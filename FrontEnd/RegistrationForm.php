@@ -1154,8 +1154,8 @@ class tx_seminars_FrontEnd_RegistrationForm extends tx_seminars_FrontEnd_Editor 
 	 *
 	 * @return string the contents of the element
 	 */
-	public function getFeUserData($unused, array $params) {
-		$result = $this->retrieveDataFromSession(NULL, $params);
+	public function getFeUserData(array $params, $unused) {
+		$result = $this->retrieveDataFromSession($params, NULL);
 
 		if (empty($result)) {
 			$key = $params['key'];
@@ -1447,7 +1447,7 @@ class tx_seminars_FrontEnd_RegistrationForm extends tx_seminars_FrontEnd_Editor 
 	 * @return integer the UID of the payment method that has been saved in the FE user session or 0 if there is none
 	 */
 	private function retrieveSavedMethodOfPayment() {
-		return intval($this->retrieveDataFromSession(NULL, array('key' => 'method_of_payment')));
+		return intval($this->retrieveDataFromSession(array('key' => 'method_of_payment'), NULL));
 	}
 
 	/**
@@ -1461,7 +1461,7 @@ class tx_seminars_FrontEnd_RegistrationForm extends tx_seminars_FrontEnd_Editor 
 	 *
 	 * @return string the data stored in the FE user session under the given key, might be empty
 	 */
-	public function retrieveDataFromSession($unused, array $parameters) {
+	public function retrieveDataFromSession(array $parameters, $unused) {
 		return tx_oelib_Session::getInstance(tx_oelib_Session::TYPE_USER)
 			->getAsString($this->prefixId . '_' . $parameters['key']);
 	}
@@ -1473,10 +1473,10 @@ class tx_seminars_FrontEnd_RegistrationForm extends tx_seminars_FrontEnd_Editor 
 	 * @return string a name to prefill the account owner
 	 */
 	public function prefillAccountOwner() {
-		$result = $this->retrieveDataFromSession(NULL, array('key' => 'account_owner'));
+		$result = $this->retrieveDataFromSession(array('key' => 'account_owner'), NULL);
 
 		if (empty($result)) {
-			$result = $this->getFeUserData(NULL, array('key' => 'name'));
+			$result = $this->getFeUserData(array('key' => 'name'), NULL);
 		}
 
 		return $result;
