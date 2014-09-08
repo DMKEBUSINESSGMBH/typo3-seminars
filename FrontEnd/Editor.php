@@ -22,7 +22,7 @@
 * This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
-require_once(PATH_formidableapi);
+//require_once(PATH_formidableapi);
 
 /**
  * This class is the base class for any kind of front-end editor, for example the event editor or the registration editor.
@@ -166,8 +166,11 @@ class tx_seminars_FrontEnd_Editor extends tx_seminars_FrontEnd_AbstractView {
 			);
 		}
 
-		/** @var $formCreator tx_ameosformidable */
-		$formCreator = t3lib_div::makeInstance('tx_ameosformidable');
+		tx_rnbase::load('tx_mkforms_forms_Factory');
+		$formCreator = tx_mkforms_forms_Factory::createForm(NULL);
+		
+// 		/** @var $formCreator tx_ameosformidable */
+// 		$formCreator = t3lib_div::makeInstance('tx_ameosformidable');
 		$formCreator->initFromTs(
 			$this, $this->formConfiguration, ($this->getObjectUid() > 0) ? $this->getObjectUid() : FALSE
 		);
