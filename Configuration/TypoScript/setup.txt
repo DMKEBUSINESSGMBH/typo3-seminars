@@ -611,8 +611,8 @@ plugin.tx_seminars_pi1 {
 					label = LLL:EXT:seminars/locallang_db.xml:tx_seminars_seminars.subtitle
 					validators {
 						10 = validator:STANDARD
-						10.userobj {
-							message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_emptySubtitle
+						10.custom.message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_emptySubtitle
+						10.custom.userobj {
 							extension = this
 							method = validateString
 							params {
@@ -2395,10 +2395,10 @@ plugin.tx_seminars_pi1 {
 						}
 						validators {
 							10 = validator:STANDARD
-							10.userobj {
+							10.custom.message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_choosePrice
+							10.custom.userobj {
 								extension = this
 								method = isValidPriceSelected
-								message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_choosePrice
 							}
 						}
 						process.userobj {
@@ -2427,10 +2427,10 @@ plugin.tx_seminars_pi1 {
 						wrapitem = |<br/>
 						validators {
 							10 = validator:STANDARD
-							10.userobj {
+							10.custom.message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_chooseMethodOfPayment
+							10.custom.userobj {
 								extension = this
 								method = isMethodOfPaymentSelected
-								message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_chooseMethodOfPayment
 							}
 						}
 						process.userobj {
@@ -2454,10 +2454,10 @@ plugin.tx_seminars_pi1 {
 						}
 						validators {
 							10 = validator:STANDARD
-							10.userobj {
+							10.custom.message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_provideBankData
+							10.custom.userobj {
 								extension = this
 								method = hasBankData
-								message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_provideBankData
 							}
 						}
 						process.userobj {
@@ -2485,10 +2485,10 @@ plugin.tx_seminars_pi1 {
 						}
 						validators {
 							10 = validator:STANDARD
-							10.userobj {
+							10.custom.message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_provideBankData
+							10.custom.userobj {
 								extension = this
 								method = hasBankData
-								message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_provideBankData
 							}
 						}
 						process.userobj {
@@ -2516,10 +2516,10 @@ plugin.tx_seminars_pi1 {
 						}
 						validators {
 							10 = validator:STANDARD
-							10.userobj {
+							10.custom.message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_provideBankData
+							10.custom.userobj {
 								extension = this
 								method = hasBankData
-								message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_provideBankData
 							}
 						}
 						process.userobj {
@@ -2547,10 +2547,10 @@ plugin.tx_seminars_pi1 {
 						}
 						validators {
 							10 = validator:STANDARD
-							10.userobj {
+							10.custom.message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_provideBankData
+							10.custom.userobj {
 								extension = this
 								method = hasBankData
-								message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_provideBankData
 							}
 						}
 						process.userobj {
@@ -2866,19 +2866,19 @@ plugin.tx_seminars_pi1 {
 								message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_noSeatsNumber
 							}
 							20 = validator:STANDARD
-							20.userobj {
+							20.custom.message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_invalidNumberOfSeats
+							20.custom.userobj {
 								extension = this
 								method = canRegisterSeats
-								message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_invalidNumberOfSeats
 							}
 							30 = validator:STANDARD
-							30.userobj {
+							30.custom.message.userobj {
+								extension = this
+								method = getMessageForSeatsNotMatchingRegisteredPersons
+							}
+							30.custom.userobj {
 								extension = this
 								method = validateNumberOfRegisteredPersons
-								message.userobj {
-									extension = this
-									method = getMessageForSeatsNotMatchingRegisteredPersons
-								}
 							}
 						}
 						process.userobj {
@@ -2924,10 +2924,10 @@ plugin.tx_seminars_pi1 {
 						name = structured_attendees_names
 						validators {
 							10 = validator:STANDARD
-							10.userobj {
+							10.custom.message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_invalidEMailAddress
+							10.custom.userobj {
 								extension = this
 								method = validateAdditionalPersonsEMailAddresses
-								message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_invalidEMailAddress
 							}
 						}
 					}
@@ -2987,10 +2987,10 @@ plugin.tx_seminars_pi1 {
 						}
 						validators {
 							10 = validator:STANDARD
-							10.userobj {
+							10.custom.message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_selectLodging
+							10.custom.userobj {
 								extension = this
 								method = isLodgingSelected
-								message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_selectLodging
 							}
 						}
 						process.userobj {
@@ -3021,10 +3021,10 @@ plugin.tx_seminars_pi1 {
 						}
 						validators {
 							10 = validator:STANDARD
-							10.userobj {
+							10.custom.message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_selectFood
+							10.custom.userobj {
 								extension = this
 								method = isFoodSelected
-								message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_selectFood
 							}
 						}
 						process.userobj {
@@ -3202,10 +3202,10 @@ plugin.tx_seminars_pi1 {
 						label = ###LABEL_TERMS###
 						validators {
 							10 = validator:STANDARD
-							10.userobj {
+							10.custom.message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_acceptTerms
+							10.custom.userobj {
 								extension = this
 								method = isTermsChecked
-								message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_acceptTerms
 							}
 						}
 						process.userobj {
@@ -3224,10 +3224,10 @@ plugin.tx_seminars_pi1 {
 						label = ###LABEL_TERMS_2###
 						validators {
 							10 = validator:STANDARD
-							10.userobj {
+							10.custom.message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_acceptTerms2
+							10.custom.userobj {
 								extension = this
 								method = isTerms2CheckedAndEnabled
-								message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_acceptTerms2
 							}
 						}
 						process.userobj {
@@ -3259,10 +3259,10 @@ plugin.tx_seminars_pi1 {
 						name = price
 						validators {
 							10 = validator:STANDARD
-							10.userobj {
+							10.custom.message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_choosePrice
+							10.custom.userobj {
 								extension = this
 								method = isValidPriceSelected
-								message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_choosePrice
 							}
 						}
 						process.userobj {
@@ -3280,10 +3280,10 @@ plugin.tx_seminars_pi1 {
 						name = method_of_payment
 						validators {
 							10 = validator:STANDARD
-							10.userobj {
+							10.custom.message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_chooseMethodOfPayment
+							10.custom.userobj {
 								extension = this
 								method = isMethodOfPaymentSelected
-								message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_chooseMethodOfPayment
 							}
 						}
 						process.userobj {
@@ -3297,10 +3297,10 @@ plugin.tx_seminars_pi1 {
 						name = account_number
 						validators {
 							10 = validator:STANDARD
-							10.userobj {
+							10.custom.message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_provideBankData
+							10.custom.userobj {
 								extension = this
 								method = hasBankData
-								message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_provideBankData
 							}
 						}
 						process.userobj {
@@ -3318,10 +3318,10 @@ plugin.tx_seminars_pi1 {
 						name = bank_code
 						validators {
 							10 = validator:STANDARD
-							10.userobj {
+							10.custom.message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_provideBankData
+							10.custom.userobj {
 								extension = this
 								method = hasBankData
-								message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_provideBankData
 							}
 						}
 						process.userobj {
@@ -3339,10 +3339,10 @@ plugin.tx_seminars_pi1 {
 						name = bank_name
 						validators {
 							10 = validator:STANDARD
-							10.userobj {
+							10.custom.message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_provideBankData
+							10.custom.userobj {
 								extension = this
 								method = hasBankData
-								message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_provideBankData
 							}
 						}
 						process.userobj {
@@ -3360,10 +3360,10 @@ plugin.tx_seminars_pi1 {
 						name = account_owner
 						validators {
 							10 = validator:STANDARD
-							10.userobj {
+							10.custom.message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_provideBankData
+							10.custom.userobj {
 								extension = this
 								method = hasBankData
-								message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_provideBankData
 							}
 						}
 						process.userobj {
@@ -3498,10 +3498,10 @@ plugin.tx_seminars_pi1 {
 						name = seats
 						validators {
 							10 = validator:STANDARD
-							10.userobj {
+							10.custom.message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_invalidNumberOfSeats
+							10.custom.userobj {
 								extension = this
 								method = canRegisterSeats
-								message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_invalidNumberOfSeats
 							}
 							20 = validator:PREG
 							20.pattern {
@@ -3509,13 +3509,13 @@ plugin.tx_seminars_pi1 {
 								message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_noSeatsNumber
 							}
 							30 = validator:STANDARD
-							30.userobj {
-								extension = this
-								method = validateNumberOfRegisteredPersons
-								message.userobj {
+							30.custom.message.userobj {
 									extension = this
 									method = getMessageForSeatsNotMatchingRegisteredPersons
 								}
+							30.custom.userobj {
+								extension = this
+								method = validateNumberOfRegisteredPersons
 							}
 						}
 						process.userobj {
@@ -3559,10 +3559,10 @@ plugin.tx_seminars_pi1 {
 						name = structured_attendees_names
 						validators {
 							10 = validator:STANDARD
-							10.userobj {
+							10.custom.message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_invalidEMailAddress
+							10.custom.userobj {
 								extension = this
 								method = validateAdditionalPersonsEMailAddresses
-								message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_invalidEMailAddress
 							}
 						}
 					}
@@ -3596,10 +3596,10 @@ plugin.tx_seminars_pi1 {
 						}
 						validators {
 							10 = validator:STANDARD
-							10.userobj {
+							10.custom.message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_selectLodging
+							10.custom.userobj {
 								extension = this
 								method = isLodgingSelected
-								message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_selectLodging
 							}
 						}
 						process.userobj {
@@ -3630,10 +3630,10 @@ plugin.tx_seminars_pi1 {
 						}
 						validators {
 							10 = validator:STANDARD
-							10.userobj {
+							10.custom.message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_selectFood
+							10.custom.userobj {
 								extension = this
 								method = isFoodSelected
-								message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_selectFood
 							}
 						}
 						process.userobj {
@@ -3738,7 +3738,7 @@ plugin.tx_seminars_pi1 {
 						name = next_page
 						validators {
 							10 = validator:STANDARD
-							10.userobj {
+							10.custom.userobj {
 								extension = this
 								method = isLastPage
 							}
