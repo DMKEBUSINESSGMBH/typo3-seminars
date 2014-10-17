@@ -166,13 +166,22 @@ class tx_seminars_FrontEnd_Editor extends tx_seminars_FrontEnd_AbstractView {
 			);
 		}
 
+		require_once(t3lib_extMgm::extPath('rn_base') . 'class.tx_rnbase.php');
 		tx_rnbase::load('tx_mkforms_forms_Factory');
 		$formCreator = tx_mkforms_forms_Factory::createForm(NULL);
 		
 // 		/** @var $formCreator tx_ameosformidable */
 // 		$formCreator = t3lib_div::makeInstance('tx_ameosformidable');
+
+		// Configuration instance for plugin data. Necessary for LABEL translation.
+		$pluginConfig = tx_rnbase::makeInstance('tx_rnbase_configurations');
+		$pluginConfig->init($this->conf, $this->cObj, 'mkforms', 'mkforms');
+
+		// Init form from typoscript data and provide configuration for plugin
 		$formCreator->initFromTs(
-			$this, $this->formConfiguration, ($this->getObjectUid() > 0) ? $this->getObjectUid() : FALSE
+			$this, $this->formConfiguration, 
+			($this->getObjectUid() > 0) ? $this->getObjectUid() : FALSE,
+			$pluginConfig
 		);
 
 		return $formCreator;
