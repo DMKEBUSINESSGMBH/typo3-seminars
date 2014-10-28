@@ -2513,7 +2513,7 @@ class tx_seminars_FrontEnd_DefaultController extends tx_oelib_templatehelper {
 		if (!$this->mayCurrentUserEditCurrentEvent()) {
 			return '';
 		}
-
+		
 		$result = $this->createEditLink();
 
 		if ($this->seminar->isPublished()) {
