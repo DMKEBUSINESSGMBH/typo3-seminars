@@ -634,8 +634,8 @@ plugin.tx_seminars_pi1 {
 					}
 					validators {
 						10 = validator:STANDARD
-						10.userobj {
-							message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_noCategoryChosen
+						10.custom.message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_noCategoryChosen
+						10.custom.userobj {
 							extension = this
 							method = validateCheckboxes
 							params {
@@ -652,8 +652,8 @@ plugin.tx_seminars_pi1 {
 					label = LLL:EXT:seminars/locallang_db.xml:tx_seminars_seminars.teaser
 					validators {
 						10 = validator:STANDARD
-						10.userobj {
-							message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_emptyTeaser
+						10.custom.message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_emptyTeaser
+						10.custom.userobj {
 							extension = this
 							method = validateString
 							params {
@@ -670,8 +670,8 @@ plugin.tx_seminars_pi1 {
 					label = LLL:EXT:seminars/locallang_db.xml:tx_seminars_seminars.description
 					validators {
 						10 = validator:STANDARD
-						10.userobj {
-							message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_emptyDescription
+						10.custom.message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_emptyDescription
+						10.custom.userobj {
 							extension = this
 							method = validateString
 							params {
@@ -700,8 +700,8 @@ plugin.tx_seminars_pi1 {
 					}
 					validators {
 						10 = validator:STANDARD
-						10.userobj {
-							message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_noEventTypeChosen
+						10.custom.message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_noEventTypeChosen
+						10.custom.userobj {
 							extension = this
 							method = validateInteger
 							params {
@@ -718,8 +718,8 @@ plugin.tx_seminars_pi1 {
 					label = LLL:EXT:seminars/locallang_db.xml:tx_seminars_seminars.accreditation_number
 					validators {
 						10 = validator:STANDARD
-						10.userobj {
-							message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_accreditationNumberZero
+						10.custom.message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_accreditationNumberZero
+						10.custom.userobj {
 							extension = this
 							method = validateString
 							params {
@@ -736,8 +736,8 @@ plugin.tx_seminars_pi1 {
 					label = LLL:EXT:seminars/locallang_db.xml:tx_seminars_seminars.credit_points
 					validators {
 						10 = validator:STANDARD
-						10.userobj {
-							message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_creditPointsZero
+						10.custom.message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_creditPointsZero
+						10.custom.userobj {
 							extension = this
 							method = validateInteger
 							params {
@@ -760,8 +760,8 @@ plugin.tx_seminars_pi1 {
 					}
 					validators {
 						10 = validator:STANDARD
-						10.userobj {
-							message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_invalidBeginDate
+						10.custom.message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_invalidBeginDate
+						10.custom.userobj {
 							extension = this
 							method = validateDate
 							params {
@@ -784,8 +784,8 @@ plugin.tx_seminars_pi1 {
 					}
 					validators {
 						10 = validator:STANDARD
-						10.userobj {
-							message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_invalidEndDate
+						10.custom.message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_invalidEndDate
+						10.custom.userobj {
 							extension = this
 							method = validateDate
 							params {
@@ -808,8 +808,8 @@ plugin.tx_seminars_pi1 {
 					}
 					validators {
 						10 = validator:STANDARD
-						10.userobj {
-							message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_invalidBeginDateRegistration
+						10.custom.message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_invalidBeginDateRegistration
+						10.custom.userobj {
 							extension = this
 							method = validateDate
 							params {
@@ -832,8 +832,8 @@ plugin.tx_seminars_pi1 {
 					}
 					validators {
 						10 = validator:STANDARD
-						10.userobj {
-							message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_invalidDeadlineRegistration
+						10.custom.message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_invalidDeadlineRegistration
+						10.custom.userobj {
 							extension = this
 							method = validateDate
 							params {
@@ -856,8 +856,8 @@ plugin.tx_seminars_pi1 {
 					}
 					validators {
 						10 = validator:STANDARD
-						10.userobj {
-							message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_invalidDeadlineEarlyBird
+						10.custom.message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_invalidDeadlineEarlyBird
+						10.custom.userobj {
 							extension = this
 							method = validateDate
 							params {
@@ -880,8 +880,8 @@ plugin.tx_seminars_pi1 {
 					}
 					validators {
 						10 = validator:STANDARD
-						10.userobj {
-							message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_invalidDeadlineUnregistration
+						10.custom.message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_invalidDeadlineUnregistration
+						10.custom.userobj {
 							extension = this
 							method = validateDate
 							params {
@@ -906,8 +906,8 @@ plugin.tx_seminars_pi1 {
 					}
 					validators {
 						10 = validator:STANDARD
-						10.userobj {
-							message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_noPlaceChosen
+						10.custom.message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_noPlaceChosen
+						10.custom.userobj {
 							extension = this
 							method = validateCheckboxes
 							params {
@@ -1165,8 +1165,8 @@ plugin.tx_seminars_pi1 {
 					label = LLL:EXT:seminars/locallang_db.xml:tx_seminars_seminars.room
 					validators {
 						10 = validator:STANDARD
-						10.userobj {
-							message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_emptyRoom
+						10.custom.message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_emptyRoom
+						10.custom.userobj {
 							extension = this
 							method = validateString
 							params {
@@ -1188,8 +1188,8 @@ plugin.tx_seminars_pi1 {
 					}
 					validators {
 						10 = validator:STANDARD
-						10.userobj {
-							message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_noLodgingsChosen
+						10.custom.message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_noLodgingsChosen
+						10.custom.userobj {
 							extension = this
 							method = validateCheckboxes
 							params {
@@ -1211,8 +1211,8 @@ plugin.tx_seminars_pi1 {
 					}
 					validators {
 						10 = validator:STANDARD
-						10.userobj {
-							message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_noFoodsChosen
+						10.custom.message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_noFoodsChosen
+						10.custom.userobj {
 							extension = this
 							method = validateCheckboxes
 							params {
@@ -1241,8 +1241,8 @@ plugin.tx_seminars_pi1 {
 					}
 					validators {
 						10 = validator:STANDARD
-						10.userobj {
-							message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_noSpeakersChosen
+						10.custom.message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_noSpeakersChosen
+						10.custom.userobj {
 							extension = this
 							method = validateCheckboxes
 							params {
@@ -1612,8 +1612,8 @@ plugin.tx_seminars_pi1 {
 					}
 					validators {
 						10 = validator:STANDARD
-						10.userobj {
-							message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_noPartnersChosen
+						10.custom.message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_noPartnersChosen
+						10.custom.userobj {
 							extension = this
 							method = validateCheckboxes
 							params {
@@ -1642,8 +1642,8 @@ plugin.tx_seminars_pi1 {
 					}
 					validators {
 						10 = validator:STANDARD
-						10.userobj {
-							message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_noTutorsChosen
+						10.custom.message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_noTutorsChosen
+						10.custom.userobj {
 							extension = this
 							method = validateCheckboxes
 							params {
@@ -1672,8 +1672,8 @@ plugin.tx_seminars_pi1 {
 					}
 					validators {
 						10 = validator:STANDARD
-						10.userobj {
-							message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_noLeadersChosen
+						10.custom.message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_noLeadersChosen
+						10.custom.userobj {
 							extension = this
 							method = validateCheckboxes
 							params {
@@ -1690,8 +1690,8 @@ plugin.tx_seminars_pi1 {
 					label = LLL:EXT:seminars/locallang_db.xml:tx_seminars_seminars.price_regular
 					validators {
 						10 = validator:STANDARD
-						10.userobj {
-							message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_invalidPriceRegular
+						10.custom.message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_invalidPriceRegular
+						10.custom.userobj {
 							extension = this
 							method = validatePrice
 							params {
@@ -1708,8 +1708,8 @@ plugin.tx_seminars_pi1 {
 					label = LLL:EXT:seminars/locallang_db.xml:tx_seminars_seminars.price_regular_early
 					validators {
 						10 = validator:STANDARD
-						10.userobj {
-							message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_invalidPriceRegularEarly
+						10.custom.message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_invalidPriceRegularEarly
+						10.custom.userobj {
 							extension = this
 							method = validatePrice
 							params {
@@ -1726,8 +1726,8 @@ plugin.tx_seminars_pi1 {
 					label = LLL:EXT:seminars/locallang_db.xml:tx_seminars_seminars.price_regular_board
 					validators {
 						10 = validator:STANDARD
-						10.userobj {
-							message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_invalidPriceRegularBoard
+						10.custom.message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_invalidPriceRegularBoard
+						10.custom.userobj {
 							extension = this
 							method = validatePrice
 							params {
@@ -1744,8 +1744,8 @@ plugin.tx_seminars_pi1 {
 					label = LLL:EXT:seminars/locallang_db.xml:tx_seminars_seminars.price_special
 					validators {
 						10 = validator:STANDARD
-						10.userobj {
-							message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_invalidPriceSpecial
+						10.custom.message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_invalidPriceSpecial
+						10.custom.userobj {
 							extension = this
 							method = validatePrice
 							params {
@@ -1762,8 +1762,8 @@ plugin.tx_seminars_pi1 {
 					label = LLL:EXT:seminars/locallang_db.xml:tx_seminars_seminars.price_special_early
 					validators {
 						10 = validator:STANDARD
-						10.userobj {
-							message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_invalidPriceSpecialEarly
+						10.custom.message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_invalidPriceSpecialEarly
+						10.custom.userobj {
 							extension = this
 							method = validatePrice
 							params {
@@ -1780,8 +1780,8 @@ plugin.tx_seminars_pi1 {
 					label = LLL:EXT:seminars/locallang_db.xml:tx_seminars_seminars.price_special_board
 					validators {
 						10 = validator:STANDARD
-						10.userobj {
-							message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_invalidPriceSpecialBoard
+						10.custom.message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_invalidPriceSpecialBoard
+						10.custom.userobj {
 							extension = this
 							method = validatePrice
 							params {
@@ -1798,8 +1798,8 @@ plugin.tx_seminars_pi1 {
 					label = LLL:EXT:seminars/locallang_db.xml:tx_seminars_seminars.additional_information
 					validators {
 						10 = validator:STANDARD
-						10.userobj {
-							message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_emptyAdditionalInformation
+						10.custom.message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_emptyAdditionalInformation
+						10.custom.userobj {
 							extension = this
 							method = validateString
 							params {
@@ -1824,8 +1824,8 @@ plugin.tx_seminars_pi1 {
 					}
 					validators {
 						10 = validator:STANDARD
-						10.userobj {
-							message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_noCheckboxesChosen
+						10.custom.message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_noCheckboxesChosen
+						10.custom.userobj {
 							extension = this
 							method = validateCheckboxes
 							params {
@@ -1972,8 +1972,8 @@ plugin.tx_seminars_pi1 {
 					}
 					validators {
 						10 = validator:STANDARD
-						10.userobj {
-							message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_noPaymentMethodsChosen
+						10.custom.message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_noPaymentMethodsChosen
+						10.custom.userobj {
 							extension = this
 							method = validateCheckboxes
 							params {
@@ -2001,8 +2001,8 @@ plugin.tx_seminars_pi1 {
 					}
 					validators {
 						10 = validator:STANDARD
-						10.userobj {
-							message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_emptyOrganizer
+						10.custom.message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_emptyOrganizer
+						10.custom.userobj {
 							php (
 								$value = array_pop(func_get_args());
 								return (!empty($value));
@@ -2029,8 +2029,8 @@ plugin.tx_seminars_pi1 {
 					label = LLL:EXT:seminars/locallang_db.xml:tx_seminars_seminars.attendees_min
 					validators {
 						10 = validator:STANDARD
-						10.userobj {
-							message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_attendeesMinZero
+						10.custom.message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_attendeesMinZero
+						10.custom.userobj {
 							extension = this
 							method = validateInteger
 							params {
@@ -2047,8 +2047,8 @@ plugin.tx_seminars_pi1 {
 					label = LLL:EXT:seminars/locallang_db.xml:tx_seminars_seminars.attendees_max
 					validators {
 						10 = validator:STANDARD
-						10.userobj {
-							message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_attendeesMaxZero
+						10.custom.message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_attendeesMaxZero
+						10.custom.userobj {
 							extension = this
 							method = validateInteger
 							params {
@@ -2071,8 +2071,8 @@ plugin.tx_seminars_pi1 {
 					label = LLL:EXT:seminars/locallang_db.xml:tx_seminars_seminars.offline_attendees
 					validators {
 						10 = validator:STANDARD
-						10.userobj {
-							message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_offlineAttendeesZero
+						10.custom.message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_offlineAttendeesZero
+						10.custom.userobj {
 							extension = this
 							method = validateInteger
 							params {
@@ -2097,8 +2097,8 @@ plugin.tx_seminars_pi1 {
 					}
 					validators {
 						10 = validator:STANDARD
-						10.userobj {
-							message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_noTargetGroupsChosen
+						10.custom.message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_noTargetGroupsChosen
+						10.custom.userobj {
 							extension = this
 							method = validateCheckboxes
 							params {
@@ -2292,8 +2292,8 @@ plugin.tx_seminars_pi1 {
 					label = LLL:EXT:seminars/locallang_db.xml:tx_seminars_seminars.notes
 					validators {
 						10 = validator:STANDARD
-						10.userobj {
-							message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_emptyNotes
+						10.custom.message = LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_emptyNotes
+						10.custom.userobj {
 							extension = this
 							method = validateString
 							params {
@@ -2314,13 +2314,13 @@ plugin.tx_seminars_pi1 {
 					}
 					validators {
 						10 = validator:STANDARD
-						10.userobj {
+						10.custom.message.userobj {
+							extension = this
+							method = getFileUploadErrorMessage
+						}
+						10.custom.userobj {
 							extension = this
 							method = checkFile
-							message.userobj {
-								extension = this
-								method = getFileUploadErrorMessage
-							}
 						}
 					}
 				}

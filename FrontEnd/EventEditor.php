@@ -356,10 +356,9 @@ class tx_seminars_FrontEnd_EventEditor extends tx_seminars_FrontEnd_Editor {
 	 *               and "value" (for the UID)
 	 */
 	public function populateListSpeakers(
-		array $items, $parameters = array(), tx_ameosformidable $formidable = NULL
+		$parameters = array(), tx_ameosformidable $formidable = NULL
 	) {
-		$result = $items;
-
+		$result = array();
 		$speakerMapper = tx_oelib_MapperRegistry::get('tx_seminars_Mapper_Speaker');
 		$speakers = $speakerMapper->findByPageUid(
 			$this->getPidsForAuxiliaryRecords(), 'title ASC'
