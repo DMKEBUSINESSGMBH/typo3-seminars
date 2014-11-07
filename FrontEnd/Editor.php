@@ -181,7 +181,7 @@ class tx_seminars_FrontEnd_Editor extends tx_seminars_FrontEnd_AbstractView {
 		$formCreator->initFromTs(
 			$this, $this->formConfiguration, 
 			($this->getObjectUid() > 0) ? $this->getObjectUid() : FALSE,
-			$pluginConfig
+			$pluginConfig , 'form.'
 		);
 
 		return $formCreator;

@@ -242,6 +242,7 @@ function updateAuxiliaryRecordInEditor(htmlId, title) {
  * @param {Array} buttonData the data of the edit button of the record
  */
 function appendAuxiliaryRecordInEditor(uid, title, htmlName, buttonData) {
+	// FIXME: gibt es dafür was im Wrapper??
 	var container = $$("#tx_seminars_pi1_seminars_" + htmlName + " tbody")[0];
 	if (!container) {
 		return;

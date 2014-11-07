@@ -1117,7 +1117,6 @@ class tx_seminars_FrontEnd_EventEditor extends tx_seminars_FrontEnd_Editor {
 		);
 		$isAnAuxiliaryPidSet = ($frontEndUser->getAuxiliaryRecordsPid() > 0) ||
 			($axiliaryPidFromSetup > 0);
-
 		return $isFrontEndEditingAllowed && $isAnAuxiliaryPidSet;
 	}
 
@@ -1515,7 +1514,7 @@ class tx_seminars_FrontEnd_EventEditor extends tx_seminars_FrontEnd_Editor {
 		foreach ($keys as $key) {
 			if ((trim($formData[$key]) == '') && self::isPlaceFieldRequired($key)
 			) {
-				$validationErrors[] = $formidable->getLLLabel(
+				$validationErrors[] = $formidable->getConfig()->getLLLabel(
 					'LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_empty' .
 						ucfirst($key)
 				);
@@ -1525,7 +1524,7 @@ class tx_seminars_FrontEnd_EventEditor extends tx_seminars_FrontEnd_Editor {
 		if ((intval($formData[$key]) == 0)
 			&& self::isPlaceFieldRequired($key)
 		) {
-			$validationErrors[] = $formidable->getLLLabel(
+			$validationErrors[] = $formidable->getConfig()->getLLLabel(
 				'LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_empty' . ucfirst($key)
 			);
 		}
@@ -1666,7 +1665,7 @@ class tx_seminars_FrontEnd_EventEditor extends tx_seminars_FrontEnd_Editor {
 		$owner = tx_oelib_FrontEndLoginManager::getInstance()
 			->getLoggedInUser('tx_seminars_Mapper_FrontEndUser');
 		$ownerPageUid = $owner->getAuxiliaryRecordsPid();
-
+		
 		$pageUid = ($ownerPageUid > 0)
 			? $ownerPageUid
 			: tx_oelib_ConfigurationRegistry::get('plugin.tx_seminars_pi1')
@@ -1688,8 +1687,11 @@ class tx_seminars_FrontEnd_EventEditor extends tx_seminars_FrontEnd_Editor {
 	 *
 	 * @return array calls to be executed on the client
 	 */
-	public static function createNewSpeaker(tx_ameosformidable $formidable) {
-		$formData = $formidable->oMajixEvent->getParams();
+	public static function createNewSpeaker($formData, tx_ameosformidable $formidable) {
+		tx_rnbase::load('tx_mkforms_util_FormBase');
+
+		$formData = tx_mkforms_util_FormBase::removePathFromWidgetData($formData, $formidable);
+		//$formData = $formidable->oMajixEvent->getParams();
 		$validationErrors = self::validateSpeaker(
 			$formidable, array('title' => $formData['newSpeaker_title'])
 		);
@@ -1700,13 +1702,24 @@ class tx_seminars_FrontEnd_EventEditor extends tx_seminars_FrontEnd_Editor {
 				),
 			);
 		};
-
+		
 		$speaker = t3lib_div::makeInstance('tx_seminars_Model_Speaker');
+
+		// Load TCA for database operation
+		tx_rnbase::load('tx_rnbase_util_TCA');
+		tx_rnbase_util_TCA::loadTCA('fe_users');
+
+		self::createBasicAuxiliaryData();
+
+
+
 		$speaker->setData(array_merge(
 			self::createBasicAuxiliaryData(),
 			array('skills' => new tx_oelib_List())
 		));
 		self::setSpeakerData($speaker, 'newSpeaker_', $formData);
+
+
 		$speaker->markAsDirty();
 		tx_oelib_MapperRegistry::get('tx_seminars_Mapper_Speaker')
 			->save($speaker);
@@ -1825,7 +1838,7 @@ class tx_seminars_FrontEnd_EventEditor extends tx_seminars_FrontEnd_Editor {
 	) {
 		$validationErrors = array();
 		if (trim($formData['title']) == '') {
-			$validationErrors[] = $formidable->getLLLabel(
+			$validationErrors[] = $formidable->getConfig()->getLLLabel(
 				'LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_emptyName'
 			);
 		}
@@ -2076,7 +2089,7 @@ class tx_seminars_FrontEnd_EventEditor extends tx_seminars_FrontEnd_Editor {
 	) {
 		$validationErrors = array();
 		if (trim($formData['title']) == '') {
-			$validationErrors[] = $formidable->getLLLabel(
+			$validationErrors[] = $formidable->getConfig()->getLLLabel(
 				'LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_emptyTitle'
 			);
 		}
@@ -2289,7 +2302,7 @@ class tx_seminars_FrontEnd_EventEditor extends tx_seminars_FrontEnd_Editor {
 	) {
 		$validationErrors = array();
 		if (trim($formData['title']) == '') {
-			$validationErrors[] = $formidable->getLLLabel(
+			$validationErrors[] = $formidable->getConfig()->getLLLabel(
 				'LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_emptyTitle'
 			);
 		}
@@ -2301,14 +2314,14 @@ class tx_seminars_FrontEnd_EventEditor extends tx_seminars_FrontEnd_Editor {
 
 			if (($minimumAge > 0) && ($maximumAge > 0)) {
 				if ($minimumAge > $maximumAge) {
-					$validationErrors[] = $formidable->getLLLabel(
+					$validationErrors[] = $formidable->getConfig()->getLLLabel(
 						'LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:' .
 							'message_targetGroupMaximumAgeSmallerThanMinimumAge'
 					);
 				}
 			}
 		} else {
-			$validationErrors[] = $formidable->getLLLabel(
+			$validationErrors[] = $formidable->getConfig()->getLLLabel(
 				'LLL:EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml:message_noTargetGroupAgeNumber'
 			);
 		}

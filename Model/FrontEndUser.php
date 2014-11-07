@@ -78,7 +78,7 @@ class tx_seminars_Model_FrontEndUser extends tx_oelib_Model_FrontEndUser {
 		if ($this->getUserGroups()->isEmpty()) {
 			return 0;
 		}
-
+		
 		$auxiliaryRecordsPid = 0;
 
 		foreach ($this->getUserGroups() as $userGroup) {
