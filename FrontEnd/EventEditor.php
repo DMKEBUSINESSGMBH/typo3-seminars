@@ -56,9 +56,28 @@ class tx_seminars_FrontEnd_EventEditor extends tx_seminars_FrontEnd_Editor {
 	 * @param array $configuration TypoScript configuration for the plugin
 	 * @param tslib_cObj $cObj the parent cObj content, needed for the flexforms
 	 */
-	public function __construct(array $configuration, tslib_cObj $cObj) {
-		parent::__construct($configuration, $cObj);
+	public function __construct(array $configuration = array(), tslib_cObj $cObj = NULL) {
+		if (!empty($configuration) && $cObj !== NULL) {
+			parent::__construct($configuration, $cObj);
+		}
 		$this->setRequiredFormFields();
+	}
+
+	/**
+	 * there are more than one init calls.
+	 * mkforms calls the init for code behinds and oelib inits the class too.
+	 *
+	 * @param array $configuration
+	 */
+	public function init($configuration = NULL) {
+		// init call of oelib
+		if (is_array($configuration)) {
+			parent::init($configuration);
+		}
+		// init call of mkforms
+		elseif($configuration instanceof tx_mkforms_forms_IForm) {
+			// nothing todo
+		}
 	}
 
 	/**
@@ -378,6 +397,10 @@ class tx_seminars_FrontEnd_EventEditor extends tx_seminars_FrontEnd_Editor {
 		) && is_object($formidable);
 
 		$type = $parameters['type'];
+		if (!empty($parameters['lister'])) {
+			$isLister = TRUE;
+			$activeSpeakers = $formidable->getDataHandler()->getStoredData(strtolower($type) . 's');
+		}
 
 		foreach ($speakers as $speaker) {
 			$frontEndUserIsOwner = ($speaker->getOwner() === $frontEndUser);
@@ -388,6 +411,16 @@ class tx_seminars_FrontEnd_EventEditor extends tx_seminars_FrontEnd_Editor {
 				continue;
 			}
 
+			// the new method to list the speakers!
+			if ($isLister) {
+				$result[] = array(
+					'uid' => $speaker->getUid(),
+					'selected' => t3lib_div::inList($activeSpeakers, $speaker->getUid()) ? 1 : 0,
+					'name' => $speaker->getName(),
+					'edit' => ($showEditButton && $frontEndUserIsOwner) ? 1 : 0,
+				);
+				continue;
+			}
 			if ($showEditButton && $frontEndUserIsOwner) {
 				$editButtonConfiguration['name'] = 'edit' . $type . 'Button_' . $speaker->getUid();
 				$editButtonConfiguration['onclick']['userobj']['php'] = '
@@ -1665,7 +1698,7 @@ class tx_seminars_FrontEnd_EventEditor extends tx_seminars_FrontEnd_Editor {
 		$owner = tx_oelib_FrontEndLoginManager::getInstance()
 			->getLoggedInUser('tx_seminars_Mapper_FrontEndUser');
 		$ownerPageUid = $owner->getAuxiliaryRecordsPid();
-		
+
 		$pageUid = ($ownerPageUid > 0)
 			? $ownerPageUid
 			: tx_oelib_ConfigurationRegistry::get('plugin.tx_seminars_pi1')
@@ -1688,10 +1721,7 @@ class tx_seminars_FrontEnd_EventEditor extends tx_seminars_FrontEnd_Editor {
 	 * @return array calls to be executed on the client
 	 */
 	public static function createNewSpeaker($formData, tx_ameosformidable $formidable) {
-		tx_rnbase::load('tx_mkforms_util_FormBase');
-
-		$formData = tx_mkforms_util_FormBase::removePathFromWidgetData($formData, $formidable);
-		//$formData = $formidable->oMajixEvent->getParams();
+		$formData = self::removePathFromWidgetData($formData, $formidable);
 		$validationErrors = self::validateSpeaker(
 			$formidable, array('title' => $formData['newSpeaker_title'])
 		);
@@ -1702,12 +1732,10 @@ class tx_seminars_FrontEnd_EventEditor extends tx_seminars_FrontEnd_Editor {
 				),
 			);
 		};
-		
+
 		$speaker = t3lib_div::makeInstance('tx_seminars_Model_Speaker');
 
-		// Load TCA for database operation
-		tx_rnbase::load('tx_rnbase_util_TCA');
-		tx_rnbase_util_TCA::loadTCA('fe_users');
+		self::loadTCA(); // Load TCA for database operation
 
 		self::createBasicAuxiliaryData();
 
@@ -1719,11 +1747,28 @@ class tx_seminars_FrontEnd_EventEditor extends tx_seminars_FrontEnd_Editor {
 		));
 		self::setSpeakerData($speaker, 'newSpeaker_', $formData);
 
-
 		$speaker->markAsDirty();
-		tx_oelib_MapperRegistry::get('tx_seminars_Mapper_Speaker')
-			->save($speaker);
+		tx_oelib_MapperRegistry::get('tx_seminars_Mapper_Speaker')->save($speaker);
 
+		$speakerTypes = array(
+			"speaker",
+			"leader",
+			"partner",
+			"tutor",
+		);
+
+		$results = array();
+		// refresh all speaker listers
+		foreach ($speakerTypes as $speakerType) {
+			if (!isset($formidable->aORenderlets[$speakerType . 's'])) {
+				continue;
+			}
+			$results[] = $formidable->aORenderlets[$speakerType . 's']->majixRepaint();
+		}
+		$results[] = $formidable->aORenderlets['newSpeakerModalBox']->majixCloseBox();
+		return $results;
+
+		// the old code
 		$editButtonConfiguration =& $formidable->_navConf(
 			$formidable->aORenderlets['editSpeakerButton']->sXPath
 		);
@@ -1761,8 +1806,10 @@ class tx_seminars_FrontEnd_EventEditor extends tx_seminars_FrontEnd_Editor {
 	 *
 	 * @return array calls to be executed on the client
 	 */
-	public static function updateSpeaker(tx_ameosformidable $formidable) {
-		$formData = $formidable->oMajixEvent->getParams();
+	public static function updateSpeaker(array $formData, tx_ameosformidable $formidable) {
+		$formData = self::removePathFromWidgetData($formData, $formidable);
+
+		self::loadTCA();
 
 		$frontEndUser = tx_oelib_FrontEndLoginManager::getInstance()
 			->getLoggedInUser('tx_seminars_Mapper_FrontEndUser');
@@ -1804,21 +1851,18 @@ class tx_seminars_FrontEnd_EventEditor extends tx_seminars_FrontEnd_Editor {
 			"tutor",
 		);
 
-		$uid = $speaker->getUid();
-		$name = $speaker->getName();
-
-		$javaScript = '';
+		$results = array();
+		// refresh all speaker listers
 		foreach ($speakerTypes as $speakerType) {
-			$javaScript .= 'updateAuxiliaryRecordInEditor("' .
-				'tx_seminars_pi1_seminars_' .  $speakerType. '_label_' . $uid . '", ' .
-				'"' . addcslashes($name, '"\\') . '"' .
-				');';
+			if (!isset($formidable->aORenderlets[$speakerType . 's'])) {
+				continue;
+			}
+			$results[] = $formidable->aORenderlets[$speakerType . 's']->majixRepaint();
 		}
+		// close edit box
+		$results[] = $formidable->aORenderlets['editSpeakerModalBox']->majixCloseBox();
 
-		return array(
-			$formidable->aORenderlets['editSpeakerModalBox']->majixCloseBox(),
-			$formidable->majixExecJs($javaScript),
-		);
+		return $results;
 	}
 
 	/**
@@ -1895,12 +1939,30 @@ class tx_seminars_FrontEnd_EventEditor extends tx_seminars_FrontEnd_Editor {
 	 *
 	 * @return array calls to be executed on the client
 	 */
+	public static function openEditSpeakerModalBox(
+		array $params, tx_ameosformidable $formidable
+	) {
+		$speakerId = empty($params['uid']) ? 0 : (int) $params['uid'];
+		return self::showEditSpeakerModalBox($formidable, $speakerId);
+	}
+
+	/**
+	 * Shows a modalbox containing a form for editing an existing speaker record.
+	 *
+	 * @param tx_ameosformidable $formidable the FORMidable object
+	 * @param integer $speakerUid the UID of the speaker to edit, must be > 0
+	 *
+	 * @return array calls to be executed on the client
+	 */
 	public static function showEditSpeakerModalBox(
 		tx_ameosformidable $formidable, $speakerUid
 	) {
 		if ($speakerUid <= 0) {
 			return $formidable->majixExecJs('alert("$speakerUid must be >= 0.");');
 		}
+
+
+		self::loadTCA(); // Load TCA for database operation
 
 		$speakerMapper = tx_oelib_MapperRegistry::get('tx_seminars_Mapper_Speaker');
 
@@ -1939,7 +2001,7 @@ class tx_seminars_FrontEnd_EventEditor extends tx_seminars_FrontEnd_Editor {
 		);
 
 		foreach ($fields as $key => $value) {
-			$formidable->aORenderlets['editSpeaker_' . $key]->setValue($value);
+			$formidable->aORenderlets['editSpeakerModalBox__editSpeaker_' . $key]->setValue($value);
 		}
 
 		$result = array();
@@ -1948,11 +2010,11 @@ class tx_seminars_FrontEnd_EventEditor extends tx_seminars_FrontEnd_Editor {
 		$result[] = $formidable->aORenderlets['editSpeakerModalBox']->majixShowBox();
 		$formidable->oRenderer->_setDisplayLabels(FALSE);
 
-		$result[] = $formidable->aORenderlets['editSpeaker_skills']->majixCheckNone();
+		$result[] = $formidable->aORenderlets['editSpeakerModalBox__editSpeaker_skills']->majixCheckNone();
 
 		$skills = $speaker->getSkills();
 		foreach ($skills as $skill) {
-			$result[] = $formidable->aORenderlets['editSpeaker_skills']
+			$result[] = $formidable->aORenderlets['editSpeakerModalBox__editSpeaker_skills']
 				->majixCheckItem($skill->getUid());
 		}
 
@@ -2566,6 +2628,7 @@ class tx_seminars_FrontEnd_EventEditor extends tx_seminars_FrontEnd_Editor {
 			unset($formFields[$categoryKey]);
 		}
 	}
+
 }
 
 if (defined('TYPO3_MODE') && $GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['XCLASS']['ext/seminars/FrontEnd/EventEditor.php']) {
