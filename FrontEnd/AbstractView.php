@@ -81,6 +81,30 @@ abstract class tx_seminars_FrontEnd_AbstractView extends tx_oelib_templatehelper
 	}
 
 	/**
+	 * We load the TCA. This is needed for the ajax calls
+	 *
+	 * @param string $tablename
+	 */
+	protected static function loadTCA($tablename = 'fe_users') {
+		// Load TCA for database operation
+		tx_rnbase::load('tx_rnbase_util_TCA');
+		tx_rnbase_util_TCA::loadTCA($tablename);
+	}
+
+	/**
+	 * Eliminate renderlet path info from the given data
+	 *
+	 * @param array $formData
+	 * @param tx_mkforms_forms_Base $form
+	 * @return array
+	 */
+	protected static function removePathFromWidgetData(
+		array $formData, tx_ameosformidable $formidable
+	) {
+		tx_rnbase::load('tx_mkforms_util_FormBase');
+		return tx_mkforms_util_FormBase::removePathFromWidgetData($formData, $formidable);
+	}
+	/**
 	 * Renders the view and returns its content.
 	 *
 	 * @return string the view's content
