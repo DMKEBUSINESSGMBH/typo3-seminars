@@ -1285,6 +1285,8 @@ plugin.tx_seminars_pi1 {
 					uidColumn = uid
 					usegp = 0
 					datasource.use = listSpeakers
+					### disable the pager, list all speaker
+					pager.rows.perpage = -1
 					columns {
 						uid {
 							name = uid
