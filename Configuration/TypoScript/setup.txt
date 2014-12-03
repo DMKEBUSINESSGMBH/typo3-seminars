@@ -1484,11 +1484,9 @@ plugin.tx_seminars_pi1 {
 							wrap = |</div>
 							onclick {
 								runat = ajax
-								cache = false
 								params = newSpeakerModalBox__*
-#								params = newSpeaker_title, newSpeaker_gender, newSpeaker_organization, newSpeaker_homepage, newSpeaker_description, newSpeaker_skills, newSpeaker_notes, newSpeaker_address, newSpeaker_phone_work, newSpeaker_phone_home, newSpeaker_phone_mobile, newSpeaker_fax, newSpeaker_email, newSpeaker_cancelation_period
-								userobj.extension = this
-								userobj.method = createNewSpeaker
+								cache = false
+								exec = eventeditor.createNewSpeaker()
 							}
 						}
 					}
@@ -1653,14 +1651,6 @@ plugin.tx_seminars_pi1 {
 								cache = false
 								exec = eventeditor.updateSpeaker()
 							}
-							/*
-							onclick {
-								runat = ajax
-								params = editSpeakerModalBox__*
-								userobj.extension = this
-								userobj.method = updateSpeaker
-							}
-							*/
 						}
 					}
 				}
