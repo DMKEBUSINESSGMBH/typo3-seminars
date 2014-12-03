@@ -1739,8 +1739,6 @@ class tx_seminars_FrontEnd_EventEditor extends tx_seminars_FrontEnd_Editor {
 
 		self::createBasicAuxiliaryData();
 
-
-
 		$speaker->setData(array_merge(
 			self::createBasicAuxiliaryData(),
 			array('skills' => new tx_oelib_List())
