@@ -76,6 +76,12 @@ class tx_seminars_FrontEnd_EventEditor extends tx_seminars_FrontEnd_Editor {
 		}
 		// init call of mkforms
 		elseif($configuration instanceof tx_mkforms_forms_IForm) {
+			if (
+				is_object($configuration->getParent())
+				&& is_array($configuration->getParent()->conf)
+			) {
+				parent::init($configuration);
+			}
 			// nothing todo
 		}
 	}
@@ -377,6 +383,12 @@ class tx_seminars_FrontEnd_EventEditor extends tx_seminars_FrontEnd_Editor {
 	public function populateListSpeakers(
 		$parameters = array(), tx_ameosformidable $formidable = NULL
 	) {
+// 		echo '<h1>DEBUG: '.__FILE__.'LINE: '.__LINE__.'</h1><pre>'.var_export(array(
+// 				$parameters,
+// 				tx_rnbase_util_Debug::getDebugTrail(),
+// 			), TRUE).'</pre>';
+// 		exit('DEBUG:'.__FILE__.' LINE:'.__LINE__);
+
 		$result = array();
 		$speakerMapper = tx_oelib_MapperRegistry::get('tx_seminars_Mapper_Speaker');
 		$speakers = $speakerMapper->findByPageUid(
@@ -1720,7 +1732,7 @@ class tx_seminars_FrontEnd_EventEditor extends tx_seminars_FrontEnd_Editor {
 	 *
 	 * @return array calls to be executed on the client
 	 */
-	public static function createNewSpeaker($formData, tx_ameosformidable $formidable) {
+	public function createNewSpeaker($formData, tx_ameosformidable $formidable) {
 		$formData = self::removePathFromWidgetData($formData, $formidable);
 		$validationErrors = self::validateSpeaker(
 			$formidable, array('title' => $formData['newSpeaker_title'])
@@ -1748,21 +1760,9 @@ class tx_seminars_FrontEnd_EventEditor extends tx_seminars_FrontEnd_Editor {
 		$speaker->markAsDirty();
 		tx_oelib_MapperRegistry::get('tx_seminars_Mapper_Speaker')->save($speaker);
 
-		$speakerTypes = array(
-			"speaker",
-			"leader",
-			"partner",
-			"tutor",
-		);
-
-		$results = array();
 		// refresh all speaker listers
-		foreach ($speakerTypes as $speakerType) {
-			if (!isset($formidable->aORenderlets[$speakerType . 's'])) {
-				continue;
-			}
-			$results[] = $formidable->aORenderlets[$speakerType . 's']->majixRepaint();
-		}
+		$results = $this->repaintSpeakers($formidable);
+		// close box
 		$results[] = $formidable->aORenderlets['newSpeakerModalBox']->majixCloseBox();
 		return $results;
 
@@ -1804,7 +1804,7 @@ class tx_seminars_FrontEnd_EventEditor extends tx_seminars_FrontEnd_Editor {
 	 *
 	 * @return array calls to be executed on the client
 	 */
-	public static function updateSpeaker(array $formData, tx_ameosformidable $formidable) {
+	public function updateSpeaker(array $formData, tx_ameosformidable $formidable) {
 		$formData = self::removePathFromWidgetData($formData, $formidable);
 
 		self::loadTCA();
@@ -1813,7 +1813,6 @@ class tx_seminars_FrontEnd_EventEditor extends tx_seminars_FrontEnd_Editor {
 			->getLoggedInUser('tx_seminars_Mapper_FrontEndUser');
 
 		$speakerMapper = tx_oelib_MapperRegistry::get('tx_seminars_Mapper_Speaker');
-
 		try {
 			$speaker = $speakerMapper->find(intval($formData['editSpeaker_uid']));
 		} catch (Exception $exception) {
@@ -1842,24 +1841,36 @@ class tx_seminars_FrontEnd_EventEditor extends tx_seminars_FrontEnd_Editor {
 		self::setSpeakerData($speaker, 'editSpeaker_', $formData);
 		$speakerMapper->save($speaker);
 
+		$results = $this->repaintSpeakers($formidable);
+		// close edit box
+		$results[] = $formidable->aORenderlets['editSpeakerModalBox']->majixCloseBox();
+
+		return $results;
+	}
+
+	/**
+	 *
+	 * @param tx_ameosformidable $formidable
+	 * @return array
+	 */
+	protected function repaintSpeakers(tx_ameosformidable $formidable) {
 		$speakerTypes = array(
-			"speaker",
-			"leader",
-			"partner",
-			"tutor",
+			'speaker',
+			'leader',
+			'partner',
+			'tutor',
 		);
 
 		$results = array();
 		// refresh all speaker listers
 		foreach ($speakerTypes as $speakerType) {
-			if (!isset($formidable->aORenderlets[$speakerType . 's'])) {
-				continue;
+			if (
+				is_object($widget = $formidable->getWidget($speakerType . 's'))
+				&& $widget instanceof tx_mkforms_widgets_lister_Main
+			) {
+				$results[] = $widget->repaintFirst();
 			}
-			$results[] = $formidable->aORenderlets[$speakerType . 's']->majixRepaint();
 		}
-		// close edit box
-		$results[] = $formidable->aORenderlets['editSpeakerModalBox']->majixCloseBox();
-
 		return $results;
 	}
 

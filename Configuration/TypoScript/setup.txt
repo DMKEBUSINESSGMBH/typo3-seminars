@@ -520,9 +520,8 @@ plugin.tx_seminars_pi1 {
 				debug = false
 				displaylabels = false
 				codeBehind {
-					type = php
 					name = eventeditor
-					path = EXT:seminars/FrontEnd/EventEditor.php:tx_seminars_FrontEnd_EventEditor
+					path = this
 				}
 			}
 			control {
@@ -586,9 +585,8 @@ plugin.tx_seminars_pi1 {
 					listSpeakers = datasource:PHPARRAY
 					listSpeakers {
 						name = listSpeakers
-						bindsto.userobj {
-							extension = this
-							method= populateListSpeakers
+						bindsto {
+							exec = eventeditor.populateListSpeakers
 							params {
 								10.name = type
 								10.value = Speaker
@@ -1652,10 +1650,17 @@ plugin.tx_seminars_pi1 {
 							onclick {
 								runat = ajax
 								params = editSpeakerModalBox__*
-#								params = editSpeaker_title, editSpeaker_gender, editSpeaker_organization, editSpeaker_homepage, editSpeaker_description, editSpeaker_skills, editSpeaker_notes, editSpeaker_address, editSpeaker_phone_work, editSpeaker_phone_home, editSpeaker_phone_mobile, editSpeaker_fax, editSpeaker_email, editSpeaker_cancelation_period, editSpeaker_uid
+								cache = false
+								exec = eventeditor.updateSpeaker()
+							}
+							/*
+							onclick {
+								runat = ajax
+								params = editSpeakerModalBox__*
 								userobj.extension = this
 								userobj.method = updateSpeaker
 							}
+							*/
 						}
 					}
 				}
