@@ -507,10 +507,11 @@ plugin.tx_seminars_pi1 {
 	# whether to allow front-end editing of target groups
 	allowFrontEndEditingOfTargetGroups = 0
 
+	# location of language file for substitution of LABEL markers
+	locallangFilename = EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml
+
 	form =< config.tx_mkforms
 	form {
-		# location of language file for substitution of LABEL markers
-		locallangFilename = EXT:seminars/Resources/Private/Language/FrontEnd/locallang.xml
 
 		eventEditor {
 			meta {
