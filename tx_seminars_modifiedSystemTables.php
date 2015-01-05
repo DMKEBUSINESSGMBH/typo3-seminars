@@ -1,7 +1,5 @@
 <?php
-if (!defined ('TYPO3_MODE')) {
-	die('Access denied.');
-}
+defined('TYPO3_MODE') or die('Access denied.');
 
 if (!function_exists('txSeminarsGetTableRelationsClause')) {
 	/**
@@ -27,9 +25,10 @@ if (!function_exists('txSeminarsGetTableRelationsClause')) {
 }
 
 $globalConfiguration = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['seminars']);
-$usePageBrowser = (boolean) $globalConfiguration['usePageBrowser'];
+$usePageBrowser = (bool)$globalConfiguration['usePageBrowser'];
 $selectType = $usePageBrowser ? 'group' : 'select';
 
+$addToFeInterface = (t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version) < 6002000);
 if (!isset($GLOBALS['TCA']['fe_users']['columns']['tx_seminars_registration'])) {
 	if (t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version) < 6001000) {
 		t3lib_div::loadTCA('fe_users');
@@ -51,7 +50,7 @@ if (!isset($GLOBALS['TCA']['fe_users']['columns']['tx_seminars_registration'])) 
 				),
 			),
 		),
-		1
+		$addToFeInterface
 	);
 }
 
@@ -138,7 +137,7 @@ if (!isset($GLOBALS['TCA']['fe_groups']['columns']['tx_seminars_publish_events']
 							'icon' => 'list.gif',
 							'params' => array (
 								'table'=>'tx_seminars_categories',
-								'pid' => ((boolean) $globalConfiguration['useStoragePid'] ?
+								'pid' => ((bool)$globalConfiguration['useStoragePid'] ?
 									'###STORAGE_PID###' : '###CURRENT_PID###'),
 							),
 							'script' => 'wizard_list.php',
@@ -167,7 +166,7 @@ if (!isset($GLOBALS['TCA']['fe_groups']['columns']['tx_seminars_publish_events']
 				),
 			),
 		),
-		1
+		$addToFeInterface
 	);
 
 	t3lib_extMgm::addToAllTCAtypes(
@@ -223,7 +222,7 @@ if (!isset($GLOBALS['TCA']['be_groups']['columns']['tx_seminars_events_folder'])
 				),
 			),
 		),
-		1
+		$addToFeInterface
 	);
 
 	t3lib_extMgm::addToAllTCAtypes(

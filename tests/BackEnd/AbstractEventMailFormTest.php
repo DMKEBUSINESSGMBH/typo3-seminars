@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * This file is part of the TYPO3 CMS project.
  *
  * It is free software; you can redistribute it and/or modify it under
@@ -33,21 +33,21 @@ class Tx_Seminars_BackEnd_AbstractEventMailFormTest extends Tx_Phpunit_TestCase 
 	/**
 	 * UID of a dummy system folder
 	 *
-	 * @var integer
+	 * @var int
 	 */
 	private $dummySysFolderUid;
 
 	/**
 	 * UID of a dummy organizer record
 	 *
-	 * @var integer
+	 * @var int
 	 */
 	private $organizerUid;
 
 	/**
 	 * UID of a dummy event record
 	 *
-	 * @var integer
+	 * @var int
 	 */
 	private $eventUid;
 
@@ -63,7 +63,10 @@ class Tx_Seminars_BackEnd_AbstractEventMailFormTest extends Tx_Phpunit_TestCase 
 	 */
 	protected $mailer = NULL;
 
-	public function setUp() {
+	protected function setUp() {
+		$configuration = new Tx_Oelib_Configuration();
+		Tx_Oelib_ConfigurationRegistry::getInstance()->set('plugin.tx_seminars', $configuration);
+
 		$this->languageBackup = $GLOBALS['LANG']->lang;
 		$GLOBALS['LANG']->lang = 'default';
 
@@ -104,18 +107,14 @@ class Tx_Seminars_BackEnd_AbstractEventMailFormTest extends Tx_Phpunit_TestCase 
 			'organizers'
 		);
 
-		$this->fixture = new tx_seminars_tests_fixtures_BackEnd_TestingEventMailForm(
-			$this->eventUid
-		);
+		$this->fixture = new tx_seminars_tests_fixtures_BackEnd_TestingEventMailForm($this->eventUid);
 		$this->fixture->setDateFormat();
 	}
 
-	public function tearDown() {
+	protected function tearDown() {
 		$GLOBALS['LANG']->lang = $this->languageBackup;
 
 		$this->testingFramework->cleanUp();
-
-		unset($this->fixture, $this->testingFramework, $this->mailer);
 
 		$this->flushAllFlashMessages();
 	}
@@ -127,9 +126,9 @@ class Tx_Seminars_BackEnd_AbstractEventMailFormTest extends Tx_Phpunit_TestCase 
 	 */
 	protected function getRenderedFlashMessages() {
 		if (class_exists('TYPO3\\CMS\\Core\\Messaging\\FlashMessageService', TRUE)) {
-			/** @var $flashMessageService \TYPO3\CMS\Core\Messaging\FlashMessageService */
+			/** @var \TYPO3\CMS\Core\Messaging\FlashMessageService $flashMessageService */
 			$flashMessageService = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Messaging\\FlashMessageService');
-			/** @var $defaultFlashMessageQueue \TYPO3\CMS\Core\Messaging\FlashMessageQueue */
+			/** @var \TYPO3\CMS\Core\Messaging\FlashMessageQueue $defaultFlashMessageQueue */
 			$defaultFlashMessageQueue = $flashMessageService->getMessageQueueByIdentifier();
 			$renderedFlashMessages = $defaultFlashMessageQueue->renderFlashMessages();
 		} else {

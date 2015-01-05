@@ -41,16 +41,14 @@ class tx_seminars_Mapper_CheckboxTest extends tx_phpunit_testcase {
 	 */
 	private $fixture;
 
-	public function setUp() {
+	protected function setUp() {
 		$this->testingFramework = new tx_oelib_testingFramework('tx_seminars');
 
 		$this->fixture = new tx_seminars_Mapper_Checkbox();
 	}
 
-	public function tearDown() {
+	protected function tearDown() {
 		$this->testingFramework->cleanUp();
-
-		unset($this->fixture, $this->testingFramework);
 	}
 
 
@@ -74,10 +72,12 @@ class tx_seminars_Mapper_CheckboxTest extends tx_phpunit_testcase {
 		$uid = $this->testingFramework->createRecord(
 			'tx_seminars_checkboxes', array('title' => 'I agree with the T&C.')
 		);
+		/** @var tx_seminars_Model_Checkbox $model */
+		$model = $this->fixture->find($uid);
 
 		$this->assertEquals(
 			'I agree with the T&C.',
-			$this->fixture->find($uid)->getTitle()
+			$model->getTitle()
 		);
 	}
 

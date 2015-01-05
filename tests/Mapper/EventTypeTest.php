@@ -41,16 +41,14 @@ class tx_seminars_Mapper_EventTypeTest extends tx_phpunit_testcase {
 	 */
 	private $fixture;
 
-	public function setUp() {
+	protected function setUp() {
 		$this->testingFramework = new tx_oelib_testingFramework('tx_seminars');
 
 		$this->fixture = new tx_seminars_Mapper_EventType();
 	}
 
-	public function tearDown() {
+	protected function tearDown() {
 		$this->testingFramework->cleanUp();
-
-		unset($this->fixture, $this->testingFramework);
 	}
 
 
@@ -75,9 +73,11 @@ class tx_seminars_Mapper_EventTypeTest extends tx_phpunit_testcase {
 			'tx_seminars_event_types', array('title' => 'Workshop')
 		);
 
+		/** @var tx_seminars_Model_EventType $model */
+		$model = $this->fixture->find($uid);
 		$this->assertEquals(
 			'Workshop',
-			$this->fixture->find($uid)->getTitle()
+			$model->getTitle()
 		);
 	}
 }

@@ -41,7 +41,7 @@ class tx_seminars_BackEnd_OrganizersListTest extends tx_phpunit_testcase {
 	private $testingFramework;
 
 	/**
-	 * @var integer PID of a dummy system folder
+	 * @var int PID of a dummy system folder
 	 */
 	private $dummySysFolderPid = 0;
 
@@ -55,7 +55,7 @@ class tx_seminars_BackEnd_OrganizersListTest extends tx_phpunit_testcase {
 	*/
 	private $originalLanguage;
 
-	public function setUp() {
+	protected function setUp() {
 		tx_oelib_configurationProxy::getInstance('seminars')->setAsBoolean('enableConfigCheck', FALSE);
 
 		// Sets the localization to the default language so that all tests can
@@ -79,23 +79,22 @@ class tx_seminars_BackEnd_OrganizersListTest extends tx_phpunit_testcase {
 			'doktype' => tx_seminars_BackEnd_AbstractList::SYSFOLDER_TYPE,
 		));
 
-		$this->backEndModule->doc = t3lib_div::makeInstance('bigDoc');
-		$this->backEndModule->doc->backPath = $GLOBALS['BACK_PATH'];
-		$this->backEndModule->doc->docType = 'xhtml_strict';
+		$document = new bigDoc();
+		$this->backEndModule->doc = $document;
+		$document->backPath = $GLOBALS['BACK_PATH'];
+		$document->docType = 'xhtml_strict';
 
 		$this->fixture = new tx_seminars_BackEnd_OrganizersList(
 			$this->backEndModule
 		);
 	}
 
-	public function tearDown() {
+	protected function tearDown() {
 		// Resets the language of the interface to the value it had before
 		// we set it to "default" for testing.
 		$GLOBALS['LANG']->lang = $this->originalLanguage;
 
 		$this->testingFramework->cleanUp();
-
-		unset($this->backEndModule, $this->fixture, $this->testingFramework);
 	}
 
 	/**

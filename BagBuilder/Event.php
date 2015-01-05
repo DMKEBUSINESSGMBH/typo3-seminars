@@ -43,7 +43,7 @@ class tx_seminars_BagBuilder_Event extends tx_seminars_BagBuilder_Abstract {
 	protected $tableName = 'tx_seminars_seminars';
 
 	/**
-	 * @var array list of the valid keys for time-frames
+	 * @var string[] list of the valid keys for time-frames
 	 */
 	private static $validTimeFrames = array(
 		'past', 'pastAndCurrent', 'current', 'currentAndUpcoming', 'upcoming',
@@ -51,8 +51,7 @@ class tx_seminars_BagBuilder_Event extends tx_seminars_BagBuilder_Abstract {
 	);
 
 	/**
-	 * @var array a list of field names in which we can search, grouped by
-	 *            record type
+	 * @var array[] a list of field names in which we can search, grouped by record type
 	 *
 	 * 'seminars' is the list of fields that are always stored in the seminar
 	 * record.
@@ -79,7 +78,7 @@ class tx_seminars_BagBuilder_Event extends tx_seminars_BagBuilder_Abstract {
 	const TRIM_CHARACTER_LIST = " ,\t\n\r\0\x0b";
 
 	/**
-	 * @var integer the minimum search word length
+	 * @var int the minimum search word length
 	 */
 	const MINIMUM_SEARCH_WORD_LENGTH = 2;
 
@@ -134,7 +133,7 @@ class tx_seminars_BagBuilder_Event extends tx_seminars_BagBuilder_Abstract {
 
 		$this->whereClauseParts['categories'] =
 			'(' .
-			'(object_type != ' . tx_seminars_Model_Event::TYPE_DATE . ' AND ' .
+			'(object_type <> ' . tx_seminars_Model_Event::TYPE_DATE . ' AND ' .
 			'tx_seminars_seminars.uid' . $uidMatcher . ')' .
 			' OR ' .
 			'(object_type = ' . tx_seminars_Model_Event::TYPE_DATE . ' AND ' .
@@ -146,7 +145,7 @@ class tx_seminars_BagBuilder_Event extends tx_seminars_BagBuilder_Abstract {
 	 * Limits the bag to events at any of the places with the UIDs provided as
 	 * the parameter $placeUids.
 	 *
-	 * @param array $placeUids place UIDs, set to an empty array for no limitation, need not be SQL-safe
+	 * @param string[] $placeUids place UIDs, set to an empty array for no limitation, need not be SQL-safe
 	 *
 	 * @return void
 	 */
@@ -174,7 +173,7 @@ class tx_seminars_BagBuilder_Event extends tx_seminars_BagBuilder_Abstract {
 	 * @return void
 	 */
 	public function ignoreCanceledEvents() {
-		$this->whereClauseParts['hideCanceledEvents'] = 'cancelled!=' .
+		$this->whereClauseParts['hideCanceledEvents'] = 'cancelled <> ' .
 			tx_seminars_seminar::STATUS_CANCELED;
 	}
 
@@ -213,8 +212,8 @@ class tx_seminars_BagBuilder_Event extends tx_seminars_BagBuilder_Abstract {
 				// 2. If the event has an end date, does it lie in the past?, OR
 				// 3. If the event has *no* end date, does the *begin* date lie
 				//    in the past?
-				$where = 'tx_seminars_seminars.begin_date != 0 ' .
-					'AND ( (tx_seminars_seminars.end_date != 0 ' .
+				$where = 'tx_seminars_seminars.begin_date <> 0 ' .
+					'AND ( (tx_seminars_seminars.end_date <> 0 ' .
 							'AND tx_seminars_seminars.end_date <= ' . $now .
 						') OR (' .
 							'tx_seminars_seminars.end_date = 0 ' .
@@ -227,7 +226,7 @@ class tx_seminars_BagBuilder_Event extends tx_seminars_BagBuilder_Abstract {
 				// 1. Generally, only events that have a begin date set, AND
 				// 2. the begin date lies in the past.
 				// (So events without a begin date won't be listed here.)
-				$where = 'tx_seminars_seminars.begin_date != 0 ' .
+				$where = 'tx_seminars_seminars.begin_date <> 0 ' .
 					'AND tx_seminars_seminars.begin_date <= ' . $now;
 				break;
 			case 'current':
@@ -235,7 +234,7 @@ class tx_seminars_BagBuilder_Event extends tx_seminars_BagBuilder_Abstract {
 				// 1. Events that have both a begin and end date, AND
 				// 2. The begin date lies in the past, AND
 				// 3. The end date lies in the future.
-				$where = 'tx_seminars_seminars.begin_date != 0 ' .
+				$where = 'tx_seminars_seminars.begin_date <> 0 ' .
 					'AND tx_seminars_seminars.begin_date <= ' . $now . ' ' .
 					// This implies that end_date is != 0.
 					'AND tx_seminars_seminars.end_date > ' . $now;
@@ -274,7 +273,7 @@ class tx_seminars_BagBuilder_Event extends tx_seminars_BagBuilder_Abstract {
 				//    (events that have not started yet), OR
 				// 3. Events that have no (begin) date set yet.
 				$where = '(' .
-						'tx_seminars_seminars.deadline_registration != 0 ' .
+						'tx_seminars_seminars.deadline_registration <> 0 ' .
 						'AND tx_seminars_seminars.deadline_registration > ' . $now .
 					') OR (' .
 						'tx_seminars_seminars.deadline_registration = 0 ' .
@@ -319,7 +318,7 @@ class tx_seminars_BagBuilder_Event extends tx_seminars_BagBuilder_Abstract {
 	 * Limits the bag to events from any of the event types with the UIDs
 	 * provided as the parameter $eventTypeUids.
 	 *
-	 * @param array $eventTypeUids event type UIDs, set to an empty array for no limitation, need not be SQL-safe
+	 * @param string[] $eventTypeUids event type UIDs, set to an empty array for no limitation, need not be SQL-safe
 	 *
 	 * @return void
 	 */
@@ -351,7 +350,7 @@ class tx_seminars_BagBuilder_Event extends tx_seminars_BagBuilder_Abstract {
 	 * Limits the bag to events in the cities given in the first parameter
 	 * $cities.
 	 *
-	 * @param array $cities array of city names, set to an empty array for no limitation, may not be SQL-safe
+	 * @param string[] $cities city names, set to an empty array for no limitation, may not be SQL-safe
 	 *
 	 * @return void
 	 */
@@ -386,7 +385,7 @@ class tx_seminars_BagBuilder_Event extends tx_seminars_BagBuilder_Abstract {
 	 * Limits the bag to events in the countries given in the first parameter
 	 * $countries.
 	 *
-	 * @param array $countries
+	 * @param string[] $countries
 	 *        ISO 3166-2 (alpha2) country codes, invalid country codes are allowed, set to an empty array for no limitation,
 	 *        need not be SQL-safe
 	 *
@@ -423,7 +422,7 @@ class tx_seminars_BagBuilder_Event extends tx_seminars_BagBuilder_Abstract {
 	 * Limits the bag to events in the languages given in the first parameter
 	 * $languages.
 	 *
-	 * @param array $languages
+	 * @param string[] $languages
 	 *        ISO 639-1 (alpha2) language codes, invalid language codes are allowed, set to an empty array for no limitation,
 	 *        need not be SQL-safe
 	 *
@@ -470,7 +469,7 @@ class tx_seminars_BagBuilder_Event extends tx_seminars_BagBuilder_Abstract {
 	 * Limits the bag to events where the FE user given in the parameter
 	 * $feUserUid is the owner.
 	 *
-	 * @param integer $feUserUid the FE user UID of the owner to limit for, set to 0 to remove the limitation, must be >= 0
+	 * @param int $feUserUid the FE user UID of the owner to limit for, set to 0 to remove the limitation, must be >= 0
 	 *
 	 * @return void
 	 */
@@ -513,7 +512,7 @@ class tx_seminars_BagBuilder_Event extends tx_seminars_BagBuilder_Abstract {
 	 * Limits the bag to events with the FE user UID given in the parameter
 	 * $feUserUid as event manager.
 	 *
-	 * @param integer $feUserUid
+	 * @param int $feUserUid
 	 *        the FE user UID of the event manager to limit for, set to 0 to remove the limitation, must be >= 0
 	 *
 	 * @return void
@@ -585,7 +584,7 @@ class tx_seminars_BagBuilder_Event extends tx_seminars_BagBuilder_Abstract {
 		$this->whereClauseParts['other_dates'] = '(' .
 			'tx_seminars_seminars.topic = ' . $event->getTopicUid() .
 			' AND object_type = ' . tx_seminars_Model_Event::TYPE_DATE .
-			' AND uid != ' . $event->getUid() .
+			' AND uid <> ' . $event->getUid() .
 		')';
 	}
 
@@ -702,7 +701,7 @@ class tx_seminars_BagBuilder_Event extends tx_seminars_BagBuilder_Abstract {
 	/**
 	 * Limits the bag to events in status $status.
 	 *
-	 * @param integer $status tx_seminars_seminar::STATUS_PLANNED, ::STATUS_CONFIRMED or ::STATUS_CANCELED
+	 * @param int $status tx_seminars_seminar::STATUS_PLANNED, ::STATUS_CONFIRMED or ::STATUS_CANCELED
 	 *
 	 * @return void
 	 */
@@ -715,7 +714,7 @@ class tx_seminars_BagBuilder_Event extends tx_seminars_BagBuilder_Abstract {
 	 * Limits the bag to events which are currently $days days before their
 	 * begin date.
 	 *
-	 * @param integer $days days before the begin date, must be > 0
+	 * @param int $days days before the begin date, must be > 0
 	 *
 	 * @return void
 	 */
@@ -733,7 +732,7 @@ class tx_seminars_BagBuilder_Event extends tx_seminars_BagBuilder_Abstract {
 	 *
 	 * @param string $searchWord the current search word, must not be empty, must be SQL-safe and quoted for LIKE
 	 *
-	 * @return array the WHERE clause parts for the search in categories
+	 * @return string[] the WHERE clause parts for the search in categories
 	 */
 	private function getSearchWherePartForCategories($searchWord) {
 		return $this->getSearchWherePartInMmRelationForTopicOrSingleEventRecord(
@@ -750,7 +749,7 @@ class tx_seminars_BagBuilder_Event extends tx_seminars_BagBuilder_Abstract {
 	 *
 	 * @param string $searchWord the current search word, must not be empty, must be SQL-safe and quoted for LIKE
 	 *
-	 * @return array the WHERE clause parts for the search in target groups
+	 * @return string[] the WHERE clause parts for the search in target groups
 	 */
 	private function getSearchWherePartForTargetGroups($searchWord) {
 		return $this->getSearchWherePartInMmRelationForTopicOrSingleEventRecord(
@@ -767,7 +766,7 @@ class tx_seminars_BagBuilder_Event extends tx_seminars_BagBuilder_Abstract {
 	 *
 	 * @param string $searchWord the current search word, must not be empty, must be SQL-safe and quoted for LIKE
 	 *
-	 * @return array the WHERE clause parts for the search in organizers
+	 * @return string[] the WHERE clause parts for the search in organizers
 	 */
 	private function getSearchWherePartForOrganizers($searchWord) {
 		return $this->getSearchWherePartForMmRelation(
@@ -784,7 +783,7 @@ class tx_seminars_BagBuilder_Event extends tx_seminars_BagBuilder_Abstract {
 	 *
 	 * @param string $searchWord the current search word, must not be empty, must be SQL-safe and quoted for LIKE
 	 *
-	 * @return array the WHERE clause parts for the search in event types
+	 * @return string[] the WHERE clause parts for the search in event types
 	 */
 	private function getSearchWherePartForEventTypes($searchWord) {
 		$result = array();
@@ -799,7 +798,7 @@ class tx_seminars_BagBuilder_Event extends tx_seminars_BagBuilder_Abstract {
 				' AND tx_seminars_event_types.uid = s1.event_type' .
 				' AND ((s1.uid = s2.topic AND s2.object_type = ' .
 						tx_seminars_Model_Event::TYPE_DATE . ') ' .
-					'OR (s1.uid = s2.uid AND s1.object_type != ' .
+					'OR (s1.uid = s2.uid AND s1.object_type <> ' .
 						tx_seminars_Model_Event::TYPE_DATE . '))' .
 				' AND s2.uid=tx_seminars_seminars.uid)' .
 			')';
@@ -814,7 +813,7 @@ class tx_seminars_BagBuilder_Event extends tx_seminars_BagBuilder_Abstract {
 	 *
 	 * @param string $searchWord the current search word, must not be empty
 	 *
-	 * @return array the WHERE clause parts for the search in places
+	 * @return string[] the WHERE clause parts for the search in places
 	 */
 	private function getSearchWherePartForPlaces($searchWord) {
 		return $this->getSearchWherePartForMmRelation(
@@ -831,7 +830,7 @@ class tx_seminars_BagBuilder_Event extends tx_seminars_BagBuilder_Abstract {
 	 *
 	 * @param string $searchWord the current search word, must not be empty
 	 *
-	 * @return array the WHERE clause parts for the search in event topics
+	 * @return string[] the WHERE clause parts for the search in event topics
 	 */
 	private function getSearchWherePartForEventTopics($searchWord) {
 		$where = array();
@@ -867,8 +866,7 @@ class tx_seminars_BagBuilder_Event extends tx_seminars_BagBuilder_Abstract {
 	 *
 	 * @param string $searchWord the current search word, must not be empty, must be SQL-safe and quoted for LIKE
 	 *
-	 * @return array the WHERE clause parts for the search independent
-	 *               from the event record type
+	 * @return string[] the WHERE clause parts for the search independent from the event record type
 	 */
 	private function getSearchWherePartIndependentFromEventRecordType(
 		$searchWord
@@ -890,7 +888,7 @@ class tx_seminars_BagBuilder_Event extends tx_seminars_BagBuilder_Abstract {
 	 * @param string $searchWord the current search word, must not be empty,
 	 *               must be SQL-safe and quoted for LIKE
 	 *
-	 * @return array the WHERE clause parts for the search in speakers
+	 * @return string[] the WHERE clause parts for the search in speakers
 	 */
 	private function getSearchWherePartForSpeakers($searchWord) {
 		$mmTables = array(
@@ -933,7 +931,7 @@ class tx_seminars_BagBuilder_Event extends tx_seminars_BagBuilder_Abstract {
 	 * @param string $mmTable
 	 *        the m:n relation table, must not be empty
 	 *
-	 * @return array the WHERE clause parts for the search in categories
+	 * @return string[] the WHERE clause parts for the search in categories
 	 */
 	private function getSearchWherePartInMmRelationForTopicOrSingleEventRecord(
 		$searchWord, $searchFieldKey, $foreignTable, $mmTable
@@ -952,7 +950,7 @@ class tx_seminars_BagBuilder_Event extends tx_seminars_BagBuilder_Abstract {
 					$foreignTable .
 				' WHERE ((tx_seminars_seminars.object_type = ' .
 						tx_seminars_Model_Event::TYPE_DATE .
-						' AND s1.object_type != ' . tx_seminars_Model_Event::TYPE_DATE .
+						' AND s1.object_type <> ' . tx_seminars_Model_Event::TYPE_DATE .
 						' AND tx_seminars_seminars.topic = s1.uid)' .
 					' OR (tx_seminars_seminars.object_type = ' .
 						tx_seminars_Model_Event::TYPE_COMPLETE .
@@ -986,8 +984,7 @@ class tx_seminars_BagBuilder_Event extends tx_seminars_BagBuilder_Abstract {
 	 * @param string $mmTable
 	 *        the m:n relation table, must not be empty
 	 *
-	 * @return array the WHERE clause parts for the search in categories,
-	 *               will not be empty
+	 * @return string[] the WHERE clause parts for the search in categories, will not be empty
 	 */
 	private function getSearchWherePartForMmRelation(
 		$searchWord, $searchFieldKey, $foreignTable, $mmTable
@@ -1083,7 +1080,7 @@ class tx_seminars_BagBuilder_Event extends tx_seminars_BagBuilder_Abstract {
 	 * Limits the search results to topics which are required for the
 	 * given topic.
 	 *
-	 * @param integer $eventUid the UID of the topic event for which the requirements should be found, must be > 0
+	 * @param int $eventUid the UID of the topic event for which the requirements should be found, must be > 0
 	 *
 	 * @return void
 	 */
@@ -1099,7 +1096,7 @@ class tx_seminars_BagBuilder_Event extends tx_seminars_BagBuilder_Abstract {
 	/**
 	 * Limits the search result to topics which depend on the given topic.
 	 *
-	 * @param integer $eventUid the UID of the topic event which the searched events depend on, must be > 0
+	 * @param int $eventUid the UID of the topic event which the searched events depend on, must be > 0
 	 *
 	 * @return void
 	 */
@@ -1121,7 +1118,7 @@ class tx_seminars_BagBuilder_Event extends tx_seminars_BagBuilder_Abstract {
 	 * Registrations for dates that have a non-zero expiry date in the past will
 	 * be counted as not existing.
 	 *
-	 * @param integer $uid the UID of the front-end user whose registered events should be removed from the bag, must be > 0
+	 * @param int $uid the UID of the front-end user whose registered events should be removed from the bag, must be > 0
 	 *
 	 * @return void
 	 */
@@ -1145,7 +1142,7 @@ class tx_seminars_BagBuilder_Event extends tx_seminars_BagBuilder_Abstract {
 	 *
 	 * A $earliestBeginDate of 0 will remove the filter.
 	 *
-	 * @param integer $earliestBeginDate the earliest begin date as UNIX time-stamp, 0 will remove the limit
+	 * @param int $earliestBeginDate the earliest begin date as UNIX time-stamp, 0 will remove the limit
 	 *
 	 * @return void
 	 */
@@ -1168,7 +1165,7 @@ class tx_seminars_BagBuilder_Event extends tx_seminars_BagBuilder_Abstract {
 	 *
 	 * A $latestBeginDate of 0 will remove the filter.
 	 *
-	 * @param integer $latestBeginDate the latest begin date as UNIX time-stamp, 0 will remove the limit
+	 * @param int $latestBeginDate the latest begin date as UNIX time-stamp, 0 will remove the limit
 	 *
 	 * @return void
 	 */
@@ -1241,7 +1238,7 @@ class tx_seminars_BagBuilder_Event extends tx_seminars_BagBuilder_Abstract {
 	 * Limits the bag to events which have target groups with age limits within
 	 * the provided age.
 	 *
-	 * @param integer $age the age to limit the bag to, must be >= 0
+	 * @param int $age the age to limit the bag to, must be >= 0
 	 *
 	 * @return void
 	 */
@@ -1302,7 +1299,7 @@ class tx_seminars_BagBuilder_Event extends tx_seminars_BagBuilder_Abstract {
 	 * Limits the bag to events which have a price lower or equal to the given
 	 * maximum price.
 	 *
-	 * @param integer $maximumPrice
+	 * @param int $maximumPrice
 	 *                the maximum price an event is allowed to cost, must
 	 *                be >= 0
 	 *
@@ -1369,7 +1366,7 @@ class tx_seminars_BagBuilder_Event extends tx_seminars_BagBuilder_Abstract {
 	 * Limits the bag to events which have a price higher or equal to the given
 	 * minimum price.
 	 *
-	 * @param integer $minimumPrice
+	 * @param int $minimumPrice
 	 *                the minimum price an event is allowed to cost, must
 	 *                be >= 0
 	 *

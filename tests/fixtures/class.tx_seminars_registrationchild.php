@@ -36,7 +36,7 @@ class tx_seminars_registrationchild extends tx_seminars_registration {
 	/**
 	 * The constructor.
 	 *
-	 * @param integer $registrationUid UID of the registration record, must be > 0
+	 * @param int $registrationUid UID of the registration record, must be > 0
 	 */
 	public function __construct($registrationUid = 0) {
 		if ($registrationUid > 0) {
@@ -49,8 +49,7 @@ class tx_seminars_registrationchild extends tx_seminars_registration {
 			$dbResult = FALSE;
 		}
 
-		/** @var $contentObject tslib_cObj */
-		$contentObject = t3lib_div::makeInstance('tslib_cObj');
+		$contentObject = new tslib_cObj();
 		$contentObject->start(array());
 
 		parent::__construct($contentObject, $dbResult);
@@ -59,21 +58,21 @@ class tx_seminars_registrationchild extends tx_seminars_registration {
 	/**
 	 * Sets the "registration_queue" field of the registration record.
 	 *
-	 * @param boolean $isOnRegistrationQueueValue TRUE if the registration should be on the waiting list, FALSE otherwise
+	 * @param bool $isOnRegistrationQueueValue TRUE if the registration should be on the waiting list, FALSE otherwise
 	 *
 	 * @return void
 	 */
 	public function setIsOnRegistrationQueue($isOnRegistrationQueueValue) {
 		$this->setRecordPropertyInteger(
 			'registration_queue',
-			intval($isOnRegistrationQueueValue)
+			(int)$isOnRegistrationQueueValue
 		);
 	}
 
 	/**
 	 * Sets the payment method of this registration.
 	 *
-	 * @param integer $uid the UID of the payment method to set
+	 * @param int $uid the UID of the payment method to set
 	 *
 	 * @return void
 	 */
@@ -102,8 +101,7 @@ class tx_seminars_registrationchild extends tx_seminars_registration {
 	/**
 	 * Returns the content of the member variable foods.
 	 *
-	 * @return array the content of the member variable foods, will be empty if
-	 *               foods is empty
+	 * @return int[] the content of the member variable foods, will be empty if foods is empty
 	 */
 	public function getFoodsData() {
 		return $this->foods;
@@ -112,8 +110,7 @@ class tx_seminars_registrationchild extends tx_seminars_registration {
 	/**
 	 * Returns the content of the member variable lodgings.
 	 *
-	 * @return array the content of the member variable lodgings, will be empty
-	 *               if lodgings is empty
+	 * @return int[] the content of the member variable lodgings, will be empty if lodgings is empty
 	 */
 	public function getLodgingsData() {
 		return $this->lodgings;
@@ -122,8 +119,7 @@ class tx_seminars_registrationchild extends tx_seminars_registration {
 	/**
 	 * Returns the content of the member variable checkboxes.
 	 *
-	 * @return array the content of the member variable checkboxes, will be
-	 *               empty if checkboxes is empty
+	 * @return int[] the content of the member variable checkboxes, will be empty if checkboxes is empty
 	 */
 	public function getCheckboxesData() {
 		return $this->checkboxes;
@@ -132,7 +128,7 @@ class tx_seminars_registrationchild extends tx_seminars_registration {
 	/**
 	 * Sets the value for 'registered_themselves'.
 	 *
-	 * @param boolean $registeredThemselves the value for the registered_themselves property
+	 * @param bool $registeredThemselves the value for the registered_themselves property
 	 *
 	 * @return void
 	 */

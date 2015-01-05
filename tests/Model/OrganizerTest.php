@@ -36,14 +36,9 @@ class tx_seminars_Model_OrganizerTest extends tx_phpunit_testcase {
 	 */
 	private $fixture;
 
-	public function setUp() {
+	protected function setUp() {
 		$this->fixture = new tx_seminars_Model_Organizer();
 	}
-
-	public function tearDown() {
-		unset($this->fixture);
-	}
-
 
 	///////////////////////////////
 	// Tests regarding the name.

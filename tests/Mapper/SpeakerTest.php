@@ -41,16 +41,14 @@ class tx_seminars_Mapper_SpeakerTest extends tx_phpunit_testcase {
 	 */
 	private $fixture;
 
-	public function setUp() {
+	protected function setUp() {
 		$this->testingFramework = new tx_oelib_testingFramework('tx_seminars');
 
 		$this->fixture = new tx_seminars_Mapper_Speaker();
 	}
 
-	public function tearDown() {
+	protected function tearDown() {
 		$this->testingFramework->cleanUp();
-
-		unset($this->fixture, $this->testingFramework);
 	}
 
 
@@ -77,9 +75,11 @@ class tx_seminars_Mapper_SpeakerTest extends tx_phpunit_testcase {
 			'tx_seminars_speakers', array('title' => 'John Doe')
 		);
 
+		/** @var tx_seminars_Model_Speaker $model */
+		$model = $this->fixture->find($uid);
 		$this->assertEquals(
 			'John Doe',
-			$this->fixture->find($uid)->getName()
+			$model->getName()
 		);
 	}
 
@@ -94,8 +94,10 @@ class tx_seminars_Mapper_SpeakerTest extends tx_phpunit_testcase {
 	public function getSkillsReturnsListInstance() {
 		$uid = $this->testingFramework->createRecord('tx_seminars_speakers');
 
+		/** @var tx_seminars_Model_Speaker $model */
+		$model = $this->fixture->find($uid);
 		$this->assertTrue(
-			$this->fixture->find($uid)->getSkills() instanceof tx_oelib_List
+			$model->getSkills() instanceof tx_oelib_List
 		);
 	}
 
@@ -105,8 +107,10 @@ class tx_seminars_Mapper_SpeakerTest extends tx_phpunit_testcase {
 	public function getSkillsWithoutSkillsReturnsEmptyList() {
 		$uid = $this->testingFramework->createRecord('tx_seminars_speakers');
 
+		/** @var tx_seminars_Model_Speaker $model */
+		$model = $this->fixture->find($uid);
 		$this->assertTrue(
-			$this->fixture->find($uid)->getSkills()->isEmpty()
+			$model->getSkills()->isEmpty()
 		);
 	}
 
@@ -121,8 +125,10 @@ class tx_seminars_Mapper_SpeakerTest extends tx_phpunit_testcase {
 			'tx_seminars_speakers', $speakerUid, $skill->getUid(), 'skills'
 		);
 
+		/** @var tx_seminars_Model_Speaker $model */
+		$model = $this->fixture->find($speakerUid);
 		$this->assertFalse(
-			$this->fixture->find($speakerUid)->getSkills()->isEmpty()
+			$model->getSkills()->isEmpty()
 		);
 	}
 
@@ -137,9 +143,11 @@ class tx_seminars_Mapper_SpeakerTest extends tx_phpunit_testcase {
 			'tx_seminars_speakers', $speakerUid, $skill->getUid(), 'skills'
 		);
 
+		/** @var tx_seminars_Model_Speaker $model */
+		$model = $this->fixture->find($speakerUid);
 		$this->assertEquals(
 			$skill->getUid(),
-			$this->fixture->find($speakerUid)->getSkills()->getUids()
+			$model->getSkills()->getUids()
 		);
 	}
 

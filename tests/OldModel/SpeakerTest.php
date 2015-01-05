@@ -47,7 +47,7 @@ class tx_seminars_OldModel_SpeakerTest extends tx_phpunit_testcase {
 	 */
 	private $maximalFixture;
 
-	public function setUp() {
+	protected function setUp() {
 		$this->testingFramework = new tx_oelib_testingFramework('tx_seminars');
 		$fixtureUid = $this->testingFramework->createRecord(
 			'tx_seminars_speakers',
@@ -77,10 +77,8 @@ class tx_seminars_OldModel_SpeakerTest extends tx_phpunit_testcase {
 		$this->maximalFixture = new tx_seminars_speaker($maximalFixtureUid);
 	}
 
-	public function tearDown() {
+	protected function tearDown() {
 		$this->testingFramework->cleanUp();
-
-		unset($this->fixture, $this->testingFramework);
 	}
 
 
@@ -94,7 +92,7 @@ class tx_seminars_OldModel_SpeakerTest extends tx_phpunit_testcase {
 	 *
 	 * @param array $skillData data of the skill to add, may be empty
 	 *
-	 * @return integer the UID of the created record, will always be > 0
+	 * @return int the UID of the created record, will always be > 0
 	 */
 	private function addSkillRelation(array $skillData) {
 		$uid = $this->testingFramework->createRecord(

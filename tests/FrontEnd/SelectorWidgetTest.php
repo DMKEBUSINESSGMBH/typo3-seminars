@@ -48,7 +48,7 @@ class tx_seminars_FrontEnd_SelectorWidgetTest extends tx_phpunit_testcase {
 	 */
 	protected $staticInfo;
 
-	public function setUp() {
+	protected function setUp() {
 		$this->testingFramework = new tx_oelib_testingFramework('tx_seminars');
 		$this->testingFramework->createFakeFrontEnd();
 
@@ -61,15 +61,10 @@ class tx_seminars_FrontEnd_SelectorWidgetTest extends tx_phpunit_testcase {
 		);
 	}
 
-	public function tearDown() {
-		if ($this->staticInfo) {
-			unset($this->staticInfo);
-		}
-
+	protected function tearDown() {
 		$this->testingFramework->cleanUp();
 
 		tx_seminars_registrationmanager::purgeInstance();
-		unset($this->fixture, $this->testingFramework);
 	}
 
 
@@ -84,7 +79,7 @@ class tx_seminars_FrontEnd_SelectorWidgetTest extends tx_phpunit_testcase {
 	 * @return void
 	 */
 	private function instantiateStaticInfo() {
-		$this->staticInfo = t3lib_div::makeInstance('tx_staticinfotables_pi1');
+		$this->staticInfo = new tx_staticinfotables_pi1();
 		$this->staticInfo->init();
 	}
 
@@ -1290,7 +1285,7 @@ class tx_seminars_FrontEnd_SelectorWidgetTest extends tx_phpunit_testcase {
 		);
 
 		$output = $this->fixture->render();
-		$currentYear = intval(date('Y'));
+		$currentYear = (int)date('Y');
 
 		$this->assertContains(
 			'<option value="' . $currentYear . '">' . $currentYear .'</option>',
@@ -1350,7 +1345,7 @@ class tx_seminars_FrontEnd_SelectorWidgetTest extends tx_phpunit_testcase {
 			'numberOfYearsInDateFilter', 2
 		);
 
-		$thisYear = date('Y', mktime());
+		$thisYear = date('Y', time());
 		$this->fixture->piVars['from_day'] = 2;
 		$this->fixture->piVars['from_month'] = 5;
 		$this->fixture->piVars['from_year'] = $thisYear;

@@ -50,11 +50,11 @@ class Tx_Seminars_Tests_Csv_EventListViewTest extends Tx_Phpunit_TestCase {
 	/**
 	 * PID of the system folder in which we store our test data
 	 *
-	 * @var integer
+	 * @var int
 	 */
 	protected $pageUid = 0;
 
-	public function setUp() {
+	protected function setUp() {
 		$GLOBALS['LANG']->includeLLFile(t3lib_extMgm::extPath('seminars') . 'locallang_db.xml');
 		$GLOBALS['LANG']->includeLLFile(t3lib_extMgm::extPath('lang') . 'locallang_general.xml');
 
@@ -69,10 +69,8 @@ class Tx_Seminars_Tests_Csv_EventListViewTest extends Tx_Phpunit_TestCase {
 		$this->subject = new Tx_Seminars_Csv_EventListView();
 	}
 
-	public function tearDown() {
+	protected function tearDown() {
 		$this->testingFramework->cleanUp();
-
-		unset($this->subject, $this->testingFramework, $this->configuration);
 	}
 
 	/**
@@ -95,7 +93,7 @@ class Tx_Seminars_Tests_Csv_EventListViewTest extends Tx_Phpunit_TestCase {
 	 *
 	 * @param array $eventData optional data for the event record
 	 *
-	 * @return integer the UID of the created event record
+	 * @return int the UID of the created event record
 	 */
 	protected function createEventInFolderAndSetPageUid(array $eventData = array()) {
 		$this->pageUid = $this->testingFramework->createSystemFolder();

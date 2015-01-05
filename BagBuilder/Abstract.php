@@ -43,8 +43,7 @@ abstract class tx_seminars_BagBuilder_Abstract {
 	protected $tableName = '';
 
 	/**
-	 * @var array associative array with the WHERE clause parts (will be
-	 *            concatenated with " AND " later)
+	 * @var string[] associative array with the WHERE clause parts (will be concatenated with " AND " later)
 	 */
 	protected $whereClauseParts = array();
 
@@ -54,7 +53,7 @@ abstract class tx_seminars_BagBuilder_Abstract {
 	protected $orderBy = 'uid';
 
 	/**
-	 * @var integer the field by which the DB query result should be grouped
+	 * @var int the field by which the DB query result should be grouped
 	 */
 	protected $groupBy = '';
 
@@ -65,17 +64,17 @@ abstract class tx_seminars_BagBuilder_Abstract {
 	protected $limit = '';
 
 	/**
-	 * @var array array of additional table names for the query
+	 * @var string[] additional table names for the query
 	 */
 	protected $additionalTableNames = array();
 
 	/**
-	 * @var boolean whether the timing of records should be ignored
+	 * @var bool whether the timing of records should be ignored
 	 */
 	protected $ignoreTimingOfRecords = FALSE;
 
 	/**
-	 * @var boolean whether hidden records should be shown, too
+	 * @var bool whether hidden records should be shown, too
 	 */
 	protected $showHiddenRecords = FALSE;
 
@@ -94,7 +93,8 @@ abstract class tx_seminars_BagBuilder_Abstract {
 	 * @return tx_seminars_Bag_Abstract customized, newly-created bag
 	 */
 	public function build() {
-		return t3lib_div::makeInstance(
+		/** @var tx_seminars_Bag_Abstract $bag */
+		$bag = t3lib_div::makeInstance(
 			$this->bagClassName,
 			$this->getWhereClause(),
 			implode(',', $this->additionalTableNames),
@@ -104,6 +104,7 @@ abstract class tx_seminars_BagBuilder_Abstract {
 			($this->showHiddenRecords ? 1 : -1),
 			$this->ignoreTimingOfRecords
 		);
+		return $bag;
 	}
 
 	/**
@@ -123,7 +124,7 @@ abstract class tx_seminars_BagBuilder_Abstract {
 	 * @param string $sourcePagePids
 	 *        comma-separated list of PIDs of the system folders with the records;
 	 *        must not be empty; need not be safeguarded against SQL injection
-	 * @param integer $recursionDepth
+	 * @param int $recursionDepth
 	 *        recursion depth, must be >= 0
 	 *
 	 * @return void
@@ -145,7 +146,7 @@ abstract class tx_seminars_BagBuilder_Abstract {
 	/**
 	 * Checks whether some source pages have already been set.
 	 *
-	 * @return boolean TRUE if source pages have already been set, FALSE
+	 * @return bool TRUE if source pages have already been set, FALSE
 	 *                 otherwise
 	 */
 	public function hasSourcePages() {

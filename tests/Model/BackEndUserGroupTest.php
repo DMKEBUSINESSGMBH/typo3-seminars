@@ -36,14 +36,9 @@ class tx_seminars_Model_BackEndUserGroupTest extends tx_phpunit_testcase {
 	 */
 	private $fixture;
 
-	public function setUp() {
+	protected function setUp() {
 		$this->fixture = new tx_seminars_Model_BackEndUserGroup();
 	}
-
-	public function tearDown() {
-		unset($this->fixture);
-	}
-
 
 	////////////////////////////////
 	// Tests concerning getTitle()

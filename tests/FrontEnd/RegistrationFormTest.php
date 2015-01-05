@@ -49,7 +49,7 @@ class tx_seminars_FrontEnd_RegistrationFormTest extends tx_phpunit_testcase {
 	protected $session = NULL;
 
 	/**
-	 * @var integer the UID of the event the fixture relates to
+	 * @var int the UID of the event the fixture relates to
 	 */
 	protected $seminarUid = 0;
 
@@ -109,7 +109,6 @@ class tx_seminars_FrontEnd_RegistrationFormTest extends tx_phpunit_testcase {
 		$this->testingFramework->cleanUp();
 
 		tx_seminars_registrationmanager::purgeInstance();
-		unset($this->fixture, $this->session, $this->testingFramework, $this->seminar);
 	}
 
 
@@ -464,7 +463,7 @@ class tx_seminars_FrontEnd_RegistrationFormTest extends tx_phpunit_testcase {
 	 */
 	public function populateListCountriesWithLanguageSetToDefaultNotContainsEnglishCountryNameForGermany() {
 		$backUpLanguage = $GLOBALS['LANG'];
-		$GLOBALS['LANG'] = t3lib_div::makeInstance('language');
+		$GLOBALS['LANG'] = new language();
 		$GLOBALS['LANG']->init('default');
 
 		$this->assertNotContains(
@@ -545,7 +544,7 @@ class tx_seminars_FrontEnd_RegistrationFormTest extends tx_phpunit_testcase {
 	/**
 	 * Data provider that returns the keys of all available form fields.
 	 *
-	 * @return array two-dimensional array with the inner array being:
+	 * @return array[] two-dimensional array with the inner array being:
 	 *               [key] string: the form field key
 	 *               [self-contained] boolean: whether the field is visible
 	 *                                if no other fields are visible
@@ -691,7 +690,7 @@ class tx_seminars_FrontEnd_RegistrationFormTest extends tx_phpunit_testcase {
 	 * @test
 	 *
 	 * @param string $key the key of the field to check for, must not be empty
-	 * @param boolean $isSelfContained
+	 * @param bool $isSelfContained
 	 *        whether the field will be visible if no other fields are enabled
 	 *        and the event has no special features enabled
 	 *

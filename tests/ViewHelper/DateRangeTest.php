@@ -52,7 +52,7 @@ class tx_seminars_ViewHelper_DateRangeTest extends tx_phpunit_testcase {
 	private $translator;
 
 	/**
-	 * @var integer some random date (2001-01-01 00:00:00)
+	 * @var int some random date (2001-01-01 00:00:00)
 	 */
 	const BEGIN_DATE = 978303600;
 
@@ -65,7 +65,7 @@ class tx_seminars_ViewHelper_DateRangeTest extends tx_phpunit_testcase {
 		DATE_FORMAT_MD = '%d.%m.',
 		DATE_FORMAT_D = '%d.';
 
-	public function setUp() {
+	protected function setUp() {
 		$this->testingFramework	= new tx_oelib_testingFramework('tx_seminars');
 
 		$this->configuration = new tx_oelib_Configuration();
@@ -82,10 +82,8 @@ class tx_seminars_ViewHelper_DateRangeTest extends tx_phpunit_testcase {
 		$this->fixture = new tx_seminars_ViewHelper_DateRange();
 	}
 
-	public function tearDown() {
+	protected function tearDown() {
 		$this->testingFramework->cleanUp();
-
-		unset($this->fixture, $this->testingFramework, $this->configuration, $this->translator);
 	}
 
 	/**

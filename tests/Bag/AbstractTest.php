@@ -43,12 +43,12 @@ class tx_seminars_Bag_AbstractTest extends tx_phpunit_testcase {
 	private $testingFramework;
 
 	/**
-	 * @var integer the UID of the first test record in the DB
+	 * @var int the UID of the first test record in the DB
 	 */
 	private $uidOfFirstRecord = 0;
 
 	/**
-	 * @var integer the UID of the second test record in the DB
+	 * @var int the UID of the second test record in the DB
 	 */
 	private $uidOfSecondRecord = 0;
 
@@ -69,8 +69,6 @@ class tx_seminars_Bag_AbstractTest extends tx_phpunit_testcase {
 
 	protected function tearDown() {
 		$this->testingFramework->cleanUp();
-
-		unset($this->fixture, $this->testingFramework);
 	}
 
 
@@ -226,6 +224,7 @@ class tx_seminars_Bag_AbstractTest extends tx_phpunit_testcase {
 
 	public function testIsEmptyForEmptyBagAfterIteratingReturnsTrue() {
 		$bag = new tx_seminars_tests_fixtures_Bag_Testing('1 = 2');
+		/** @var tx_seminars_tests_fixtures_OldModel_Testing $item */
 		foreach ($bag as $item);
 
 		$this->assertTrue(
@@ -243,6 +242,7 @@ class tx_seminars_Bag_AbstractTest extends tx_phpunit_testcase {
 
 	public function testIsEmptyForBagWithOneElementAfterIteratingReturnsFalse() {
 		$bag = new tx_seminars_tests_fixtures_Bag_Testing('uid = ' . $this->uidOfFirstRecord);
+		/** @var tx_seminars_tests_fixtures_OldModel_Testing $item */
 		foreach ($bag as $item);
 
 		$this->assertFalse(

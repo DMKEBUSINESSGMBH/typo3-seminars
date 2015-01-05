@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * This file is part of the TYPO3 CMS project.
  *
  * It is free software; you can redistribute it and/or modify it under
@@ -48,21 +48,21 @@ class Tx_Seminars_BackEnd_CancelEventMailFormTest extends Tx_Phpunit_TestCase {
 	/**
 	 * UID of a dummy system folder
 	 *
-	 * @var integer
+	 * @var int
 	 */
 	private $dummySysFolderUid;
 
 	/**
 	 * UID of a dummy organizer record
 	 *
-	 * @var integer
+	 * @var int
 	 */
 	private $organizerUid;
 
 	/**
 	 * UID of a dummy event record
 	 *
-	 * @var integer
+	 * @var int
 	 */
 	private $eventUid;
 
@@ -83,7 +83,10 @@ class Tx_Seminars_BackEnd_CancelEventMailFormTest extends Tx_Phpunit_TestCase {
 	 */
 	protected $mailer = NULL;
 
-	public function setUp() {
+	protected function setUp() {
+		$configuration = new Tx_Oelib_Configuration();
+		Tx_Oelib_ConfigurationRegistry::getInstance()->set('plugin.tx_seminars', $configuration);
+
 		$this->extConfBackup = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'];
 		$this->t3VarBackup = $GLOBALS['T3_VAR']['getUserObj'];
 		$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['seminars'] = array();
@@ -130,9 +133,7 @@ class Tx_Seminars_BackEnd_CancelEventMailFormTest extends Tx_Phpunit_TestCase {
 			'organizers'
 		);
 
-		$this->fixture = new tx_seminars_BackEnd_CancelEventMailForm(
-			$this->eventUid
-		);
+		$this->fixture = new tx_seminars_BackEnd_CancelEventMailForm($this->eventUid);
 
 		$this->linkBuilder = $this->getMock(
 			'tx_seminars_Service_SingleViewLinkBuilder',
@@ -144,12 +145,10 @@ class Tx_Seminars_BackEnd_CancelEventMailFormTest extends Tx_Phpunit_TestCase {
 		$this->fixture->injectLinkBuilder($this->linkBuilder);
 	}
 
-	public function tearDown() {
+	protected function tearDown() {
 		$GLOBALS['LANG']->lang = $this->languageBackup;
 
 		$this->testingFramework->cleanUp();
-
-		unset($this->linkBuilder, $this->fixture, $this->testingFramework, $this->mailer);
 
 		$this->flushAllFlashMessages();
 
@@ -164,9 +163,9 @@ class Tx_Seminars_BackEnd_CancelEventMailFormTest extends Tx_Phpunit_TestCase {
 	 */
 	protected function getRenderedFlashMessages() {
 		if (class_exists('TYPO3\\CMS\\Core\\Messaging\\FlashMessageService', TRUE)) {
-			/** @var $flashMessageService \TYPO3\CMS\Core\Messaging\FlashMessageService */
+			/** @var \TYPO3\CMS\Core\Messaging\FlashMessageService $flashMessageService */
 			$flashMessageService = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Messaging\\FlashMessageService');
-			/** @var $defaultFlashMessageQueue \TYPO3\CMS\Core\Messaging\FlashMessageQueue */
+			/** @var \TYPO3\CMS\Core\Messaging\FlashMessageQueue $defaultFlashMessageQueue */
 			$defaultFlashMessageQueue = $flashMessageService->getMessageQueueByIdentifier();
 			$renderedFlashMessages = $defaultFlashMessageQueue->renderFlashMessages();
 		} else {
@@ -183,9 +182,9 @@ class Tx_Seminars_BackEnd_CancelEventMailFormTest extends Tx_Phpunit_TestCase {
 	 */
 	protected function flushAllFlashMessages() {
 		if (class_exists('TYPO3\\CMS\\Core\\Messaging\\FlashMessageService', TRUE)) {
-			/** @var $flashMessageService \TYPO3\CMS\Core\Messaging\FlashMessageService */
+			/** @var  \TYPO3\CMS\Core\Messaging\FlashMessageService $flashMessageService */
 			$flashMessageService = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Messaging\\FlashMessageService');
-			/** @var $defaultFlashMessageQueue \TYPO3\CMS\Core\Messaging\FlashMessageQueue */
+			/** @var \TYPO3\CMS\Core\Messaging\FlashMessageQueue $defaultFlashMessageQueue */
 			$defaultFlashMessageQueue = $flashMessageService->getMessageQueueByIdentifier();
 			$defaultFlashMessageQueue->getAllMessagesAndFlush();
 		} else {
@@ -566,6 +565,7 @@ class Tx_Seminars_BackEnd_CancelEventMailFormTest extends Tx_Phpunit_TestCase {
 			)
 		);
 
+		/** @var tx_seminars_Model_Registration $registration */
 		$registration = tx_oelib_MapperRegistry::get('tx_seminars_Mapper_Registration')->find($registrationUid);
 		$hook = $this->getMock('tx_seminars_Interface_Hook_BackEndModule');
 		$hook->expects($this->once())->method('modifyCancelEmail')

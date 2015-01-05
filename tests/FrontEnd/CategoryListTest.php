@@ -43,16 +43,16 @@ class tx_seminars_FrontEnd_CategoryListTest extends tx_phpunit_testcase {
 	private $testingFramework;
 
 	/**
-	 * @var integer the UID of a seminar to which the fixture relates
+	 * @var int the UID of a seminar to which the fixture relates
 	 */
 	private $seminarUid;
 
 	/**
-	 * @var integer PID of a dummy system folder
+	 * @var int PID of a dummy system folder
 	 */
 	private $systemFolderPid = 0;
 
-	public function setUp() {
+	protected function setUp() {
 		tx_oelib_configurationProxy::getInstance('seminars')->setAsBoolean('enableConfigCheck', FALSE);
 
 		$this->testingFramework = new tx_oelib_testingFramework('tx_seminars');
@@ -79,10 +79,8 @@ class tx_seminars_FrontEnd_CategoryListTest extends tx_phpunit_testcase {
 		);
 	}
 
-	public function tearDown() {
+	protected function tearDown() {
 		$this->testingFramework->cleanUp();
-
-		unset($this->fixture, $this->testingFramework);
 	}
 
 

@@ -81,8 +81,7 @@ class tx_seminars_FrontEnd_DefaultController extends tx_oelib_templatehelper {
 	private $previousDate = '';
 
 	/**
-	 * @var array List of field names (as keys) by which we can sort plus
-	 *            the corresponding SQL sort criteria (as value).
+	 * @var string[] field names (as keys) by which we can sort plus the corresponding SQL sort criteria (as value).
 	 *
 	 * We cannot use the database table name constants here because default
 	 * values for member variable don't allow for compound expression.
@@ -96,7 +95,7 @@ class tx_seminars_FrontEnd_DefaultController extends tx_oelib_templatehelper {
 			FROM tx_seminars_seminars_categories_mm, tx_seminars_categories,
 					tx_seminars_seminars s1, tx_seminars_seminars s2
 			WHERE ( ( s1.uid=s2.topic
-						AND s1.object_type!=2
+						AND s1.object_type <> 2
 						AND s2.object_type=2
 						AND s2.uid=tx_seminars_seminars.uid
 				) OR ( s1.uid=s2.uid
@@ -111,21 +110,21 @@ class tx_seminars_FrontEnd_DefaultController extends tx_oelib_templatehelper {
 		// Date records get it from their topic record.
 		'title' => '(SELECT s1.title
 			FROM tx_seminars_seminars s1, tx_seminars_seminars s2
-			WHERE ((s1.uid=s2.topic AND s2.object_type=2) OR (s1.uid=s2.uid AND s1.object_type!=2))
+			WHERE ((s1.uid=s2.topic AND s2.object_type=2) OR (s1.uid=s2.uid AND s1.object_type <> 2))
 				AND s2.uid=tx_seminars_seminars.uid)',
 		'subtitle' => '(SELECT s1.subtitle
 			FROM tx_seminars_seminars s1, tx_seminars_seminars s2
-			WHERE ((s1.uid=s2.topic AND s2.object_type=2) OR (s1.uid=s2.uid AND s1.object_type!=2))
+			WHERE ((s1.uid=s2.topic AND s2.object_type=2) OR (s1.uid=s2.uid AND s1.object_type <> 2))
 				AND s2.uid=tx_seminars_seminars.uid)',
 		'uid' => 'tx_seminars_seminars.uid',
 		'event_type' => '(SELECT s1.event_type
 			FROM tx_seminars_seminars s1, tx_seminars_seminars s2
-			WHERE ((s1.uid=s2.topic AND s2.object_type=2) OR (s1.uid=s2.uid AND s1.object_type!=2))
+			WHERE ((s1.uid=s2.topic AND s2.object_type=2) OR (s1.uid=s2.uid AND s1.object_type <> 2))
 				AND s2.uid=tx_seminars_seminars.uid)',
 		'accreditation_number' => 'tx_seminars_seminars.accreditation_number',
 		'credit_points' => '(SELECT s1.credit_points
 			FROM tx_seminars_seminars s1, tx_seminars_seminars s2
-			WHERE ((s1.uid=s2.topic AND s2.object_type=2) OR (s1.uid=s2.uid AND s1.object_type!=2))
+			WHERE ((s1.uid=s2.topic AND s2.object_type=2) OR (s1.uid=s2.uid AND s1.object_type <> 2))
 				AND s2.uid=tx_seminars_seminars.uid)',
 		// This will sort by the speaker names or the alphabetically lowest
 		// speaker name (if there is more than one speaker).
@@ -144,11 +143,11 @@ class tx_seminars_FrontEnd_DefaultController extends tx_oelib_templatehelper {
 				AND tx_seminars_seminars_place_mm.uid_foreign=tx_seminars_sites.uid)',
 		'price_regular' => '(SELECT s1.price_regular
 			FROM tx_seminars_seminars s1, tx_seminars_seminars s2
-			WHERE ((s1.uid=s2.topic AND s2.object_type=2) OR (s1.uid=s2.uid AND s1.object_type!=2))
+			WHERE ((s1.uid=s2.topic AND s2.object_type=2) OR (s1.uid=s2.uid AND s1.object_type <> 2))
 				AND s2.uid=tx_seminars_seminars.uid)',
 		'price_special' => '(SELECT s1.price_special
 			FROM tx_seminars_seminars s1, tx_seminars_seminars s2
-			WHERE ((s1.uid=s2.topic AND s2.object_type=2) OR (s1.uid=s2.uid AND s1.object_type!=2))
+			WHERE ((s1.uid=s2.topic AND s2.object_type=2) OR (s1.uid=s2.uid AND s1.object_type <> 2))
 				AND s2.uid=tx_seminars_seminars.uid)',
 		'organizers' => '(SELECT MIN(tx_seminars_organizers.title)
 			FROM tx_seminars_seminars_organizers_mm, tx_seminars_organizers
@@ -164,7 +163,7 @@ class tx_seminars_FrontEnd_DefaultController extends tx_oelib_templatehelper {
 					+(SELECT SUM(tx_seminars_attendances.seats)
 					FROM tx_seminars_attendances
 					WHERE tx_seminars_attendances.seminar=tx_seminars_seminars.uid
-						AND  tx_seminars_attendances.seats!=0
+						AND  tx_seminars_attendances.seats <> 0
 						AND tx_seminars_attendances.deleted=0)
 				)',
 		// This will sort by the target groups titles or the alphabetically lowest
@@ -179,28 +178,28 @@ class tx_seminars_FrontEnd_DefaultController extends tx_oelib_templatehelper {
 	/**
 	 * hook objects for the list view
 	 *
-	 * @var array
+	 * @var tx_seminars_Interface_Hook_EventListView[]
 	 */
 	private $listViewHooks = array();
 
 	/**
 	 * whether the hooks in $this->listViewHooks have been retrieved
 	 *
-	 * @var boolean
+	 * @var bool
 	 */
 	private $listViewHooksHaveBeenRetrieved = FALSE;
 
 	/**
 	 * hook objects for the single view
 	 *
-	 * @var array
+	 * @var tx_seminars_Interface_Hook_EventSingleView[]
 	 */
 	private $singleViewHooks = array();
 
 	/**
 	 * whether the hooks in $this->singleViewHooks have been retrieved
 	 *
-	 * @var boolean
+	 * @var bool
 	 */
 	private $singleViewHooksHaveBeenRetrieved = FALSE;
 
@@ -263,7 +262,7 @@ class tx_seminars_FrontEnd_DefaultController extends tx_oelib_templatehelper {
 				's_template_special'
 			);
 		} else {
-			$this->showUid = intval($this->piVars['showUid']);
+			$this->showUid = (int)$this->piVars['showUid'];
 		}
 
 		$this->whatToDisplay = $this->getConfValueString('what_to_display');
@@ -292,14 +291,16 @@ class tx_seminars_FrontEnd_DefaultController extends tx_oelib_templatehelper {
 				// The fallthrough is intended
 				// because createRegistrationsListPage() will differentiate later.
 			case 'list_registrations':
+				/** @var tx_seminars_FrontEnd_RegistrationsList $registrationsList */
 				$registrationsList = t3lib_div::makeInstance(
 					'tx_seminars_FrontEnd_RegistrationsList', $this->conf,
-					$this->whatToDisplay, intval($this->piVars['seminar']),
+					$this->whatToDisplay, (int)$this->piVars['seminar'],
 					$this->cObj
 				);
 				$result = $registrationsList->render();
 				break;
 			case 'countdown':
+				/** @var tx_seminars_FrontEnd_Countdown $countdown */
 				$countdown = t3lib_div::makeInstance(
 					'tx_seminars_FrontEnd_Countdown',
 					$this->conf,
@@ -309,6 +310,7 @@ class tx_seminars_FrontEnd_DefaultController extends tx_oelib_templatehelper {
 				$result = $countdown->render();
 				break;
 			case 'category_list':
+				/** @var tx_seminars_FrontEnd_CategoryList $categoryList */
 				$categoryList = t3lib_div::makeInstance(
 					'tx_seminars_FrontEnd_CategoryList',
 					$this->conf, $this->cObj
@@ -316,6 +318,7 @@ class tx_seminars_FrontEnd_DefaultController extends tx_oelib_templatehelper {
 				$result = $categoryList->render();
 				break;
 			case 'event_headline':
+				/** @var tx_seminars_FrontEnd_EventHeadline $eventHeadline */
 				$eventHeadline = t3lib_div::makeInstance(
 					'tx_seminars_FrontEnd_EventHeadline',
 					$this->conf, $this->cObj
@@ -368,7 +371,7 @@ class tx_seminars_FrontEnd_DefaultController extends tx_oelib_templatehelper {
 	/**
 	 * Checks that we are properly initialized and that we have a config getter.
 	 *
-	 * @return boolean TRUE if we are properly initialized, FALSE otherwise
+	 * @return bool TRUE if we are properly initialized, FALSE otherwise
 	 */
 	public function isInitialized() {
 		return ($this->isInitialized && is_object($this->configGetter));
@@ -445,10 +448,10 @@ class tx_seminars_FrontEnd_DefaultController extends tx_oelib_templatehelper {
 	 * If the seminar cannot be created, $this->seminar will be NULL, and
 	 * this function will return FALSE.
 	 *
-	 * @param integer $seminarUid an event UID
-	 * @param boolean $showHiddenRecords whether hidden records should be retrieved as well
+	 * @param int $seminarUid an event UID
+	 * @param bool $showHiddenRecords whether hidden records should be retrieved as well
 	 *
-	 * @return boolean TRUE if the seminar UID is valid and the object has been
+	 * @return bool TRUE if the seminar UID is valid and the object has been
 	 *                 created, FALSE otherwise
 	 */
 	public function createSeminar($seminarUid, $showHiddenRecords = FALSE) {
@@ -462,9 +465,9 @@ class tx_seminars_FrontEnd_DefaultController extends tx_oelib_templatehelper {
 			$seminarUid, 'tx_seminars_seminars', $showHiddenRecords
 			)
 		) {
-			$this->setSeminar(t3lib_div::makeInstance(
-				'tx_seminars_seminar', $seminarUid, FALSE, $showHiddenRecords
-			));
+			/** @var tx_seminars_seminar $seminar */
+			$seminar = t3lib_div::makeInstance('tx_seminars_seminar', $seminarUid, FALSE, $showHiddenRecords);
+			$this->setSeminar($seminar);
 
 			$result = ($showHiddenRecords)
 				? $this->canShowCurrentEvent()
@@ -493,9 +496,9 @@ class tx_seminars_FrontEnd_DefaultController extends tx_oelib_templatehelper {
 	 * If the registration cannot be created, $this->registration will be NULL,
 	 * and this function will return FALSE.
 	 *
-	 * @param integer $registrationUid a registration UID
+	 * @param int $registrationUid a registration UID
 	 *
-	 * @return boolean TRUE if the registration UID is valid and the object has been created, FALSE otherwise
+	 * @return bool TRUE if the registration UID is valid and the object has been created, FALSE otherwise
 	 */
 	public function createRegistration($registrationUid) {
 		$result = FALSE;
@@ -627,8 +630,8 @@ class tx_seminars_FrontEnd_DefaultController extends tx_oelib_templatehelper {
 	 * parameter with this UID.
 	 *
 	 * @param string $label the label to wrap into a link
-	 * @param integer $pageId the PID of the page to redirect to after login (must not be empty)
-	 * @param integer $eventId the UID of the event (may be empty)
+	 * @param int $pageId the PID of the page to redirect to after login (must not be empty)
+	 * @param int $eventId the UID of the event (may be empty)
 	 *
 	 * @return string the wrapped label
 	 */
@@ -695,7 +698,10 @@ class tx_seminars_FrontEnd_DefaultController extends tx_oelib_templatehelper {
 		);
 
 		if ($this->createSeminar($this->showUid, $this->isLoggedIn())) {
-			$event = tx_oelib_MapperRegistry::get('tx_seminars_Mapper_Event')->find($this->showUid);
+			/** @var tx_seminars_Mapper_Event $mapper */
+			$mapper = tx_oelib_MapperRegistry::get('tx_seminars_Mapper_Event');
+			/** @var tx_seminars_Model_Event $event */
+			$event = $mapper->find($this->showUid);
 
 			// Lets warnings from the seminar bubble up to us.
 			$this->setErrorMessage($this->seminar->checkConfiguration(TRUE));
@@ -961,6 +967,7 @@ class tx_seminars_FrontEnd_DefaultController extends tx_oelib_templatehelper {
 
 		$this->hideSubparts('date,time', 'field_wrapper');
 
+		/** @var tx_seminars_Mapper_TimeSlot $timeSlotMapper */
 		$timeSlotMapper = tx_oelib_MapperRegistry::get('tx_seminars_Mapper_TimeSlot');
 
 		$timeSlotsOutput = '';
@@ -973,7 +980,7 @@ class tx_seminars_FrontEnd_DefaultController extends tx_oelib_templatehelper {
 			$this->setMarker('timeslot_place', htmlspecialchars($timeSlotData['place']));
 			$this->setMarker('timeslot_speakers', htmlspecialchars($timeSlotData['speakers']));
 
-			/** @var $timeSlot tx_seminars_Model_TimeSlot */
+			/** @var tx_seminars_Model_TimeSlot $timeSlot */
 			$timeSlot = $timeSlotMapper->find($timeSlotData['uid']);
 
 			foreach ($this->getSingleViewHooks() as $hook) {
@@ -1260,6 +1267,7 @@ class tx_seminars_FrontEnd_DefaultController extends tx_oelib_templatehelper {
 
 		$attachedFilesOutput = '';
 
+		/** @var string[] $attachedFile */
 		foreach ($this->seminar->getAttachedFiles($this) as $attachedFile) {
 			$this->setMarker('attached_file_name', $attachedFile['name']);
 			$this->setMarker('attached_file_size', $attachedFile['size']);
@@ -1333,10 +1341,13 @@ class tx_seminars_FrontEnd_DefaultController extends tx_oelib_templatehelper {
 
 		$output = '';
 
+		/** @var tx_seminars_Mapper_Event $eventMapper */
 		$eventMapper = tx_oelib_MapperRegistry::get('tx_seminars_Mapper_Event');
 
 		$dependencies = $this->seminar->getDependencies();
+		/** @var tx_seminars_seminar $dependency */
 		foreach ($dependencies as $dependency) {
+			/** @var tx_seminars_Model_Event $event */
 			$event = $eventMapper->find($dependency->getUid());
 			$this->setMarker(
 				'dependency_title',
@@ -1457,7 +1468,7 @@ class tx_seminars_FrontEnd_DefaultController extends tx_oelib_templatehelper {
 	/**
 	 * Checks whether online registration is enabled at all by configuration.
 	 *
-	 * @return boolean TRUE if online registration is enabled, FALSE otherwise
+	 * @return bool TRUE if online registration is enabled, FALSE otherwise
 	 */
 	protected function isRegistrationEnabled() {
 		return $this->getConfValueBoolean('enableRegistration');
@@ -1466,7 +1477,7 @@ class tx_seminars_FrontEnd_DefaultController extends tx_oelib_templatehelper {
 	/**
 	 * Checkes whether a front-end user is logged in.
 	 *
-	 * @return boolean TRUE if a user is logged in, FALSE otherwise
+	 * @return bool TRUE if a user is logged in, FALSE otherwise
 	 */
 	public function isLoggedIn() {
 		return tx_oelib_FrontEndLoginManager::getInstance()->isLoggedIn();
@@ -1860,7 +1871,7 @@ class tx_seminars_FrontEnd_DefaultController extends tx_oelib_templatehelper {
 			}
 		}
 
-		$pointer = intval($this->piVars['pointer']);
+		$pointer = (int)$this->piVars['pointer'];
 		if (class_exists('t3lib_utility_Math')) {
 			$resultsAtATime = t3lib_utility_Math::forceIntegerInRange($this->internal['results_at_a_time'], 1, 1000);
 		} else {
@@ -1901,9 +1912,11 @@ class tx_seminars_FrontEnd_DefaultController extends tx_oelib_templatehelper {
 
 		foreach ($seminarOrRegistrationBag as $currentItem) {
 			if ($whatToDisplay == 'my_events') {
+				/** tx_seminars_registration $currentItem */
 				$this->registration = $currentItem;
 				$this->setSeminar($this->registration->getSeminarObject());
 			} else {
+				/** tx_seminars_seminar $currentItem */
 				$this->setSeminar($currentItem);
 			}
 
@@ -1978,7 +1991,7 @@ class tx_seminars_FrontEnd_DefaultController extends tx_oelib_templatehelper {
 	 * Columns listed in $this->subpartsToHide are hidden (ie. not displayed).
 	 * If $this->seminar is invalid, an empty string is returned.
 	 *
-	 * @param integer $rowCounter
+	 * @param int $rowCounter
 	 *        Row counter. Starts at 0 (zero). Used for alternating class
 	 *        values in the output rows.
 	 * @param string $whatToDisplay
@@ -1993,8 +2006,10 @@ class tx_seminars_FrontEnd_DefaultController extends tx_oelib_templatehelper {
 		$result = '';
 
 		if ($this->seminar->isOk()) {
-			$event = tx_oelib_MapperRegistry::get('tx_seminars_Mapper_Event')
-				->find($this->getSeminar()->getUid());
+			/** @var tx_seminars_Mapper_Event $mapper */
+			$mapper = tx_oelib_MapperRegistry::get('tx_seminars_Mapper_Event');
+			/** @var tx_seminars_Model_Event $event */
+			$event = $mapper->find($this->getSeminar()->getUid());
 
 			$cssClasses = array();
 
@@ -2045,9 +2060,8 @@ class tx_seminars_FrontEnd_DefaultController extends tx_oelib_templatehelper {
 			}
 			$this->setMarker('image', $image);
 
-			$categoryList = t3lib_div::makeInstance(
-				'tx_seminars_FrontEnd_CategoryList', $this->conf, $this->cObj
-			);
+			/** @var tx_seminars_FrontEnd_CategoryList $categoryList */
+			$categoryList = t3lib_div::makeInstance('tx_seminars_FrontEnd_CategoryList', $this->conf, $this->cObj);
 			$listOfCategories = $categoryList->createCategoryList(
 				$this->seminar->getCategories()
 			);
@@ -2156,8 +2170,10 @@ class tx_seminars_FrontEnd_DefaultController extends tx_oelib_templatehelper {
 			}
 
 			if ($whatToDisplay === 'my_events') {
-				$registration = tx_oelib_MapperRegistry::get('tx_seminars_Mapper_Registration')
-					->find($this->registration->getUid());
+				/** @var tx_seminars_Mapper_Registration $mapper */
+				$mapper = tx_oelib_MapperRegistry::get('tx_seminars_Mapper_Registration');
+				/** @var tx_seminars_Model_Registration $registration */
+				$registration = $mapper->find($this->registration->getUid());
 
 				foreach ($this->getListViewHooks() as $hook) {
 					$hook->modifyMyEventsListRow($registration, $this->getTemplate());
@@ -2178,9 +2194,8 @@ class tx_seminars_FrontEnd_DefaultController extends tx_oelib_templatehelper {
 	 *                                       the list view
 	 */
 	private function createSeminarBagBuilder() {
-		$seminarBagBuilder = t3lib_div::makeInstance(
-			'tx_seminars_BagBuilder_Event'
-		);
+		/** @var tx_seminars_BagBuilder_Event $seminarBagBuilder */
+		$seminarBagBuilder = t3lib_div::makeInstance('tx_seminars_BagBuilder_Event');
 
 		$seminarBagBuilder->setSourcePages(
 			$this->getConfValueString('pidList'),
@@ -2200,17 +2215,13 @@ class tx_seminars_FrontEnd_DefaultController extends tx_oelib_templatehelper {
 	 *                                             "my events" list
 	 */
 	private function createRegistrationBagBuilder() {
-		$registrationBagBuilder = t3lib_div::makeInstance(
-			'tx_seminars_BagBuilder_Registration'
-		);
+		/** @var tx_seminars_BagBuilder_Registration $registrationBagBuilder */
+		$registrationBagBuilder = t3lib_div::makeInstance('tx_seminars_BagBuilder_Registration');
 
-		$registrationBagBuilder->limitToAttendee(
-			tx_oelib_FrontEndLoginManager::getInstance()
-				->getLoggedInUser('tx_seminars_Mapper_FrontEndUser')
-		);
-		$registrationBagBuilder->setOrderByEventColumn(
-			$this->getOrderByForListView()
-		);
+		/** @var tx_seminars_Model_FrontEndUser $loggedInUser */
+		$loggedInUser = tx_oelib_FrontEndLoginManager::getInstance()->getLoggedInUser('tx_seminars_Mapper_FrontEndUser');
+		$registrationBagBuilder->limitToAttendee($loggedInUser);
+		$registrationBagBuilder->setOrderByEventColumn($this->getOrderByForListView());
 
 		return $registrationBagBuilder;
 	}
@@ -2222,9 +2233,9 @@ class tx_seminars_FrontEnd_DefaultController extends tx_oelib_templatehelper {
 	 *         the object to build the requirements list with
 	 */
 	private function createRequirementsList() {
-		return t3lib_div::makeInstance(
-			'tx_seminars_FrontEnd_RequirementsList', $this->conf, $this->cObj
-		);
+		/** @var tx_seminars_FrontEnd_RequirementsList $list */
+		$list = t3lib_div::makeInstance('tx_seminars_FrontEnd_RequirementsList', $this->conf, $this->cObj);
+		return $list;
 	}
 
 	/**
@@ -2307,9 +2318,8 @@ class tx_seminars_FrontEnd_DefaultController extends tx_oelib_templatehelper {
 			return '';
 		}
 
-		$selectorWidget = t3lib_div::makeInstance(
-			'tx_seminars_FrontEnd_SelectorWidget', $this->conf, $this->cObj
-		);
+		/** @var tx_seminars_FrontEnd_SelectorWidget $selectorWidget */
+		$selectorWidget = t3lib_div::makeInstance('tx_seminars_FrontEnd_SelectorWidget', $this->conf, $this->cObj);
 
 		return $selectorWidget->render();
 	}
@@ -2422,10 +2432,8 @@ class tx_seminars_FrontEnd_DefaultController extends tx_oelib_templatehelper {
 			);
 		}
 
-		if (isset($this->piVars['category'])
-			&& (intval($this->piVars['category']) > 0)
-		) {
-			$builder->limitToCategories(intval($this->piVars['category']));
+		if (isset($this->piVars['category']) && ((int)$this->piVars['category']) > 0) {
+			$builder->limitToCategories((int)$this->piVars['category']);
 		} else {
 			$builder->limitToCategories(
 				$this->getConfValueString(
@@ -2580,7 +2588,7 @@ class tx_seminars_FrontEnd_DefaultController extends tx_oelib_templatehelper {
 	 * Checks whether the currently logged-in FE user is allowed to edit the
 	 * current event in the list view.
 	 *
-	 * @return boolean TRUE if the current user is allowed to edit the current
+	 * @return bool TRUE if the current user is allowed to edit the current
 	 *                 event, FALSE otherwise
 	 */
 	protected function mayCurrentUserEditCurrentEvent() {
@@ -2603,7 +2611,7 @@ class tx_seminars_FrontEnd_DefaultController extends tx_oelib_templatehelper {
 	/**
 	 * Hides the columns specified in the first parameter $columnsToHide.
 	 *
-	 * @param array $columnsToHide the columns to hide, may be empty
+	 * @param string[] $columnsToHide the columns to hide, may be empty
 	 *
 	 * @return void
 	 */
@@ -2615,7 +2623,7 @@ class tx_seminars_FrontEnd_DefaultController extends tx_oelib_templatehelper {
 	/**
 	 * Un-hides the columns specified in the first parameter $columnsToHide.
 	 *
-	 * @param array $columnsToUnhide the columns to un-hide, may be empty
+	 * @param string[] $columnsToUnhide the columns to un-hide, may be empty
 	 *
 	 * @return void
 	 */
@@ -2859,7 +2867,7 @@ class tx_seminars_FrontEnd_DefaultController extends tx_oelib_templatehelper {
 					);
 				}
 			}
-		} elseif ($this->createRegistration(intval($this->piVars['registration']))) {
+		} elseif ($this->createRegistration((int)$this->piVars['registration'])) {
 			if ($this->createSeminar($this->registration->getSeminar())) {
 				if ($this->seminar->isUnregistrationPossible()) {
 					$isOkay = TRUE;
@@ -2938,7 +2946,7 @@ class tx_seminars_FrontEnd_DefaultController extends tx_oelib_templatehelper {
 	 * @return string HTML code for the form
 	 */
 	protected function createRegistrationForm() {
-		/** @var $registrationEditor tx_seminars_FrontEnd_RegistrationForm */
+		/** @var tx_seminars_FrontEnd_RegistrationForm $registrationEditor */
 		$registrationEditor = t3lib_div::makeInstance('tx_seminars_FrontEnd_RegistrationForm', $this->conf, $this->cObj);
 		$registrationEditor->setSeminar($this->seminar);
 		$registrationEditor->setAction($this->piVars['action']);
@@ -3025,10 +3033,9 @@ class tx_seminars_FrontEnd_DefaultController extends tx_oelib_templatehelper {
 	 * @return tx_seminars_FrontEnd_EventEditor the initialized event editor
 	 */
 	protected function createEventEditorInstance() {
-		$eventEditor = t3lib_div::makeInstance(
-			'tx_seminars_FrontEnd_EventEditor', $this->conf, $this->cObj
-		);
-		$eventEditor->setObjectUid(intval($this->piVars['seminar']));
+		/** @var tx_seminars_FrontEnd_EventEditor $eventEditor */
+		$eventEditor = t3lib_div::makeInstance('tx_seminars_FrontEnd_EventEditor', $this->conf, $this->cObj);
+		$eventEditor->setObjectUid((int)$this->piVars['seminar']);
 
 		return $eventEditor;
 	}
@@ -3036,7 +3043,7 @@ class tx_seminars_FrontEnd_DefaultController extends tx_oelib_templatehelper {
 	/**
 	 * Creates the category icon IMG tag with the icon title as title attribute.
 	 *
-	 * @param array $iconData
+	 * @param string[] $iconData
 	 *        the filename and title of the icon in an associative array with "icon" as key for the filename and "title" as key
 	 *        for the icon title, the values for "title" and "icon" may be empty
 	 *
@@ -3099,6 +3106,7 @@ class tx_seminars_FrontEnd_DefaultController extends tx_oelib_templatehelper {
 		$result = '';
 		$organizers = $this->seminar->getOrganizerBag();
 
+		/** @var tx_seminars_OldModel_Organizer $organizer */
 		foreach ($organizers as $organizer) {
 			if ($organizer->hasHomepage()) {
 				$organizerTitle = $this->cObj->getTypoLink(
@@ -3196,7 +3204,7 @@ class tx_seminars_FrontEnd_DefaultController extends tx_oelib_templatehelper {
 	 *
 	 * @param string $fromOrTo must be "from" or "to", depending on the date part which should be retrieved.
 	 *
-	 * @return integer the timestamp for the date set in piVars, will be 0 if no
+	 * @return int the timestamp for the date set in piVars, will be 0 if no
 	 *                 date was set
 	 */
 	private function getTimestampFromDatePiVars($fromOrTo) {
@@ -3217,7 +3225,7 @@ class tx_seminars_FrontEnd_DefaultController extends tx_oelib_templatehelper {
 	 * Before this function is called, the piVars from_day, from_month and
 	 * from_year must be run through ensureIntegerPiVars.
 	 *
-	 * @return integer the timestamp for the fromDate, will be > 0
+	 * @return int the timestamp for the fromDate, will be > 0
 	 */
 	private function getFromDate() {
 		$day = ($this->piVars['from_day'] > 0) ? $this->piVars['from_day'] : 1;
@@ -3226,7 +3234,7 @@ class tx_seminars_FrontEnd_DefaultController extends tx_oelib_templatehelper {
 			: 1;
 		$year = ($this->piVars['from_year'] > 0)
 			? $this->piVars['from_year']
-			: intval(date('Y', $GLOBALS['SIM_EXEC_TIME']));
+			: (int)date('Y', $GLOBALS['SIM_EXEC_TIME']);
 
 		return mktime(0, 0, 0, $month, $day, $year);
 	}
@@ -3238,7 +3246,7 @@ class tx_seminars_FrontEnd_DefaultController extends tx_oelib_templatehelper {
 	 * Before this function is called, the piVars to_day, to_month and to_year
 	 * must be run through ensureIntegerPiVars.
 	 *
-	 * @return integer the timestamp for the toDate, will be > 0
+	 * @return int the timestamp for the toDate, will be > 0
 	 */
 	private function getToDate() {
 		$longMonths = array(1, 3, 5, 7, 8, 10, 12);
@@ -3248,7 +3256,7 @@ class tx_seminars_FrontEnd_DefaultController extends tx_oelib_templatehelper {
 			: 12;
 		$year = ($this->piVars['to_year'] > 0)
 			? $this->piVars['to_year']
-			: intval(date('Y', $GLOBALS['SIM_EXEC_TIME']));
+			: (int)date('Y', $GLOBALS['SIM_EXEC_TIME']);
 
 		$day = $this->piVars['to_day'];
 
@@ -3319,7 +3327,7 @@ class tx_seminars_FrontEnd_DefaultController extends tx_oelib_templatehelper {
 	 * Checks if the current user has permission to access the attached files of
 	 * an event.
 	 *
-	 * @return boolean TRUE if the user is allowed to access the attached files,
+	 * @return bool TRUE if the user is allowed to access the attached files,
 	 *                 FALSE otherwise
 	 */
 	private function mayUserAccessAttachedFiles() {
@@ -3337,7 +3345,7 @@ class tx_seminars_FrontEnd_DefaultController extends tx_oelib_templatehelper {
 	 * Checks if the current FE user has access to the event editor and thus may
 	 * see the my entered events list.
 	 *
-	 * @return boolean TRUE if the user is allowed to access the event editor,
+	 * @return bool TRUE if the user is allowed to access the event editor,
 	 *                 FALSE otherwise
 	 */
 	private function hasEventEditorAccess() {
@@ -3352,7 +3360,7 @@ class tx_seminars_FrontEnd_DefaultController extends tx_oelib_templatehelper {
 	 * When this function is called, $this->seminar must contain a seminar, and
 	 * a user must be logged in at the front end.
 	 *
-	 * @return boolean TRUE if the logged-in user can view the current seminar,
+	 * @return bool TRUE if the logged-in user can view the current seminar,
 	 *                 FALSE otherwise
 	 */
 	private function canShowCurrentEvent() {
@@ -3438,8 +3446,10 @@ class tx_seminars_FrontEnd_DefaultController extends tx_oelib_templatehelper {
 			return;
 		}
 
-		$event = tx_oelib_MapperRegistry::get('tx_seminars_Mapper_Event')
-			->find($this->piVars['seminar']);
+		/** @var tx_seminars_Mapper_Event $mapper */
+		$mapper = tx_oelib_MapperRegistry::get('tx_seminars_Mapper_Event');
+		/** @var tx_seminars_Model_Event $event */
+		$event = $mapper->find($this->piVars['seminar']);
 		if (!$event->isPublished()) {
 			return;
 		}
@@ -3465,7 +3475,9 @@ class tx_seminars_FrontEnd_DefaultController extends tx_oelib_templatehelper {
 	 */
 	protected function hideEvent(tx_seminars_Model_Event $event) {
 		$event->markAsHidden();
-		tx_oelib_MapperRegistry::get('tx_seminars_Mapper_Event')->save($event);
+		/** @var tx_seminars_Mapper_Event $mapper */
+		$mapper = tx_oelib_MapperRegistry::get('tx_seminars_Mapper_Event');
+		$mapper->save($event);
 	}
 
 	/**
@@ -3477,7 +3489,9 @@ class tx_seminars_FrontEnd_DefaultController extends tx_oelib_templatehelper {
 	 */
 	protected function unhideEvent(tx_seminars_Model_Event $event) {
 		$event->markAsVisible();
-		tx_oelib_MapperRegistry::get('tx_seminars_Mapper_Event')->save($event);
+		/** @var tx_seminars_Mapper_Event $mapper */
+		$mapper = tx_oelib_MapperRegistry::get('tx_seminars_Mapper_Event');
+		$mapper->save($event);
 	}
 
 	/**
@@ -3486,7 +3500,7 @@ class tx_seminars_FrontEnd_DefaultController extends tx_oelib_templatehelper {
 	 * @param tx_seminars_Model_Event $event
 	 *        the event which to link to
 	 * @param string $linkText the link text, must not be empty
-	 * @param boolean $htmlspecialcharLinkText whether to htmlspecialchar the link text
+	 * @param bool $htmlspecialcharLinkText whether to htmlspecialchar the link text
 	 *
 	 * @return string HTML code for the link to the event's single view page
 	 */
@@ -3504,7 +3518,9 @@ class tx_seminars_FrontEnd_DefaultController extends tx_oelib_templatehelper {
 	 */
 	protected function getLinkBuilder() {
 		if ($this->linkBuilder === NULL) {
-			$this->injectLinkBuilder(t3lib_div::makeInstance('tx_seminars_Service_SingleViewLinkBuilder'));
+			/** @var tx_seminars_Service_SingleViewLinkBuilder $linkBuilder */
+			$linkBuilder = t3lib_div::makeInstance('tx_seminars_Service_SingleViewLinkBuilder');
+			$this->injectLinkBuilder($linkBuilder);
 		}
 		$this->linkBuilder->setPlugin($this);
 

@@ -55,7 +55,7 @@ class ext_update {
 	/**
 	 * Returns whether the update module may be accessed.
 	 *
-	 * @return boolean TRUE if the update module may be accessed, FALSE otherwise
+	 * @return bool TRUE if the update module may be accessed, FALSE otherwise
 	 */
 	public function access() {
 		if (!t3lib_extMgm::isLoaded('oelib')
@@ -89,7 +89,7 @@ class ext_update {
 	 *
 	 * @param string $fieldToUpdate the DB field to check for needing an update, must be 'registrations'
 	 *
-	 * @return boolean TRUE if any rows need to be updated, FALSE otherwise
+	 * @return bool TRUE if any rows need to be updated, FALSE otherwise
 	 */
 	private function needsToUpdateEventField($fieldToUpdate) {
 		switch ($fieldToUpdate) {
@@ -115,8 +115,9 @@ class ext_update {
 	/**
 	 * Updates the "registrations" field of the event records.
 	 *
-	 * @return string information about the status of the update process,
-	 *                will not be empty
+	 * @return string information about the status of the update process, will not be empty
+	 *
+	 * @throws tx_oelib_Exception_Database
 	 */
 	private function updateRegistrationsField() {
 		$query = 'UPDATE tx_seminars_seminars SET registrations = ' .

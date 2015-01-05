@@ -40,7 +40,7 @@ class tx_seminars_FrontEnd_EditorTest extends tx_phpunit_testcase {
 	 */
 	private $testingFramework;
 
-	public function setUp() {
+	protected function setUp() {
 		$this->testingFramework = new tx_oelib_testingFramework('tx_seminars');
 		$this->testingFramework->createFakeFrontEnd();
 
@@ -48,16 +48,15 @@ class tx_seminars_FrontEnd_EditorTest extends tx_phpunit_testcase {
 		$this->fixture->setTestMode();
 	}
 
-	public function tearDown() {
+	protected function tearDown() {
 		$this->testingFramework->cleanUp();
 
 		tx_seminars_registrationmanager::purgeInstance();
-		unset($this->fixture, $this->testingFramework);
 	}
 
 
 	//////////////////////////////
-	// Testing the testmode flag
+	// Testing the test mode flag
 	//////////////////////////////
 
 	public function testIsTestModeReturnsTrueForTestModeEnabled() {

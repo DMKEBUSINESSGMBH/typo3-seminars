@@ -63,28 +63,28 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	/**
 	 * the number of all attendances
 	 *
-	 * @var integer
+	 * @var int
 	 */
 	protected $numberOfAttendances = 0;
 
 	/**
 	 * the number of paid attendances
 	 *
-	 * @var integer
+	 * @var int
 	 */
 	protected $numberOfAttendancesPaid = 0;
 
 	/**
 	 * the number of attendances on the registration queue
 	 *
-	 * @var integer
+	 * @var int
 	 */
 	protected $numberOfAttendancesOnQueue = 0;
 
 	/**
 	 * whether the statistics have been already calculate
 	 *
-	 * @var boolean
+	 * @var bool
 	 */
 	protected $statisticsHaveBeenCalculated = FALSE;
 
@@ -98,7 +98,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	private $topic = NULL;
 
 	/**
-	 * @var integer the different statuses of an event.
+	 * @var int the different statuses of an event.
 	 */
 	const STATUS_PLANNED = 0,
 		STATUS_CANCELED = 1,
@@ -111,9 +111,9 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	 * fails. If we need the seminar object although it's hidden, the parameter
 	 * $allowHiddenRecords should be set to TRUE.
 	 *
-	 * @param integer $uid UID of the seminar to retrieve from the DB. This parameter will be ignored if $dbResult is provided.
+	 * @param int $uid UID of the seminar to retrieve from the DB. This parameter will be ignored if $dbResult is provided.
 	 * @param resource|boolean $dbResult MySQL result pointer (of SELECT query). If this parameter is provided, $uid will be ignored.
-	 * @param boolean $allowHiddenRecords whether it is possible to create a seminar object from a hidden record
+	 * @param bool $allowHiddenRecords whether it is possible to create a seminar object from a hidden record
 	 */
 	public function __construct($uid, $dbResult = FALSE, $allowHiddenRecords = FALSE) {
 		parent::__construct($uid, $dbResult, $allowHiddenRecords);
@@ -150,8 +150,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	 * @param string $fieldName the name of the field to check
 	 * @param string $value the value that was entered in the TCE form that needs to be validated
 	 *
-	 * @return array associative array containing the field "status" and
-	 *               "newValue" (if needed)
+	 * @return array associative array containing the field "status" and "newValue" (if needed)
 	 */
 	private function validateTceValues($fieldName, $value) {
 		$result = array('status' => TRUE);
@@ -208,7 +207,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	 * This function is used in order to check values entered in the TCE forms
 	 * in the TYPO3 back end. It is called through a hook in the TCE class.
 	 *
-	 * @param array &$fieldArray
+	 * @param string[] &$fieldArray
 	 *        associative array containing the values entered in the TCE form (as a reference)
 	 *
 	 * @return array associative array containing data to update the database
@@ -275,7 +274,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	/**
 	 * Checks whether we have a subtitle.
 	 *
-	 * @return boolean TRUE if we have a non-empty subtitle, FALSE otherwise.
+	 * @return bool TRUE if we have a non-empty subtitle, FALSE otherwise.
 	 */
 	public function hasSubtitle() {
 		return $this->hasTopicString('subtitle');
@@ -304,7 +303,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	/**
 	 * Checks whether we have a description.
 	 *
-	 * @return boolean TRUE if we have a non-empty description, FALSE otherwise.
+	 * @return bool TRUE if we have a non-empty description, FALSE otherwise.
 	 */
 	public function hasDescription() {
 		return $this->hasTopicString('description');
@@ -336,7 +335,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	/**
 	 * Checks whether we have additional information for this event.
 	 *
-	 * @return boolean TRUE if we have additional information (field not empty),
+	 * @return bool TRUE if we have additional information (field not empty),
 	 *                 FALSE otherwise.
 	 */
 	public function hasAdditionalInformation() {
@@ -374,7 +373,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	/**
 	 * Checks whether we have an accreditation number set.
 	 *
-	 * @return boolean TRUE if we have a non-empty accreditation number, FALSE otherwise.
+	 * @return bool TRUE if we have a non-empty accreditation number, FALSE otherwise.
 	 */
 	public function hasAccreditationNumber() {
 		return $this->hasRecordPropertyString('accreditation_number');
@@ -396,7 +395,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	 * Checks whether this seminar has a non-zero number of credit
 	 * points assigned.
 	 *
-	 * @return boolean TRUE if the seminar has credit points assigned,
+	 * @return bool TRUE if the seminar has credit points assigned,
 	 *                 FALSE otherwise.
 	 */
 	public function hasCreditPoints() {
@@ -477,12 +476,11 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	 * valid at all. As this field is filled through the BE from a prefilled
 	 * list, this should never be an issue at all.
 	 *
-	 * @return boolean whether at least one place with country are set
+	 * @return bool whether at least one place with country are set
 	 *                 for the current event
 	 */
 	public function hasCountry() {
-		return $this->hasPlace()
-			&& (boolean) count($this->getPlacesWithCountry());
+		return $this->hasPlace() && !empty($this->getPlacesWithCountry());
 	}
 
 	/**
@@ -491,8 +489,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	 * place is set, or the set place(s) don't have any country set, an empty
 	 * array will be returned.
 	 *
-	 * @return array the list of ISO codes for the countries of this
-	 *               event, may be empty
+	 * @return string[] the list of ISO codes for the countries of this event, may be empty
 	 */
 	public function getPlacesWithCountry() {
 		if (!$this->hasPlace()) {
@@ -510,7 +507,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 				'tx_seminars_seminars_place_mm.uid_local = ' .
 				'tx_seminars_seminars.uid',
 			'tx_seminars_seminars.uid = ' . $this->getUid() .
-				' AND tx_seminars_sites.country != ""' .
+				' AND tx_seminars_sites.country <> ""' .
 				tx_oelib_db::enableFields('tx_seminars_sites'),
 			'country'
 		);
@@ -543,9 +540,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 		$countries = $this->getPlacesWithCountry();
 		// Get the real country names from the ISO codes.
 		foreach ($countries as $currentCountry) {
-			$countryList[] = $this->getCountryNameFromIsoCode(
-				$currentCountry
-			);
+			$countryList[] = $this->getCountryNameFromIsoCode($currentCountry);
 		}
 
 		// Makes sure that each country is exactly once in the array and then
@@ -582,7 +577,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	 * Returns a boolean TRUE if at least one of the set places has a
 	 * city set, returns FALSE otherwise.
 	 *
-	 * @return boolean whether at least one place with city are set for the
+	 * @return bool whether at least one place with city are set for the
 	 *                 current event
 	 */
 	public function hasCities() {
@@ -595,7 +590,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	 * place is set, or the set place(s) don't have any city set, an empty
 	 * array will be returned.
 	 *
-	 * @return array the list of city names for this event, may be empty
+	 * @return string[] the list of city names for this event, may be empty
 	 */
 	public function getCitiesFromPlaces() {
 		$cities = array();
@@ -706,8 +701,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	 * The second dimension is associative with the following keys:
 	 * title, address, city, country, homepage, directions
 	 *
-	 * @return array all places as a two-dimensional array, will be empty
-	 *               if there are no places assigned
+	 * @return array[] all places as a two-dimensional array, will be empty if there are no places assigned
 	 */
 	protected function getPlacesAsArray() {
 		return tx_oelib_db::selectMultiple(
@@ -808,6 +802,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 
 		$result = '';
 
+		/** @var tx_seminars_speaker $speaker */
 		foreach ($this->getSpeakerBag($speakerRelation) as $speaker) {
 			$name = $speaker->getLinkedTitle($plugin);
 			if ($speaker->hasOrganization()) {
@@ -853,6 +848,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 
 		$result = '';
 
+		/** @var tx_seminars_speaker $speaker */
 		foreach ($this->getSpeakerBag($speakerRelation) as $speaker) {
 			$result .= $speaker->getTitle();
 			if ($speaker->hasOrganization()) {
@@ -897,6 +893,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 
 		$result = array();
 
+		/** @var tx_seminars_speaker $speaker */
 		foreach ($this->getSpeakerBag($speakerRelation) as $speaker) {
 			$result[] = $speaker->getLinkedTitle($plugin);
 		}
@@ -907,7 +904,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	/**
 	 * Gets the number of speakers associated with this event.
 	 *
-	 * @return integer the number of speakers associated with this event,
+	 * @return int the number of speakers associated with this event,
 	 *                 will be >= 0
 	 */
 	public function getNumberOfSpeakers() {
@@ -917,7 +914,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	/**
 	 * Gets the number of partners associated with this event.
 	 *
-	 * @return integer the number of partners associated with this event,
+	 * @return int the number of partners associated with this event,
 	 *                 will be >= 0
 	 */
 	public function getNumberOfPartners() {
@@ -927,7 +924,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	/**
 	 * Gets the number of tutors associated with this event.
 	 *
-	 * @return integer the number of tutors associated with this event,
+	 * @return int the number of tutors associated with this event,
 	 *                 will be >= 0
 	 */
 	public function getNumberOfTutors() {
@@ -937,7 +934,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	/**
 	 * Gets the number of leaders associated with this event.
 	 *
-	 * @return integer the number of leaders associated with this event,
+	 * @return int the number of leaders associated with this event,
 	 *                 will be >= 0
 	 */
 	public function getNumberOfLeaders() {
@@ -951,7 +948,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	 *        the relation in which the speakers stand to this event:
 	 *        "speakers" (default), "partners", "tutors" or "leaders"
 	 *
-	 * @return boolean TRUE if we have any speakers of the specified type
+	 * @return bool TRUE if we have any speakers of the specified type
 	 *                 related to this event, FALSE otherwise.
 	 */
 	public function hasSpeakersOfType($speakerRelation = 'speakers') {
@@ -980,7 +977,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	/**
 	 * Checks whether we have any speakers set.
 	 *
-	 * @return boolean TRUE if we have any speakers related to this event,
+	 * @return bool TRUE if we have any speakers related to this event,
 	 *                 FALSE otherwise
 	 */
 	public function hasSpeakers() {
@@ -990,7 +987,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	/**
 	 * Checks whether we have any partners set.
 	 *
-	 * @return boolean TRUE if we have any partners related to this event,
+	 * @return bool TRUE if we have any partners related to this event,
 	 *                 FALSE otherwise
 	 */
 	public function hasPartners() {
@@ -1000,7 +997,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	/**
 	 * Checks whether we have any tutors set.
 	 *
-	 * @return boolean TRUE if we have any tutors related to this event,
+	 * @return bool TRUE if we have any tutors related to this event,
 	 *                 FALSE otherwise
 	 */
 	public function hasTutors() {
@@ -1010,7 +1007,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	/**
 	 * Checks whether we have any leaders set.
 	 *
-	 * @return boolean TRUE if we have any leaders related to this event,
+	 * @return bool TRUE if we have any leaders related to this event,
 	 *                 FALSE otherwise
 	 */
 	public function hasLeaders() {
@@ -1050,6 +1047,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 			$result .= '_single';
 		}
 
+		/** @var tx_seminars_speaker $speaker */
 		foreach ($speakers as $speaker) {
 			switch ($speaker->getGender()) {
 				case tx_seminars_speaker::GENDER_MALE:
@@ -1080,7 +1078,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	/**
 	 * Checks whether we have a language set.
 	 *
-	 * @return boolean TRUE if we have a language set for this event,
+	 * @return bool TRUE if we have a language set for this event,
 	 *                 FALSE otherwise
 	 */
 	public function hasLanguage() {
@@ -1165,9 +1163,8 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	 * @return string the price, formatted as in configured in TS
 	 */
 	public function formatPrice($value) {
-		$priceViewHelper = t3lib_div::makeInstance(
-			'tx_oelib_ViewHelper_Price'
-		);
+		/** @var tx_oelib_ViewHelper_Price $priceViewHelper */
+		$priceViewHelper = t3lib_div::makeInstance('tx_oelib_ViewHelper_Price');
 		$priceViewHelper->setCurrencyFromIsoAlpha3Code(
 			tx_oelib_ConfigurationRegistry::get('plugin.tx_seminars')
 				->getAsString('currency')
@@ -1251,7 +1248,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	/**
 	 * Checks whether this seminar has a non-zero regular price set.
 	 *
-	 * @return boolean TRUE if the seminar has a non-zero regular price,
+	 * @return bool TRUE if the seminar has a non-zero regular price,
 	 *                 FALSE if it is free.
 	 */
 	public function hasPriceRegular() {
@@ -1261,7 +1258,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	/**
 	 * Checks whether this seminar has a non-zero regular early bird price set.
 	 *
-	 * @return boolean TRUE if the seminar has a non-zero regular early
+	 * @return bool TRUE if the seminar has a non-zero regular early
 	 *                 bird price, FALSE otherwise
 	 */
 	protected function hasEarlyBirdPriceRegular() {
@@ -1271,7 +1268,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	/**
 	 * Checks whether this seminar has a non-zero special early bird price set.
 	 *
-	 * @return boolean TRUE if the seminar has a non-zero special early
+	 * @return bool TRUE if the seminar has a non-zero special early
 	 *                 bird price, FALSE otherwise
 	 */
 	protected function hasEarlyBirdPriceSpecial() {
@@ -1281,7 +1278,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	/**
 	 * Checks whether this event has a deadline for the early bird prices set.
 	 *
-	 * @return boolean TRUE if the event has an early bird deadline set,
+	 * @return bool TRUE if the event has an early bird deadline set,
 	 *                 FALSE if not
 	 */
 	private function hasEarlyBirdDeadline() {
@@ -1291,7 +1288,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	/**
 	 * Returns whether an early bird price applies.
 	 *
-	 * @return boolean TRUE if this event has an early bird dealine set and
+	 * @return bool TRUE if this event has an early bird dealine set and
 	 *                 this deadline is not over yet
 	 */
 	protected function earlyBirdApplies() {
@@ -1309,7 +1306,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	 * version for this function to return TRUE (if there is a regular special
 	 * price).
 	 *
-	 * @return boolean TRUE if an early bird deadline and early bird prices
+	 * @return bool TRUE if an early bird deadline and early bird prices
 	 *                 are set
 	 */
 	public function hasEarlyBirdPrice() {
@@ -1352,7 +1349,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	/**
 	 * Checks whether this seminar has a non-zero special price set.
 	 *
-	 * @return boolean TRUE if the seminar has a non-zero special price,
+	 * @return bool TRUE if the seminar has a non-zero special price,
 	 *                 FALSE if it is free.
 	 */
 	public function hasPriceSpecial() {
@@ -1387,7 +1384,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	 * Checks whether this event has a non-zero regular price (including full
 	 * board) set.
 	 *
-	 * @return boolean TRUE if the event has a non-zero regular price
+	 * @return bool TRUE if the event has a non-zero regular price
 	 *                 (including full board), FALSE otherwise
 	 */
 	public function hasPriceRegularBoard() {
@@ -1422,7 +1419,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	 * Checks whether this event has a non-zero special price (including full
 	 * board) set.
 	 *
-	 * @return boolean TRUE if the event has a non-zero special price
+	 * @return bool TRUE if the event has a non-zero special price
 	 *                 (including full board), FALSE otherwise
 	 */
 	public function hasPriceSpecialBoard() {
@@ -1432,8 +1429,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	/**
 	 * Gets the titles of allowed payment methods for this event.
 	 *
-	 * @return array our payment method titles, will be an empty array if there
-	 *               are no payment methods
+	 * @return string[] our payment method titles, will be an empty array if there are no payment methods
 	 */
 	public function getPaymentMethods() {
 		if (!$this->hasPaymentMethods()) {
@@ -1514,7 +1510,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	 *
 	 * Returns an empty string if the corresponding payment method could not be retrieved.
 	 *
-	 * @param integer $paymentMethodUid the UID of a single payment method, must not be zero
+	 * @param int $paymentMethodUid the UID of a single payment method, must not be zero
 	 *
 	 * @return string the selected payment method as plain text (or '' if there is an error)
 	 */
@@ -1555,7 +1551,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	 *
 	 * Returns an empty string if the corresponding payment method could not be retrieved.
 	 *
-	 * @param integer $paymentMethodUid the UID of a single payment method, must not be zero
+	 * @param int $paymentMethodUid the UID of a single payment method, must not be zero
 	 *
 	 * @return string the selected payment method as plain text (or '' if there is an error)
 	 */
@@ -1585,7 +1581,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	/**
 	 * Checks whether this seminar has any payment methods set.
 	 *
-	 * @return boolean TRUE if the seminar has any payment methods, FALSE
+	 * @return bool TRUE if the seminar has any payment methods, FALSE
 	 *                 if it is free
 	 */
 	public function hasPaymentMethods() {
@@ -1595,7 +1591,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	/**
 	 * Gets the number of available payment methods.
 	 *
-	 * @return integer the number of available payment methods, might 0
+	 * @return int the number of available payment methods, might 0
 	 */
 	public function getNumberOfPaymentMethods() {
 		return $this->getTopicInteger('payment_methods');
@@ -1631,7 +1627,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	 * 1 = multiple event topic record
 	 * 2 = multiple event date record
 	 *
-	 * @return integer the record type
+	 * @return int the record type
 	 */
 	public function getRecordType() {
 		return $this->getRecordPropertyInteger('object_type');
@@ -1640,7 +1636,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	/**
 	 * Checks whether this seminar has an event type set.
 	 *
-	 * @return boolean TRUE if the seminar has an event type set, otherwise
+	 * @return bool TRUE if the seminar has an event type set, otherwise
 	 *                 FALSE
 	 */
 	public function hasEventType() {
@@ -1651,7 +1647,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	 * Returns the UID of the event type that was selected for this event. If no
 	 * event type has been set, 0 will be returned.
 	 *
-	 * @return integer UID of the event type for this event or 0 if no
+	 * @return int UID of the event type for this event or 0 if no
 	 *                 event type is set
 	 */
 	public function getEventTypeUid() {
@@ -1663,8 +1659,9 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	 * If the seminar has a event type selected, that one is returned.
 	 * Otherwise, an empty string will be returned.
 	 *
-	 * @return string the type of this event, will be empty if this event
-	 *                does not have a type
+	 * @return string the type of this event, will be empty if this event does not have a type
+	 *
+	 * @throws tx_oelib_Exception_Database
 	 */
 	public function getEventType() {
 		if (!$this->hasEventType()) {
@@ -1695,7 +1692,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	/**
 	 * Sets the event type for this event.
 	 *
-	 * @param integer $eventType the UID of the event type to set, must be >= 0
+	 * @param int $eventType the UID of the event type to set, must be >= 0
 	 *
 	 * @return void
 	 */
@@ -1711,7 +1708,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	 * Gets the minimum number of attendances required for this event
 	 * (ie. how many registrations are needed so this event can take place).
 	 *
-	 * @return integer the minimum number of attendances, will be >= 0
+	 * @return int the minimum number of attendances, will be >= 0
 	 */
 	public function getAttendancesMin() {
 		return $this->getRecordPropertyInteger('attendees_min');
@@ -1721,7 +1718,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	 * Gets the maximum number of attendances for this event
 	 * (the total number of seats for this event).
 	 *
-	 * @return integer the maximum number of attendances, will be >= 0
+	 * @return int the maximum number of attendances, will be >= 0
 	 */
 	public function getAttendancesMax() {
 		return $this->getRecordPropertyInteger('attendees_max');
@@ -1731,7 +1728,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	 * Gets the number of attendances for this seminar
 	 * (currently the paid attendances as well as the unpaid ones).
 	 *
-	 * @return integer the number of attendances, will be >= 0
+	 * @return int the number of attendances, will be >= 0
 	 */
 	public function getAttendances() {
 		if (!$this->statisticsHaveBeenCalculated) {
@@ -1745,17 +1742,17 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	 * Checks whether there is at least one registration for this event
 	 * (counting the paid attendances as well as the unpaid ones).
 	 *
-	 * @return boolean TRUE if there is at least one registration for this
+	 * @return bool TRUE if there is at least one registration for this
 	 *                 event, FALSE otherwise
 	 */
 	public function hasAttendances() {
-		return (boolean) $this->getAttendances();
+		return $this->getAttendances() > 0;
 	}
 
 	/**
 	 * Gets the number of paid attendances for this seminar.
 	 *
-	 * @return integer the number of paid attendances, will be >= 0
+	 * @return int the number of paid attendances, will be >= 0
 	 */
 	public function getAttendancesPaid() {
 		if (!$this->statisticsHaveBeenCalculated) {
@@ -1768,7 +1765,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	/**
 	 * Gets the number of attendances that are not paid yet
 	 *
-	 * @return integer the number of attendances that are not paid yet,
+	 * @return int the number of attendances that are not paid yet,
 	 *                 will be >= 0
 	 */
 	public function getAttendancesNotPaid() {
@@ -1778,7 +1775,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	/**
 	 * Gets the number of vacancies for this seminar.
 	 *
-	 * @return integer the number of vacancies (will be 0 if the seminar
+	 * @return int the number of vacancies (will be 0 if the seminar
 	 *                 is overbooked)
 	 */
 	public function getVacancies() {
@@ -1823,7 +1820,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	/**
 	 * Checks whether this seminar still has vacancies (is not full yet).
 	 *
-	 * @return boolean TRUE if the seminar has vacancies, FALSE if it is full
+	 * @return bool TRUE if the seminar has vacancies, FALSE if it is full
 	 */
 	public function hasVacancies() {
 		return !$this->isFull();
@@ -1832,7 +1829,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	/**
 	 * Checks whether this seminar already is full.
 	 *
-	 * @return boolean TRUE if the seminar is full, FALSE if it still has
+	 * @return bool TRUE if the seminar is full, FALSE if it still has
 	 *                 vacancies or if there are unlimited vacancies
 	 */
 	public function isFull() {
@@ -1844,7 +1841,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	/**
 	 * Checks whether this seminar has enough attendances to take place.
 	 *
-	 * @return boolean TRUE if the seminar has enough attendances,
+	 * @return bool TRUE if the seminar has enough attendances,
 	 *                 FALSE otherwise
 	 */
 	public function hasEnoughAttendances() {
@@ -1855,7 +1852,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	 * Returns TRUE if this seminar has at least one target group, FALSE
 	 * otherwise.
 	 *
-	 * @return boolean TRUE if this seminar has at least one target group,
+	 * @return bool TRUE if this seminar has at least one target group,
 	 *                 FALSE otherwise
 	 */
 	public function hasTargetGroups() {
@@ -1898,9 +1895,9 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 
 	/**
 	 * Returns an array of our events's target group titles (or an empty array
-	 * if there aren't any).
+	 * if there are none).
 	 *
-	 * @return array the target groups of this event (or an empty array)
+	 * @return string[] the target groups of this event (or an empty array)
 	 */
 	public function getTargetGroupsAsArray() {
 		if (!$this->hasTargetGroups()) {
@@ -1933,7 +1930,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	/**
 	 * Gets the number of target groups associated with this event.
 	 *
-	 * @return integer the number of target groups associated with this
+	 * @return int the number of target groups associated with this
 	 *                 event, will be >= 0
 	 */
 	public function getNumberOfTargetGroups() {
@@ -1946,7 +1943,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	 * This is either the registration deadline (if set) or the begin date of an
 	 * event.
 	 *
-	 * @return integer the latest possible moment to register for a seminar
+	 * @return int the latest possible moment to register for a seminar
 	 */
 	public function getLatestPossibleRegistrationTime() {
 		if ($this->hasRegistrationDeadline()) {
@@ -1966,7 +1963,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	 * event. The latest time to register with early bird rebate is exactly at
 	 * the early bird deadline.
 	 *
-	 * @return integer the latest possible moment to register with early
+	 * @return int the latest possible moment to register with early
 	 *                 bird discount for an event
 	 */
 	private function getLatestPossibleEarlyBirdRegistrationTime() {
@@ -2007,7 +2004,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	/**
 	 * Checks whether this seminar has a deadline for registration set.
 	 *
-	 * @return boolean TRUE if the seminar has a datetime set.
+	 * @return bool TRUE if the seminar has a datetime set.
 	 */
 	public function hasRegistrationDeadline() {
 		return $this->hasRecordPropertyInteger('deadline_registration');
@@ -2080,7 +2077,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	/**
 	 * Checks whether this seminar has a deadline for unregistration set.
 	 *
-	 * @return boolean TRUE if the seminar has a unregistration deadline set.
+	 * @return bool TRUE if the seminar has a unregistration deadline set.
 	 */
 	public function hasUnregistrationDeadline() {
 		return $this->hasRecordPropertyInteger('deadline_unregistration');
@@ -2090,7 +2087,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	 * Gets the event's unregistration deadline as UNIX timestamp. Will be 0
 	 * if the event has no unregistration deadline set.
 	 *
-	 * @return integer the unregistration deadline as UNIX timestamp
+	 * @return int the unregistration deadline as UNIX timestamp
 	 */
 	public function getUnregistrationDeadlineAsTimestamp() {
 		return $this->getRecordPropertyInteger('deadline_unregistration');
@@ -2148,7 +2145,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 		$result = array();
 
 		$organizers = $this->getOrganizerBag();
-		/** @var $organizer tx_seminars_OldModel_Organizer */
+		/** @var tx_seminars_OldModel_Organizer $organizer */
 		foreach ($organizers as $organizer) {
 			$result[] = $plugin->cObj->getTypoLink(
 				htmlspecialchars($organizer->getName()),
@@ -2174,7 +2171,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 		$result = array();
 
 		$organizers = $this->getOrganizerBag();
-		/** @var $organizer tx_seminars_OldModel_Organizer */
+		/** @var tx_seminars_OldModel_Organizer $organizer */
 		foreach ($organizers as $organizer) {
 			$result[] = $organizer->getName() . ($organizer->hasHomepage() ? ', ' . $organizer->getHomepage() : '');
 		}
@@ -2187,7 +2184,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	 *
 	 * The name is not encoded yet.
 	 *
-	 * @return array the organizers' names and e-mail addresses
+	 * @return string[] the organizers' names and e-mail addresses
 	 */
 	public function getOrganizersNameAndEmail() {
 		if (!$this->hasOrganizers()) {
@@ -2197,7 +2194,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 		$result = array();
 
 		$organizers = $this->getOrganizerBag();
-		/** @var $organizer tx_seminars_OldModel_Organizer */
+		/** @var tx_seminars_OldModel_Organizer $organizer */
 		foreach ($organizers as $organizer) {
 			$result[] = '"' . $organizer->getName() . '"' . ' <' . $organizer->getEMailAddress() . '>';
 		}
@@ -2209,7 +2206,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	 * Gets our organizers' e-mail addresses in the format
 	 * "john.doe@example.com".
 	 *
-	 * @return array the organizers' e-mail addresses
+	 * @return string[] the organizers' e-mail addresses
 	 */
 	public function getOrganizersEmail() {
 		if (!$this->hasOrganizers()) {
@@ -2219,7 +2216,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 		$result = array();
 
 		$organizers = $this->getOrganizerBag();
-		/** @var $organizer tx_seminars_OldModel_Organizer */
+		/** @var tx_seminars_OldModel_Organizer $organizer */
 		foreach ($organizers as $organizer) {
 			$result[] = $organizer->getEMailAddress();
 		}
@@ -2230,7 +2227,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	/**
 	 * Gets our organizers' e-mail footers.
 	 *
-	 * @return array the organizers' e-mail footers, will be empty if no
+	 * @return string[] the organizers' e-mail footers, will be empty if no
 	 *               organizer was set, or all organizers have no e-mail footer
 	 */
 	public function getOrganizersFooter() {
@@ -2241,7 +2238,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 		$result = array();
 
 		$organizers = $this->getOrganizerBag();
-		/** @var $organizer tx_seminars_OldModel_Organizer */
+		/** @var tx_seminars_OldModel_Organizer $organizer */
 		foreach ($organizers as $organizer) {
 			$emailFooter = $organizer->getEmailFooter();
 			if ($emailFooter !== '') {
@@ -2256,7 +2253,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	 * Checks whether we have any organizers set, but does not check the
 	 * validity of that entry.
 	 *
-	 * @return boolean TRUE if we have any organizers related to this seminar, FALSE otherwise
+	 * @return bool TRUE if we have any organizers related to this seminar, FALSE otherwise
 	 */
 	public function hasOrganizers() {
 		return $this->hasRecordPropertyInteger('organizers');
@@ -2265,7 +2262,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	/**
 	 * Gets the number of organizers.
 	 *
-	 * @return integer the number of organizers, might be 0
+	 * @return int the number of organizers, might be 0
 	 */
 	public function getNumberOfOrganizers() {
 		return $this->getRecordPropertyInteger('organizers');
@@ -2288,6 +2285,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 		}
 		$result = array();
 
+		/** @var tx_seminars_Bag_Organizer $organizerBag */
 		$organizerBag = t3lib_div::makeInstance(
 			'tx_seminars_Bag_Organizer',
 			'tx_seminars_seminars_organizing_partners_mm.uid_local = ' . $this->getUid() . ' AND ' .
@@ -2295,7 +2293,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 			'tx_seminars_seminars_organizing_partners_mm'
 		);
 
-		/** @var $organizer tx_seminars_OldModel_Organizer */
+		/** @var tx_seminars_OldModel_Organizer $organizer */
 		foreach ($organizerBag as $organizer) {
 			$result[] = $plugin->cObj->getTypoLink(
 				$organizer->getName(),
@@ -2311,7 +2309,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	/**
 	 * Checks whether we have any organizing partners set.
 	 *
-	 * @return boolean TRUE if we have any organizing partners related to this event, FALSE otherwise
+	 * @return bool TRUE if we have any organizing partners related to this event, FALSE otherwise
 	 */
 	public function hasOrganizingPartners() {
 		return $this->hasRecordPropertyInteger('organizing_partners');
@@ -2320,7 +2318,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	/**
 	 * Gets the number of organizing partners associated with this event.
 	 *
-	 * @return integer the number of organizing partners associated with this event, will be >= 0
+	 * @return int the number of organizing partners associated with this event, will be >= 0
 	 */
 	public function getNumberOfOrganizingPartners() {
 		return $this->getRecordPropertyInteger('organizing_partners');
@@ -2329,7 +2327,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	/**
 	 * Checks whether this event has a separate details page set (which may be an internal or external URL).
 	 *
-	 * @return boolean TRUE if this event has a separate details page, FALSE otherwise
+	 * @return bool TRUE if this event has a separate details page, FALSE otherwise
 	 */
 	public function hasSeparateDetailsPage() {
 		return $this->hasRecordPropertyString('details_page');
@@ -2452,9 +2450,9 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	/**
 	 * Checks whether a certain user already is registered for this seminar.
 	 *
-	 * @param integer $feUserUid UID of the FE user to check, must be > 0
+	 * @param int $feUserUid UID of the FE user to check, must be > 0
 	 *
-	 * @return boolean TRUE if the user already is registered, FALSE otherwise
+	 * @return bool TRUE if the user already is registered, FALSE otherwise
 	 */
 	public function isUserRegistered($feUserUid) {
 		$result = FALSE;
@@ -2477,7 +2475,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	/**
 	 * Checks whether a certain user already is registered for this seminar.
 	 *
-	 * @param integer $feUserUid UID of the FE user to check, must be > 0
+	 * @param int $feUserUid UID of the FE user to check, must be > 0
 	 *
 	 * @return string empty string if everything is OK, else a localized
 	 *                error message
@@ -2492,10 +2490,10 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	 * but also checks whether this user is entered as a VIP for this event,
 	 * ie. he/she is allowed to view the list of registrations for this event.
 	 *
-	 * @param integer $feUserUid UID of the FE user to check, must be > 0
-	 * @param integer $defaultEventVipsFeGroupID UID of the default event VIP front-end user group
+	 * @param int $feUserUid UID of the FE user to check, must be > 0
+	 * @param int $defaultEventVipsFeGroupID UID of the default event VIP front-end user group
 	 *
-	 * @return boolean TRUE if the user is a VIP for this seminar,
+	 * @return bool TRUE if the user is a VIP for this seminar,
 	 *                 FALSE otherwise
 	 */
 	public function isUserVip($feUserUid, $defaultEventVipsFeGroupID) {
@@ -2537,20 +2535,20 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	 * @param string $whichPlugin
 	 *        the type of plugin: seminar_list, my_events, my_vip_events,
 	 *        list_registrations or list_vip_registrations
-	 * @param integer $registrationsListPID
+	 * @param int $registrationsListPID
 	 *        the value of the registrationsListPID parameter
 	 *        (only relevant for (seminar_list|my_events|my_vip_events))
-	 * @param integer $registrationsVipListPID
+	 * @param int $registrationsVipListPID
 	 *        the value of the registrationsVipListPID parameter
 	 *        (only relevant for (seminar_list|my_events|my_vip_events))
-	 * @param integer $defaultEventVipsFeGroupID
+	 * @param int $defaultEventVipsFeGroupID
 	 *        the value of the defaultEventVipsGroupID parameter
 	 *        (only relevant for (list_vip_registration|my_vip_events))
 	 * @param string $accessLevel
 	 *        who is allowed to view the front-end registration lists:
 	 *        "attendees_and_managers", "login" or "world"
 	 *
-	 * @return boolean TRUE if a FE user is logged in and the user may view
+	 * @return bool TRUE if a FE user is logged in and the user may view
 	 *                 the registrations list or may see a link to that
 	 *                 page, FALSE otherwise
 	 */
@@ -2598,17 +2596,17 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	 * @param string $whichPlugin
 	 *        the type of plugin: seminar_list, my_events, my_vip_events,
 	 *        list_registrations or list_vip_registrations
-	 * @param integer $registrationsListPID
+	 * @param int $registrationsListPID
 	 *        the value of the registrationsListPID parameter
 	 *        (only relevant for (seminar_list|my_events|my_vip_events))
-	 * @param integer $registrationsVipListPID
+	 * @param int $registrationsVipListPID
 	 *        the value of the registrationsVipListPID parameter
 	 *        (only relevant for (seminar_list|my_events|my_vip_events))
-	 * @param integer $defaultEventVipsFeGroupID
+	 * @param int $defaultEventVipsFeGroupID
 	 *        the value of the defaultEventVipsGroupID parameter
 	 *        (only relevant for (list_vip_registration|my_vip_events))
 	 *
-	 * @return boolean TRUE if a FE user is logged in and the user may view
+	 * @return bool TRUE if a FE user is logged in and the user may view
 	 *                 the registrations list or may see a link to that
 	 *                 page, FALSE otherwise
 	 */
@@ -2678,17 +2676,17 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	 * @param string $whichPlugin
 	 *        the type of plugin: seminar_list, my_events, my_vip_events,
 	 *        list_registrations or list_vip_registrations
-	 * @param integer $registrationsListPID
+	 * @param int $registrationsListPID
 	 *        the value of the registrationsListPID parameter
 	 *        (only relevant for (seminar_list|my_events|my_vip_events))
-	 * @param integer $registrationsVipListPID
+	 * @param int $registrationsVipListPID
 	 *        the value of the registrationsVipListPID parameter
 	 *        (only relevant for (seminar_list|my_events|my_vip_events))
-	 * @param integer $defaultEventVipsFeGroupID
+	 * @param int $defaultEventVipsFeGroupID
 	 *        the value of the defaultEventVipsGroupID parameter
 	 *        (only relevant for (list_vip_registration|my_vip_events))
 	 *
-	 * @return boolean TRUE if a FE user is logged in and the user may view
+	 * @return bool TRUE if a FE user is logged in and the user may view
 	 *                 the registrations list or may see a link to that
 	 *                 page, FALSE otherwise
 	 */
@@ -2741,17 +2739,17 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	 * @param string $whichPlugin
 	 *        the type of plugin: seminar_list, my_events, my_vip_events,
 	 *        list_registrations or list_vip_registrations
-	 * @param integer $registrationsListPID
+	 * @param int $registrationsListPID
 	 *        the value of the registrationsListPID parameter
 	 *        (only relevant for (seminar_list|my_events|my_vip_events))
-	 * @param integer $registrationsVipListPID
+	 * @param int $registrationsVipListPID
 	 *        the value of the registrationsVipListPID parameter
 	 *        (only relevant for (seminar_list|my_events|my_vip_events))
-	 * @param integer $defaultEventVipsFeGroupID
+	 * @param int $defaultEventVipsFeGroupID
 	 *        the value of the defaultEventVipsGroupID parameter
 	 *        (only relevant for (list_vip_registration|my_vip_events))
 	 *
-	 * @return boolean TRUE if a FE user is logged in and the user may view
+	 * @return bool TRUE if a FE user is logged in and the user may view
 	 *                 the registrations list or may see a link to that
 	 *                 page, FALSE otherwise
 	 */
@@ -2834,7 +2832,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	 *     the registration deadline is not over yet,
 	 *     and there are still vacancies.
 	 *
-	 * @return boolean TRUE if registration is possible, FALSE otherwise
+	 * @return bool TRUE if registration is possible, FALSE otherwise
 	 */
 	public function canSomebodyRegister() {
 		$registrationManager = tx_seminars_registrationmanager::getInstance();
@@ -2889,7 +2887,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	/**
 	 * Checks whether this event has been canceled.
 	 *
-	 * @return boolean TRUE if the event has been canceled, FALSE otherwise
+	 * @return bool TRUE if the event has been canceled, FALSE otherwise
 	 */
 	public function isCanceled() {
 		return ($this->getStatus() == self::STATUS_CANCELED);
@@ -2901,7 +2899,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	 * The latest moment is either the time the event starts, or a set
 	 * registration deadline.
 	 *
-	 * @return boolean TRUE if the deadline has passed, FALSE otherwise
+	 * @return bool TRUE if the deadline has passed, FALSE otherwise
 	 */
 	public function isRegistrationDeadlineOver() {
 		return ($GLOBALS['SIM_EXEC_TIME']
@@ -2913,7 +2911,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	 *
 	 * The latest moment is just before a set early bird deadline.
 	 *
-	 * @return boolean TRUE if the deadline has passed, FALSE otherwise
+	 * @return bool TRUE if the deadline has passed, FALSE otherwise
 	 */
 	public function isEarlyBirdDeadlineOver() {
 		return ($GLOBALS['SIM_EXEC_TIME']
@@ -2923,7 +2921,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	/**
 	 * Checks whether registration is necessary for this event.
 	 *
-	 * @return boolean TRUE if registration is necessary, FALSE otherwise
+	 * @return bool TRUE if registration is necessary, FALSE otherwise
 	 */
 	public function needsRegistration() {
 		return (!$this->isEventTopic()
@@ -2935,7 +2933,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	 * Checks whether this event has unlimited vacancies (needs_registration
 	 * TRUE and max_attendances 0)
 	 *
-	 * @return boolean TRUE if this event has unlimited vacancies, FALSE
+	 * @return bool TRUE if this event has unlimited vacancies, FALSE
 	 *                 otherwise
 	 */
 	public function hasUnlimitedVacancies() {
@@ -2946,7 +2944,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	 * Checks whether this event allows multiple registrations by the same
 	 * FE user.
 	 *
-	 * @return boolean TRUE if multiple registrations are allowed,
+	 * @return bool TRUE if multiple registrations are allowed,
 	 *                 FALSE otherwise
 	 */
 	public function allowsMultipleRegistrations() {
@@ -2963,7 +2961,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 			'registration_queue=0'
 		) + $this->getOfflineRegistrations();
 		$this->numberOfAttendancesPaid = $this->countAttendances(
-			'datepaid != 0 AND registration_queue = 0'
+			'datepaid <> 0 AND registration_queue = 0'
 		);
 		$this->numberOfAttendancesOnQueue = $this->countAttendances(
 			'registration_queue=1'
@@ -2988,7 +2986,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	 *        string that will be prepended to the WHERE clause using AND, e.g. 'pid=42'
 	 *        (the AND and the enclosing spaces are not necessary for this parameter)
 	 *
-	 * @return integer the number of attendances, will be >= 0
+	 * @return int the number of attendances, will be >= 0
 	 */
 	private function countAttendances($queryParameters = '1=1') {
 		$result = 0;
@@ -3014,7 +3012,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 			'tx_seminars_attendances',
 			$queryParameters .
 				' AND seminar = ' . $this->getUid() .
-				' AND seats != 0' .
+				' AND seats <> 0' .
 				tx_oelib_db::enableFields('tx_seminars_attendances')
 		);
 
@@ -3045,6 +3043,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 				$this->getRecordPropertyInteger('topic'),
 				'tx_seminars_seminars')
 			) {
+				/** @var tx_seminars_seminar $result */
 				$result = t3lib_div::makeInstance(
 					'tx_seminars_seminar',
 					$this->getRecordPropertyInteger('topic')
@@ -3057,7 +3056,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	/**
 	 * Checks whether we are a date record.
 	 *
-	 * @return boolean TRUE if we are a date record, FALSE otherwise.
+	 * @return bool TRUE if we are a date record, FALSE otherwise.
 	 */
 	public function isEventDate() {
 		return ($this->getRecordPropertyInteger('object_type')
@@ -3067,7 +3066,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	/**
 	 * Checks whether we are a topic record.
 	 *
-	 * @return boolean TRUE if we are a topic record, FALSE otherwise.
+	 * @return bool TRUE if we are a topic record, FALSE otherwise.
 	 */
 	public function isEventTopic() {
 		return ($this->getRecordPropertyInteger('object_type')
@@ -3077,7 +3076,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	/**
 	 * Checks whether we are a date record and have a topic.
 	 *
-	 * @return boolean TRUE if we are a date record and have a topic,
+	 * @return bool TRUE if we are a date record and have a topic,
 	 *                 FALSE otherwise
 	 */
 	private function isTopicOkay() {
@@ -3088,7 +3087,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	 * Gets the UID of the topic record if we are a date record. Otherwise, the
 	 * UID of this record is returned.
 	 *
-	 * @return integer either the UID of this record or its topic record,
+	 * @return int either the UID of this record or its topic record,
 	 *                 depending on whether we are a date record
 	 */
 	public function getTopicUid() {
@@ -3106,7 +3105,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	 *
 	 * @param string $key key of the element to check
 	 *
-	 * @return boolean TRUE if the corresponding integer exists and is non-empty
+	 * @return bool TRUE if the corresponding integer exists and is non-empty
 	 */
 	protected function hasTopicInteger($key) {
 		$result = FALSE;
@@ -3121,14 +3120,14 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	}
 
 	/**
-	 * Gets an (intval'ed) integer element of the record data array.
+	 * Gets an int element of the record data array.
 	 * If the array has not been initialized properly, 0 is returned instead.
 	 * If we are a date record, it'll be retrieved from the corresponding
 	 * topic record.
 	 *
 	 * @param string $key the name of the field to retrieve
 	 *
-	 * @return integer the corresponding element from the record data array
+	 * @return int the corresponding element from the record data array
 	 */
 	protected function getTopicInteger($key) {
 		$result = 0;
@@ -3149,7 +3148,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	 *
 	 * @param string $key key of the element to check
 	 *
-	 * @return boolean TRUE if the corresponding string exists and is non-empty
+	 * @return bool TRUE if the corresponding string exists and is non-empty
 	 */
 	private function hasTopicString($key) {
 		$result = FALSE;
@@ -3192,7 +3191,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	 *
 	 * @param string $key key of the element to check
 	 *
-	 * @return boolean TRUE if the corresponding decimal value exists
+	 * @return bool TRUE if the corresponding decimal value exists
 	 *                 and is not 0.00
 	 */
 	private function hasTopicDecimal($key) {
@@ -3238,7 +3237,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	 *
 	 * @param string $key the name of the field to retrieve
 	 *
-	 * @return boolean the corresponding element from the record data array
+	 * @return bool the corresponding element from the record data array
 	 */
 	private function getTopicBoolean($key) {
 		return ($this->isTopicOkay())
@@ -3249,7 +3248,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	/**
 	 * Checks whether we have any lodging options.
 	 *
-	 * @return boolean TRUE if we have at least one lodging option,
+	 * @return bool TRUE if we have at least one lodging option,
 	 *                 FALSE otherwise
 	 */
 	public function hasLodgings() {
@@ -3259,7 +3258,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	/**
 	 * Gets the lodging options associated with this event.
 	 *
-	 * @return array an array of lodging options, consisting each of a nested
+	 * @return array[] lodging options, consisting each of a nested
 	 *               array with the keys "caption" (for the title) and "value"
 	 *               (for the UID), might be empty
 	 */
@@ -3280,7 +3279,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	/**
 	 * Checks whether we have any food options.
 	 *
-	 * @return boolean TRUE if we have at least one food option, FALSE otherwise
+	 * @return bool TRUE if we have at least one food option, FALSE otherwise
 	 */
 	public function hasFoods() {
 		return $this->hasRecordPropertyInteger('foods');
@@ -3289,7 +3288,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	/**
 	 * Gets the food options associated with this event.
 	 *
-	 * @return array an array of food options, consisting each of a nested array
+	 * @return array[] food options, consisting each of a nested array
 	 *               with the keys "caption" (for the title) and "value" (for
 	 *               the UID), might be empty
 	 */
@@ -3311,7 +3310,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	 * Checks whether we have any option checkboxes. If we are a date record,
 	 * the corresponding topic record will be checked.
 	 *
-	 * @return boolean TRUE if we have at least one option checkbox,
+	 * @return bool TRUE if we have at least one option checkbox,
 	 *                 FALSE otherwise
 	 */
 	public function hasCheckboxes() {
@@ -3323,7 +3322,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	 * record, the option checkboxes of the corresponding topic record will be
 	 * retrieved.
 	 *
-	 * @return array an array of option checkboxes, consisting each of a nested
+	 * @return array[] option checkboxes, consisting each of a nested
 	 *               array with the keys "caption" (for the title) and "value"
 	 *               (for the UID), might be empty
 	 */
@@ -3350,10 +3349,10 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	 *        the name of the foreign table (must not be empty), must have the fields uid and title
 	 * @param string $mmTable
 	 *        the name of the m:m table, having the fields uid_local, uid_foreign and sorting, must not be empty
-	 * @param boolean $useTopicRecord
+	 * @param bool $useTopicRecord
 	 *        TRUE if the referenced records of the corresponding topic record should be retrieved, FALSE otherwise
 	 *
-	 * @return array an array of referenced records, consisting each of a nested
+	 * @return array[] referenced records, consisting each of a nested
 	 *               array with the keys "caption" (for the title) and "value"
 	 *               (for the UID), might be empty
 	 */
@@ -3390,10 +3389,9 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	 * Converts an array m:m records (each having a "value" and a "caption"
 	 * element) to a LF-separated string.
 	 *
-	 * @param array $records m:n elements, each having a "value" and "caption" element, may be empty
+	 * @param array[] $records m:n elements, each having a "value" and "caption" element, may be empty
 	 *
-	 * @return string the captions of the array contents separated by
-	 *                LF, will be empty if the array is empty
+	 * @return string the captions of the array contents separated by LF, will be empty if the array is empty
 	 */
 	private function mmRecordsToText($records) {
 		$result = '';
@@ -3416,7 +3414,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	 * organizer record (ie. the page configured in
 	 * plugin.tx_seminars.attendancesPID should be used), this function will return 0.
 	 *
-	 * @return integer the PID of the system folder where registration records
+	 * @return int the PID of the system folder where registration records
 	 *                 for this event should be stored or 0 if no folder is set
 	 */
 	public function getAttendancesPid() {
@@ -3430,7 +3428,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	/**
 	 * Checks whether this event's topmost organizer has a PID set to store the registration records in.
 	 *
-	 * @return boolean TRUE if a the system folder for registration is specified in this event's topmost organizers record,
+	 * @return bool TRUE if a the system folder for registration is specified in this event's topmost organizers record,
 	 *                 FALSE otherwise
 	 */
 	public function hasAttendancesPid() {
@@ -3448,15 +3446,16 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 			return NULL;
 		}
 
-		return tx_oelib_MapperRegistry::get('tx_oelib_Mapper_FrontEndUser')
-			->find($this->getRecordPropertyInteger('owner_feuser'));
+		/** @var tx_oelib_Mapper_FrontEndUser $mapper */
+		$mapper = tx_oelib_MapperRegistry::get('tx_oelib_Mapper_FrontEndUser');
+		return $mapper->find($this->getRecordPropertyInteger('owner_feuser'));
 	}
 
 	/**
 	 * Checks whether this event has an existing owner (the FE user who has
 	 * created this event).
 	 *
-	 * @return boolean TRUE if this event has an existing owner, FALSE otherwise
+	 * @return bool TRUE if this event has an existing owner, FALSE otherwise
 	 */
 	public function hasOwner() {
 		return $this->hasRecordPropertyInteger('owner_feuser');
@@ -3465,7 +3464,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	/**
 	 * Checks whether the logged-in FE user is the owner of this event.
 	 *
-	 * @return boolean TRUE if a FE user is logged in and the user is
+	 * @return bool TRUE if a FE user is logged in and the user is
 	 *                 the owner of this event, FALSE otherwise
 	 */
 	public function isOwnerFeUser() {
@@ -3485,7 +3484,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	 * configuration variable. This function checks this on a per-event basis
 	 * whereas showRegistrationFields is a global option.
 	 *
-	 * @return boolean TRUE if the "travelling terms" checkbox should
+	 * @return bool TRUE if the "travelling terms" checkbox should
 	 *                 be displayed, FALSE otherwise
 	 */
 	public function hasTerms2() {
@@ -3506,7 +3505,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	 * Checks whether this event (or this event' topic record) has a teaser
 	 * text.
 	 *
-	 * @return boolean TRUE if we have a non-empty teaser text,
+	 * @return bool TRUE if we have a non-empty teaser text,
 	 *                 FALSE otherwise
 	 */
 	public function hasTeaser() {
@@ -3697,7 +3696,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	 *
 	 * The return array's pointer will already be reset to its first element.
 	 *
-	 * @return array the available prices as a reset array of arrays
+	 * @return array[] the available prices as a reset array of arrays
 	 *               with the keys "caption" (for the title) and "value"
 	 *               (for the price code), might be empty
 	 */
@@ -3770,7 +3769,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	 *
 	 * @param string $priceCode code for the price category to check, may be empty or NULL
 	 *
-	 * @return boolean TRUE if $priceCode matches a currently available
+	 * @return bool TRUE if $priceCode matches a currently available
 	 *                 price, FALSE otherwise
 	 */
 	public function isPriceAvailable($priceCode) {
@@ -3783,7 +3782,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	 * Checks whether this event currently has at least one non-free price
 	 * (taking into account whether we still are in the early-bird period).
 	 *
-	 * @return boolean TRUE if this event currently has at least one
+	 * @return bool TRUE if this event currently has at least one
 	 *                 non-zero price, FALSE otherwise
 	 */
 	public function hasAnyPrice() {
@@ -3808,9 +3807,9 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	 *
 	 * For this, only events that forbid multiple registrations are checked.
 	 *
-	 * @param integer $feUserUid UID of the FE user to check, must be > 0
+	 * @param int $feUserUid UID of the FE user to check, must be > 0
 	 *
-	 * @return boolean TRUE if user is blocked by another registration,
+	 * @return bool TRUE if user is blocked by another registration,
 	 *                 FALSE otherwise
 	 */
 	public function isUserBlocked($feUserUid) {
@@ -3830,9 +3829,8 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 					'tx_seminars_attendances.seminar' .
 				' AND tx_seminars_attendances.user = ' . $feUserUid;
 
-			$seminarBag = t3lib_div::makeInstance(
-				'tx_seminars_Bag_Event', $queryWhere, $additionalTables
-			);
+			/** @var tx_seminars_Bag_Event $seminarBag */
+			$seminarBag = t3lib_div::makeInstance('tx_seminars_Bag_Event', $queryWhere, $additionalTables);
 
 			// One blocking event is enough.
 			$result = !$seminarBag->isEmpty();
@@ -3844,7 +3842,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	/**
 	 * Checkes whether the collision check should be skipped for this event.
 	 *
-	 * @return boolean TRUE if the collision check should be skipped for
+	 * @return bool TRUE if the collision check should be skipped for
 	 *                 this event, FALSE otherwise
 	 */
 	private function skipCollisionCheck() {
@@ -3868,7 +3866,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 		$beginDate = $this->getBeginDateAsTimestamp();
 		$endDate = $this->getEndDateAsTimestampEvenIfOpenEnded();
 
-		$result = 'tx_seminars_seminars.uid != ' . $this->getUid() .
+		$result = 'tx_seminars_seminars.uid <> ' . $this->getUid() .
 			' AND allows_multiple_registrations = 0' .
 			' AND skip_collision_check = 0' .
 			' AND (' .
@@ -3921,7 +3919,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	/**
 	 * Returns TRUE if the seminar is hidden, otherwise FALSE.
 	 *
-	 * @return boolean TRUE if the seminar is hidden, FALSE otherwise
+	 * @return bool TRUE if the seminar is hidden, FALSE otherwise
 	 */
 	public function isHidden() {
 		return $this->getRecordPropertyBoolean('hidden');
@@ -3935,7 +3933,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	 * set in the current event record, the unregistration will not be possible
 	 * and this method returns FALSE.
 	 *
-	 * @return boolean TRUE if unregistration is possible, FALSE otherwise
+	 * @return bool TRUE if unregistration is possible, FALSE otherwise
 	 */
 	public function isUnregistrationPossible() {
 		if (!$this->needsRegistration()) {
@@ -3963,7 +3961,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	/**
 	 * Checks if this event has a registration queue.
 	 *
-	 * @return boolean TRUE if this event has a registration queue, FALSE
+	 * @return bool TRUE if this event has a registration queue, FALSE
 	 *                 otherwise
 	 */
 	public function hasRegistrationQueue() {
@@ -3973,7 +3971,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	/**
 	 * Gets the number of attendances on the registration queue.
 	 *
-	 * @return integer number of attendances on the registration queue
+	 * @return int number of attendances on the registration queue
 	 */
 	public function getAttendancesOnRegistrationQueue() {
 		if (!$this->statisticsHaveBeenCalculated) {
@@ -3986,7 +3984,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	/**
 	 * Checks whether there is at least one registration on the waiting list.
 	 *
-	 * @return boolean TRUE if there is at least one registration on the
+	 * @return bool TRUE if there is at least one registration on the
 	 *                 waiting list, FALSE otherwise
 	 */
 	public function hasAttendancesOnRegistrationQueue() {
@@ -4004,8 +4002,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	 *
 	 * @param string $tableName the name of the m:n table to query, must not be empty
 	 *
-	 * @return array array of foreign record's UIDs, ordered by the field
-	 *               uid_foreign in the m:n table, may be empty
+	 * @return int[] foreign record's UIDs, ordered by the field uid_foreign in the m:n table, may be empty
 	 */
 	public function getRelatedMmRecordUids($tableName) {
 		$result = array();
@@ -4024,7 +4021,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 		// one entry.
 		if ($dbResult) {
 			while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($dbResult)) {
-				$result[] = (integer) $row['uid_foreign'];
+				$result[] = (int)$row['uid_foreign'];
 			}
 		}
 
@@ -4036,7 +4033,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	 * If there's an end date but no begin date, this function still will return
 	 * FALSE.
 	 *
-	 * @return boolean TRUE if we have a begin date, FALSE otherwise.
+	 * @return bool TRUE if we have a begin date, FALSE otherwise.
 	 */
 	public function hasDate() {
 		return ($this->hasBeginDate() || $this->hasTimeslots());
@@ -4045,7 +4042,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	/**
 	 * Returns TRUE if the seminar has at least one time slot, otherwise FALSE.
 	 *
-	 * @return boolean TRUE if the seminar has at least one time slot,
+	 * @return bool TRUE if the seminar has at least one time slot,
 	 *                 otherwise FALSE
 	 */
 	public function hasTimeslots() {
@@ -4055,7 +4052,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	/**
 	 * Returns our begin date and time as a UNIX timestamp.
 	 *
-	 * @return integer our begin date and time as a UNIX timestamp or 0 if
+	 * @return int our begin date and time as a UNIX timestamp or 0 if
 	 *                 we don't have a begin date
 	 */
 	public function getBeginDateAsTimestamp() {
@@ -4084,7 +4081,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	/**
 	 * Returns our end date and time as a UNIX timestamp.
 	 *
-	 * @return integer our end date and time as a UNIX timestamp or 0 if we
+	 * @return int our end date and time as a UNIX timestamp or 0 if we
 	 *                 don't have an end date
 	 */
 	public function getEndDateAsTimestamp() {
@@ -4120,7 +4117,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	 * all places of the event's time slots in the database.
 	 * This function is a no-op for events without time slots.
 	 *
-	 * @return integer the number of place relations of the event, will be >= 0
+	 * @return int the number of place relations of the event, will be >= 0
 	 */
 	public function updatePlaceRelationsFromTimeSlots() {
 		if (!$this->hasTimeslots()) {
@@ -4140,6 +4137,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 		// Creates an array with all place UIDs which should be related to this
 		// event.
 		$placesOfTimeSlots = array();
+		/** @var tx_seminars_timeslot $organizer */
 		foreach ($timeSlotBag as $timeSlot) {
 			if ($timeSlot->hasPlace()) {
 				$placesOfTimeSlots[] = $timeSlot->getPlace();
@@ -4154,11 +4152,11 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	/**
 	 * Creates a time slot bag for the time slots associated with this event.
 	 *
-	 * @return tx_seminars_Bag_TimeSlot bag with this event's time slots, may be
-	 *                                 empty
+	 * @return tx_seminars_Bag_TimeSlot bag with this event's time slots, may be empty
 	 */
 	private function createTimeSlotBag() {
-		return t3lib_div::makeInstance(
+		/** @var tx_seminars_Bag_TimeSlot $bag */
+		$bag = t3lib_div::makeInstance(
 			'tx_seminars_Bag_TimeSlot',
 			'tx_seminars_timeslots.seminar = ' . $this->getUid() .
 				' AND tx_seminars_timeslots.place > 0',
@@ -4166,13 +4164,13 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 			'tx_seminars_timeslots.place',
 			'tx_seminars_timeslots.begin_date ASC'
 		);
+		return $bag;
 	}
 
 	/**
 	 * Returns our time slots in an array.
 	 *
-	 * @return array an array of time slots or an empty array if there are no
-	 *               time slots
+	 * @return array[] time slots or an empty array if there are no time slots
 	 *               the array contains the following elements:
 	 *               - 'date' as key and the time slot's begin date as value
 	 *               - 'time' as key and the time slot's time as value
@@ -4185,6 +4183,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	public function getTimeSlotsAsArrayWithMarkers() {
 		$result = array();
 
+		/** @var tx_seminars_Bag_TimeSlot $timeSlotBag */
 		$timeSlotBag = t3lib_div::makeInstance(
 			'tx_seminars_Bag_TimeSlot',
 			'tx_seminars_timeslots.seminar = ' . $this->getUid(),
@@ -4193,6 +4192,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 			'tx_seminars_timeslots.begin_date ASC'
 		);
 
+		/** @var tx_seminars_timeslot $organizer */
 		foreach ($timeSlotBag as $timeSlot) {
 			$result[] = array(
 				'uid' => $timeSlot->getUid(),
@@ -4211,7 +4211,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	/**
 	 * Checks whether this seminar has at least one category.
 	 *
-	 * @return boolean TRUE if the seminar has at least one category,
+	 * @return bool TRUE if the seminar has at least one category,
 	 *                 FALSE otherwise
 	 */
 	public function hasCategories() {
@@ -4221,7 +4221,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	/**
 	 * Gets the number of categories associated with this event.
 	 *
-	 * @return integer the number of categories associated with this event,
+	 * @return int the number of categories associated with this event,
 	 *                 will be >= 0
 	 */
 	public function getNumberOfCategories() {
@@ -4232,7 +4232,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	 * Gets this event's category titles and icons as an associative
 	 * array (which may be empty), using the category UIDs as keys.
 	 *
-	 * @return array 2 level associative array with the UID as first level key
+	 * @return array[] two-dimensional associative array with the UID as first level key
 	 *               and "title" and "icon" as second level keys. "Title" will
 	 *               contain the category title and "icon" will contain the
 	 *               category icon. Will be an empty array in if the event has
@@ -4243,6 +4243,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 			return array();
 		}
 
+		/** @var tx_seminars_BagBuilder_Category $builder */
 		$builder = t3lib_div::makeInstance('tx_seminars_BagBuilder_Category');
 		$builder->limitToEvents($this->getTopicUid());
 		$builder->sortByRelationOrder();
@@ -4266,7 +4267,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	 * If this is an event date, this function will return TRUE if the date
 	 * record or the topic record has at least one file.
 	 *
-	 * @return boolean TRUE if this event has at least one attached file,
+	 * @return bool TRUE if this event has at least one attached file,
 	 *                 FALSE otherwise
 	 */
 	public function hasAttachedFiles() {
@@ -4294,7 +4295,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	 *
 	 * @param tslib_pibase $plugin a tslib_pibase object for a live page
 	 *
-	 * @return array an array of arrays with the elements "name" and
+	 * @return array[] an array of arrays with the elements "name" and
 	 *               "size" of the attached file, will be empty if
 	 *               there are no attached files
 	 */
@@ -4360,7 +4361,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	/**
 	 * Checks whether we have an image.
 	 *
-	 * @return boolean TRUE if we have an non-empty image, FALSE otherwise.
+	 * @return bool TRUE if we have an non-empty image, FALSE otherwise.
 	 */
 	public function hasImage() {
 		return $this->hasTopicString('image');
@@ -4369,8 +4370,8 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	/**
 	 * Creates the style for the title of the seminar.
 	 *
-	 * @param integer $maxImageWidth maximum width of the image, must be > 0
-	 * @param integer $maxImageHeight maximum height of the image, must be > 0
+	 * @param int $maxImageWidth maximum width of the image, must be > 0
+	 * @param int $maxImageHeight maximum height of the image, must be > 0
 	 *
 	 * @return string the complete style attribute for the seminar title
 	 *                containing the seminar image starting with a space, will
@@ -4406,7 +4407,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	 * Checks whether this event has any requiring events, ie. topics that are
 	 * prerequisite for this event
 	 *
-	 * @return boolean TRUE if this event has any requiring events, FALSE
+	 * @return bool TRUE if this event has any requiring events, FALSE
 	 *                 otherwise
 	 */
 	public function hasRequirements() {
@@ -4417,7 +4418,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	 * Checks whether this event has any depending events, ie. topics for which
 	 * this event is prerequisite.
 	 *
-	 * @return boolean TRUE if this event has any depending events, FALSE
+	 * @return bool TRUE if this event has any depending events, FALSE
 	 *                 otherwise
 	 */
 	public function hasDependencies() {
@@ -4432,6 +4433,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	 *                               event has no required events
 	 */
 	public function getRequirements() {
+		/** @var tx_seminars_BagBuilder_Event $builder */
 		$builder = t3lib_div::makeInstance('tx_seminars_BagBuilder_Event');
 		$builder->limitToRequiredEventTopics($this->getTopicUid());
 
@@ -4446,6 +4448,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	 *                               this event has no depending events
 	 */
 	public function getDependencies() {
+		/** @var tx_seminars_BagBuilder_Event $builder */
 		$builder = t3lib_div::makeInstance('tx_seminars_BagBuilder_Event');
 		$builder->limitToDependingEventTopics($this->getTopicUid());
 
@@ -4455,7 +4458,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	/**
 	 * Checks whether this event has been confirmed.
 	 *
-	 * @return boolean TRUE if the event has been confirmed, FALSE otherwise
+	 * @return bool TRUE if the event has been confirmed, FALSE otherwise
 	 */
 	public function isConfirmed() {
 		return ($this->getStatus() == self::STATUS_CONFIRMED);
@@ -4464,7 +4467,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	/**
 	 * Checks whether this event has been planned.
 	 *
-	 * @return boolean TRUE if the event has been planned, FALSE otherwise
+	 * @return bool TRUE if the event has been planned, FALSE otherwise
 	 */
 	public function isPlanned() {
 		return ($this->getStatus() == self::STATUS_PLANNED);
@@ -4473,7 +4476,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	/**
 	 * Gets the staus of this event.
 	 *
-	 * @return integer the status of this event, will be >= 0
+	 * @return int the status of this event, will be >= 0
 	 */
 	private function getStatus() {
 		return $this->getRecordPropertyInteger('cancelled');
@@ -4482,7 +4485,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	/**
 	 * Sets whether this event is planned, canceled or confirmed.
 	 *
-	 * @param integer $status STATUS_PLANNED, STATUS_CONFIRMED or STATUS_CANCELED
+	 * @param int $status STATUS_PLANNED, STATUS_CONFIRMED or STATUS_CANCELED
 	 *
 	 * @return void
 	 */
@@ -4496,7 +4499,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	 *
 	 * Before this function is called assure that this event has a begin date.
 	 *
-	 * @return integer the cancelation deadline of this event as timestamp, will be >= 0
+	 * @return int the cancelation deadline of this event as timestamp, will be >= 0
 	 *
 	 * @throws BadMethodCallException
 	 */
@@ -4514,6 +4517,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 		$deadline = $beginDate;
 		$speakers = $this->getSpeakerBag();
 
+		/** @var tx_seminars_speaker $organizer */
 		foreach ($speakers as $speaker) {
 			$speakerDeadline = $beginDate -
 				($speaker->getCancelationPeriodInDays()
@@ -4550,7 +4554,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	/**
 	 * Checks whether this event has a license expiry.
 	 *
-	 * @return boolean TRUE if this event has a license expiry, FALSE otherwise
+	 * @return bool TRUE if this event has a license expiry, FALSE otherwise
 	 */
 	public function hasExpiry() {
 		return $this->hasRecordPropertyInteger('expiry');
@@ -4576,7 +4580,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	/**
 	 * Checks whether this event has a begin date for the registration.
 	 *
-	 * @return boolean TRUE if this event has a begin date for the registration,
+	 * @return bool TRUE if this event has a begin date for the registration,
 	 *                 FALSE otherwise
 	 */
 	public function hasRegistrationBegin() {
@@ -4587,7 +4591,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	 * Returns the begin date for the registration of this event as UNIX
 	 * time-stamp.
 	 *
-	 * @return integer the begin date for the registration of this event as UNIX
+	 * @return int the begin date for the registration of this event as UNIX
 	 *                 time-stamp, will be 0 if no begin date for the
 	 *                 registration is set
 	 */
@@ -4621,12 +4625,13 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	/**
 	 * Returns the places associated with this event.
 	 *
-	 * @return tx_oelib_List with the models for the places of this event, will
-	 *                       be empty if this event has no places
+	 * @return Tx_Oelib_List with the models for the places of this event, will be empty if this event has no places
 	 */
 	public function getPlaces() {
 		if (!$this->hasPlace()) {
-			return t3lib_div::makeInstance('tx_oelib_List');
+			/** @var Tx_Oelib_List $list */
+			$list = t3lib_div::makeInstance('tx_oelib_List');
+			return $list;
 		}
 
 		$places = tx_oelib_db::selectMultiple(
@@ -4636,14 +4641,15 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 				tx_oelib_db::enableFields('tx_seminars_sites')
 		);
 
-		return t3lib_div::makeInstance('tx_seminars_Mapper_Place')
-			->getListOfModels($places);
+		/** @var tx_seminars_Mapper_Place $mapper */
+		$mapper = t3lib_div::makeInstance('tx_seminars_Mapper_Place');
+		return $mapper->getListOfModels($places);
 	}
 
 	/**
 	 * Checks whether this event has any offline registrations.
 	 *
-	 * @return boolean TRUE if this event has at least one offline registration,
+	 * @return bool TRUE if this event has at least one offline registration,
 	 *                 FALSE otherwise
 	 */
 	public function hasOfflineRegistrations() {
@@ -4653,7 +4659,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	/**
 	 * Returns the number of offline registrations for this event.
 	 *
-	 * @return integer the number of offline registrations for this event, will
+	 * @return int the number of offline registrations for this event, will
 	 *                 be 0 if this event has no offline registrations
 	 */
 	public function getOfflineRegistrations() {
@@ -4666,7 +4672,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	 *
 	 * This function may only be called if this event has a begin date.
 	 *
-	 * @return integer the unregistration deadline as UNIX timestamp determined
+	 * @return int the unregistration deadline as UNIX timestamp determined
 	 *                 by configuration and the begin date, will be 0 if the
 	 *                 unregistrationDeadlineDaysBeforeBeginDate is not set
 	 */
@@ -4688,7 +4694,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	 * Returns the effective unregistration deadline for this event as UNIX
 	 * timestamp.
 	 *
-	 * @return integer the unregistration deadline for this event as UNIX
+	 * @return int the unregistration deadline for this event as UNIX
 	 *                 timestamp, will be 0 if this event has no begin date
 	 */
 	public function getUnregistrationDeadlineFromModelAndConfiguration() {
@@ -4739,7 +4745,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	 * Note: The publication state of an event is not related to whether it is
 	 * hidden or not.
 	 *
-	 * @return boolean TRUE if this event has been published, FALSE otherwise
+	 * @return bool TRUE if this event has been published, FALSE otherwise
 	 */
 	public function isPublished() {
 		return !$this->hasRecordPropertyString('publication_hash');

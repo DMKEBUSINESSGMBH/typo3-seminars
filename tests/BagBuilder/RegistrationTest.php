@@ -41,18 +41,17 @@ class tx_seminars_BagBuilder_RegistrationTest extends tx_phpunit_testcase {
 	 */
 	private $testingFramework;
 
-	public function setUp() {
+	protected function setUp() {
 		$this->testingFramework = new tx_oelib_testingFramework('tx_seminars');
 
 		$this->fixture = new tx_seminars_BagBuilder_Registration();
 		$this->fixture->setTestMode();
 	}
 
-	public function tearDown() {
+	protected function tearDown() {
 		$this->testingFramework->cleanUp();
 
 		tx_seminars_registrationmanager::purgeInstance();
-		unset($this->fixture, $this->testingFramework);
 	}
 
 
@@ -448,8 +447,8 @@ class tx_seminars_BagBuilder_RegistrationTest extends tx_phpunit_testcase {
 			array('seminar' => $eventUid, 'user' => $feUserUid)
 		);
 
-		$user = tx_oelib_MapperRegistry::get('tx_seminars_Mapper_FrontEndUser')
-			->find($feUserUid);
+		/** @var tx_seminars_Model_FrontEndUser $user */
+		$user = tx_oelib_MapperRegistry::get('tx_seminars_Mapper_FrontEndUser')->find($feUserUid);
 		$this->fixture->limitToAttendee($user);
 		$bag = $this->fixture->build();
 
@@ -474,8 +473,8 @@ class tx_seminars_BagBuilder_RegistrationTest extends tx_phpunit_testcase {
 			'', array('tx_seminars_registration' => $registrationUid)
 		);
 
-		$user = tx_oelib_MapperRegistry::get('tx_seminars_Mapper_FrontEndUser')
-			->find($feUserUid);
+		/** @var tx_seminars_Model_FrontEndUser $user */
+		$user = tx_oelib_MapperRegistry::get('tx_seminars_Mapper_FrontEndUser')->find($feUserUid);
 		$this->fixture->limitToAttendee($user);
 		$bag = $this->fixture->build();
 
@@ -492,8 +491,8 @@ class tx_seminars_BagBuilder_RegistrationTest extends tx_phpunit_testcase {
 		$feUserUid = $this->testingFramework->createFrontEndUser();
 		$this->testingFramework->createRecord('tx_seminars_seminars');
 
-		$user = tx_oelib_MapperRegistry::get('tx_seminars_Mapper_FrontEndUser')
-			->find($feUserUid);
+		/** @var tx_seminars_Model_FrontEndUser $user */
+		$user = tx_oelib_MapperRegistry::get('tx_seminars_Mapper_FrontEndUser')->find($feUserUid);
 		$this->fixture->limitToAttendee($user);
 		$bag = $this->fixture->build();
 
@@ -515,8 +514,8 @@ class tx_seminars_BagBuilder_RegistrationTest extends tx_phpunit_testcase {
 			array('seminar' => $eventUid, 'user' => $feUserUid2)
 		);
 
-		$user = tx_oelib_MapperRegistry::get('tx_seminars_Mapper_FrontEndUser')
-			->find($feUserUid);
+		/** @var tx_seminars_Model_FrontEndUser $user */
+		$user = tx_oelib_MapperRegistry::get('tx_seminars_Mapper_FrontEndUser')->find($feUserUid);
 		$this->fixture->limitToAttendee($user);
 		$bag = $this->fixture->build();
 
@@ -538,8 +537,8 @@ class tx_seminars_BagBuilder_RegistrationTest extends tx_phpunit_testcase {
 			array('seminar' => $eventUid, 'user' => $feUserUid2)
 		);
 
-		$user = tx_oelib_MapperRegistry::get('tx_seminars_Mapper_FrontEndUser')
-			->find($feUserUid);
+		/** @var tx_seminars_Model_FrontEndUser $user */
+		$user = tx_oelib_MapperRegistry::get('tx_seminars_Mapper_FrontEndUser')->find($feUserUid);
 		$this->fixture->limitToAttendee($user);
 		$this->fixture->limitToAttendee(NULL);
 		$bag = $this->fixture->build();

@@ -43,7 +43,7 @@ class tx_seminars_BackEnd_EventsListTest extends Tx_Phpunit_TestCase {
 	protected $testingFramework = NULL;
 
 	/**
-	 * @var integer PID of a dummy system folder
+	 * @var int PID of a dummy system folder
 	 */
 	protected $dummySysFolderPid = 0;
 
@@ -79,9 +79,10 @@ class tx_seminars_BackEnd_EventsListTest extends Tx_Phpunit_TestCase {
 			'doktype' => tx_seminars_BackEnd_AbstractList::SYSFOLDER_TYPE,
 		));
 
-		$this->backEndModule->doc = t3lib_div::makeInstance('bigDoc');
-		$this->backEndModule->doc->backPath = $GLOBALS['BACK_PATH'];
-		$this->backEndModule->doc->docType = 'xhtml_strict';
+		$document = new bigDoc();
+		$this->backEndModule->doc = $document;
+		$document->backPath = $GLOBALS['BACK_PATH'];
+		$document->docType = 'xhtml_strict';
 
 		$this->fixture = new tx_seminars_BackEnd_EventsList($this->backEndModule);
 
@@ -102,8 +103,6 @@ class tx_seminars_BackEnd_EventsListTest extends Tx_Phpunit_TestCase {
 		$GLOBALS['LANG']->lang = $this->originalLanguage;
 
 		$this->testingFramework->cleanUp();
-
-		unset($this->backEndModule, $this->fixture, $this->testingFramework);
 	}
 
 

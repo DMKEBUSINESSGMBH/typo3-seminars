@@ -52,14 +52,14 @@ class Tx_Seminars_Tests_pi2_pi2Test extends Tx_Phpunit_TestCase {
 	/**
 	 * PID of the system folder in which we store our test data
 	 *
-	 * @var integer
+	 * @var int
 	 */
 	protected $pid = 0;
 
 	/**
 	 * UID of a test event record
 	 *
-	 * @var integer
+	 * @var int
 	 */
 	protected $eventUid = 0;
 
@@ -68,7 +68,7 @@ class Tx_Seminars_Tests_pi2_pi2Test extends Tx_Phpunit_TestCase {
 	 */
 	protected $configuration = NULL;
 
-	public function setUp() {
+	protected function setUp() {
 		if (t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version) < 4007000) {
 			$this->backEndConfigurationBackup = $GLOBALS['TYPO3_CONF_VARS']['BE'];
 			$GLOBALS['TYPO3_CONF_VARS']['BE']['forceCharset'] = 'utf-8';
@@ -99,11 +99,10 @@ class Tx_Seminars_Tests_pi2_pi2Test extends Tx_Phpunit_TestCase {
 		$this->fixture->init(array());
 	}
 
-	public function tearDown() {
+	protected function tearDown() {
 		$this->testingFramework->cleanUp();
 
 		tx_seminars_registrationmanager::purgeInstance();
-		unset($this->fixture, $this->testingFramework, $this->configuration);
 
 		if (t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version) < 4007000) {
 			$GLOBALS['TYPO3_CONF_VARS']['BE'] = $this->backEndConfigurationBackup;

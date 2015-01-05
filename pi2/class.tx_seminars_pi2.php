@@ -40,17 +40,17 @@ require_once(t3lib_extMgm::extPath('seminars') . 'tx_seminars_modifiedSystemTabl
  */
 class tx_seminars_pi2 extends Tx_Oelib_TemplateHelper {
 	/**
-	 * @var integer
+	 * @var int
 	 */
 	const CSV_TYPE_NUMBER = 736;
 
 	/**
-	 * @var integer HTTP status code for "page not found"
+	 * @var int HTTP status code for "page not found"
 	 */
 	const NOT_FOUND = 404;
 
 	/**
-	 * @var integer HTTP status code for "access denied"
+	 * @var int HTTP status code for "access denied"
 	 */
 	const ACCESS_DENIED = 403;
 
@@ -80,7 +80,7 @@ class tx_seminars_pi2 extends Tx_Oelib_TemplateHelper {
 	private $typo3Mode = '';
 
 	/**
-	 * @var integer the HTTP status code of error
+	 * @var int the HTTP status code of error
 	 */
 	private $errorType = 0;
 
@@ -112,10 +112,10 @@ class tx_seminars_pi2 extends Tx_Oelib_TemplateHelper {
 
 			switch ($this->piVars['table']) {
 				case 'tx_seminars_seminars':
-					$result = $this->createAndOutputListOfEvents(intval($this->piVars['pid']));
+					$result = $this->createAndOutputListOfEvents((int)$this->piVars['pid']);
 					break;
 				case 'tx_seminars_attendances':
-					$result = $this->createAndOutputListOfRegistrations(intval($this->piVars['eventUid']));
+					$result = $this->createAndOutputListOfRegistrations((int)$this->piVars['eventUid']);
 					break;
 				default:
 					$result = $this->addErrorHeaderAndReturnMessage(self::NOT_FOUND);
@@ -165,15 +165,15 @@ class tx_seminars_pi2 extends Tx_Oelib_TemplateHelper {
 	 *
 	 * If access is denied, an error message is returned, and an error 403 is set.
 	 *
-	 * @param integer $eventUid UID of the event for which to create the CSV list, must be >= 0
+	 * @param int $eventUid UID of the event for which to create the CSV list, must be >= 0
 	 *
 	 * @return string CSV list of registrations for the given seminar or an error message in case of an error
 	 */
 	public function createAndOutputListOfRegistrations($eventUid = 0) {
-		/** @var $listView Tx_Seminars_Csv_EmailRegistrationListView */
+		/** @var Tx_Seminars_Csv_EmailRegistrationListView $listView */
 		$listView = t3lib_div::makeInstance('Tx_Seminars_Csv_DownloadRegistrationListView');
 
-		$pageUid = (integer) $this->piVars['pid'];
+		$pageUid = (int)$this->piVars['pid'];
 		if ($eventUid > 0) {
 			if (!$this->hasAccessToEventAndItsRegistrations($eventUid)) {
 				return $this->addErrorHeaderAndReturnMessage($this->errorType);
@@ -197,7 +197,7 @@ class tx_seminars_pi2 extends Tx_Oelib_TemplateHelper {
 	 *
 	 * This function does not do any access checks.
 	 *
-	 * @param integer $eventUid UID of the event for which the registration list should be created, must be > 0
+	 * @param int $eventUid UID of the event for which the registration list should be created, must be > 0
 	 *
 	 * @return string CSV list of registrations for the given seminar or an
 	 *                empty string if there is not event with the provided UID
@@ -207,7 +207,7 @@ class tx_seminars_pi2 extends Tx_Oelib_TemplateHelper {
 			return '';
 		}
 
-		/** @var $listView Tx_Seminars_Csv_EmailRegistrationListView */
+		/** @var Tx_Seminars_Csv_EmailRegistrationListView $listView */
 		$listView = t3lib_div::makeInstance('Tx_Seminars_Csv_DownloadRegistrationListView');
 		$listView->setEventUid($eventUid);
 
@@ -221,7 +221,7 @@ class tx_seminars_pi2 extends Tx_Oelib_TemplateHelper {
 	 *
 	 * If access is denied, an error message is returned, and an error 403 is set.
 	 *
-	 * @param integer $pageUid PID of the page with events for which to create the CSV list, must be > 0
+	 * @param int $pageUid PID of the page with events for which to create the CSV list, must be > 0
 	 *
 	 * @return string CSV list of events for the given page or an error message in case of an error
 	 */
@@ -243,12 +243,12 @@ class tx_seminars_pi2 extends Tx_Oelib_TemplateHelper {
 	 *
 	 * This function does not do any access checks.
 	 *
-	 * @param integer $pageUid PID of the system folder from which the event records should be exported, must be > 0
+	 * @param int $pageUid PID of the system folder from which the event records should be exported, must be > 0
 	 *
 	 * @return string CSV export of the event records on that page
 	 */
 	public function createListOfEvents($pageUid) {
-		/** @var $eventListView Tx_Seminars_Csv_EventListView */
+		/** @var Tx_Seminars_Csv_EventListView $eventListView */
 		$eventListView = t3lib_div::makeInstance('Tx_Seminars_Csv_EventListView');
 		$eventListView->setPageUid($pageUid);
 
@@ -262,22 +262,22 @@ class tx_seminars_pi2 extends Tx_Oelib_TemplateHelper {
 	 *    read access to *all* pages where the registration records of the
 	 *    selected event are stored.
 	 *
-	 * @param integer $eventUid UID of the event record for which access should be checked, must be > 0
+	 * @param int $eventUid UID of the event record for which access should be checked, must be > 0
 	 *
-	 * @return boolean TRUE if the list of registrations may be exported as CSV
+	 * @return bool TRUE if the list of registrations may be exported as CSV
 	 */
 	protected function canAccessListOfRegistrations($eventUid) {
 		switch ($this->getTypo3Mode()) {
 			case 'BE':
-				/** @var $accessCheck Tx_Seminars_Csv_BackEndRegistrationAccessCheck */
+				/** @var Tx_Seminars_Csv_BackEndRegistrationAccessCheck $accessCheck */
 				$accessCheck = t3lib_div::makeInstance('Tx_Seminars_Csv_BackEndRegistrationAccessCheck');
 				$result = $accessCheck->hasAccess();
 				break;
 			case 'FE':
-				/** @var $accessCheck Tx_Seminars_Csv_FrontEndRegistrationAccessCheck */
+				/** @var Tx_Seminars_Csv_FrontEndRegistrationAccessCheck $accessCheck */
 				$accessCheck = t3lib_div::makeInstance('Tx_Seminars_Csv_FrontEndRegistrationAccessCheck');
 
-				/** @var $seminar tx_seminars_seminar */
+				/** @var tx_seminars_seminar $seminar */
 				$seminar = t3lib_div::makeInstance('tx_seminars_seminar', $eventUid);
 				$accessCheck->setEvent($seminar);
 
@@ -293,12 +293,12 @@ class tx_seminars_pi2 extends Tx_Oelib_TemplateHelper {
 	/**
 	 * Checks whether the logged-in BE user has access to the event list.
 	 *
-	 * @param integer $pageUid PID of the page with events for which to check access, must be >= 0
+	 * @param int $pageUid PID of the page with events for which to check access, must be >= 0
 	 *
-	 * @return boolean TRUE if the list of events may be exported as CSV, FALSE otherwise
+	 * @return bool TRUE if the list of events may be exported as CSV, FALSE otherwise
 	 */
 	protected function canAccessListOfEvents($pageUid) {
-		/** @var $accessCheck Tx_Seminars_Csv_BackEndEventAccessCheck */
+		/** @var Tx_Seminars_Csv_BackEndEventAccessCheck $accessCheck */
 		$accessCheck = t3lib_div::makeInstance('Tx_Seminars_Csv_BackEndEventAccessCheck');
 		$accessCheck->setPageUid($pageUid);
 
@@ -344,7 +344,7 @@ class tx_seminars_pi2 extends Tx_Oelib_TemplateHelper {
 	/**
 	 * Adds a status header and returns an error message.
 	 *
-	 * @param integer $errorCode
+	 * @param int $errorCode
 	 *        the type of error message, must be tx_seminars_pi2::ACCESS_DENIED or tx_seminars_pi2::NOT_FOUND
 	 *
 	 * @return string the error message belonging to the error code, will not be empty
@@ -371,16 +371,16 @@ class tx_seminars_pi2 extends Tx_Oelib_TemplateHelper {
 	/**
 	 * Checks whether the currently logged-in BE-User is allowed to access the registrations records on the given page.
 	 *
-	 * @param integer $pageUid PID of the page to check the access for, must be >= 0
+	 * @param int $pageUid PID of the page to check the access for, must be >= 0
 	 *
-	 * @return boolean
+	 * @return bool
 	 *         TRUE if the currently logged-in BE-User is allowed to access the registrations records,
 	 *         FALSE if the user has no access or this function is called in FE mode
 	 */
 	private function canAccessRegistrationsOnPage($pageUid) {
 		switch ($this->getTypo3Mode()) {
 			case 'BE':
-				/** @var $accessCheck Tx_Seminars_Csv_BackEndRegistrationAccessCheck */
+				/** @var Tx_Seminars_Csv_BackEndRegistrationAccessCheck $accessCheck */
 				$accessCheck = t3lib_div::makeInstance('Tx_Seminars_Csv_BackEndRegistrationAccessCheck');
 				$accessCheck->setPageUid($pageUid);
 				$result = $accessCheck->hasAccess();
@@ -428,10 +428,10 @@ class tx_seminars_pi2 extends Tx_Oelib_TemplateHelper {
 	 *
 	 * Stores the type of the error in $this->errorType
 	 *
-	 * @param integer $eventUid
+	 * @param int $eventUid
 	 *        the event to check the access for, must be >= 0 but not necessarily point to an existing event
 	 *
-	 * @return boolean TRUE if the event record exists and the BE-User has
+	 * @return bool TRUE if the event record exists and the BE-User has
 	 *                 access to the registrations belonging to the event,
 	 *                 FALSE otherwise
 	 */

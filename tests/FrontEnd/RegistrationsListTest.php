@@ -42,21 +42,21 @@ class tx_seminars_FrontEnd_RegistrationsListTest extends tx_phpunit_testcase {
 	private $testingFramework;
 
 	/**
-	 * @var integer the UID of a seminar to which the fixture relates
+	 * @var int the UID of a seminar to which the fixture relates
 	 */
 	private $seminarUid;
 
 	/**
-	 * @var integer the UID of a front end user for testing purposes
+	 * @var int the UID of a front end user for testing purposes
 	 */
 	private $feUserUid = 0;
 
 	/**
-	 * @var integer the UID of a registration for testing purposes
+	 * @var int the UID of a registration for testing purposes
 	 */
 	private $registrationUid = 0;
 
-	public function setUp() {
+	protected function setUp() {
 		tx_oelib_configurationProxy::getInstance('seminars')->setAsBoolean('enableConfigCheck', FALSE);
 
 		tx_oelib_headerProxyFactory::getInstance()->enableTestMode();
@@ -85,11 +85,10 @@ class tx_seminars_FrontEnd_RegistrationsListTest extends tx_phpunit_testcase {
 		);
 	}
 
-	public function tearDown() {
+	protected function tearDown() {
 		$this->testingFramework->cleanUp();
 
 		tx_seminars_registrationmanager::purgeInstance();
-		unset($this->fixture, $this->testingFramework);
 	}
 
 

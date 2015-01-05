@@ -72,6 +72,7 @@ class tx_seminars_BackEnd_EventsList extends tx_seminars_BackEnd_AbstractList {
 
 		$this->createTableHeading();
 
+		/** @var tx_seminars_BagBuilder_Event $builder */
 		$builder = t3lib_div::makeInstance('tx_seminars_BagBuilder_Event');
 		$builder->setBackEndMode();
 
@@ -158,6 +159,7 @@ class tx_seminars_BackEnd_EventsList extends tx_seminars_BackEnd_AbstractList {
 	private function createListBody(tx_seminars_Bag_Event $events) {
 		$tableRows = '';
 
+		/** @var tx_seminars_seminar $event */
 		foreach ($events as $event) {
 			$this->template->setMarker('uid', $event->getUid());
 			$this->template->setMarker('icon', $event->getRecordIcon());
@@ -423,7 +425,7 @@ class tx_seminars_BackEnd_EventsList extends tx_seminars_BackEnd_AbstractList {
 	 * This will be determined by the event folder storage setting of the
 	 * currently logged-in BE-user.
 	 *
-	 * @return integer the PID for new event records, will be >= 0
+	 * @return int the PID for new event records, will be >= 0
 	 */
 	protected function getNewRecordPid() {
 		return $this->getLoggedInUser()->getEventFolderFromGroup();

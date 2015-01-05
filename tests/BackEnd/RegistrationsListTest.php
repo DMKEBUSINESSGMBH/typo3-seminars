@@ -41,7 +41,7 @@ class tx_seminars_BackEnd_RegistrationsListTest extends tx_phpunit_testcase {
 	private $testingFramework;
 
 	/**
-	 * @var integer PID of a dummy system folder
+	 * @var int PID of a dummy system folder
 	 */
 	private $dummySysFolderPid = 0;
 
@@ -55,7 +55,7 @@ class tx_seminars_BackEnd_RegistrationsListTest extends tx_phpunit_testcase {
 	 */
 	private $backEndLanguageBackup;
 
-	public function setUp() {
+	protected function setUp() {
 		tx_oelib_configurationProxy::getInstance('seminars')->setAsBoolean('enableConfigCheck', FALSE);
 
 		$this->testingFramework = new tx_oelib_testingFramework('tx_seminars');
@@ -74,25 +74,21 @@ class tx_seminars_BackEnd_RegistrationsListTest extends tx_phpunit_testcase {
 			'doktype' => tx_seminars_BackEnd_AbstractList::SYSFOLDER_TYPE,
 		));
 
-		$this->backEndModule->doc = t3lib_div::makeInstance('bigDoc');
-		$this->backEndModule->doc->backPath = $GLOBALS['BACK_PATH'];
-		$this->backEndModule->doc->docType = 'xhtml_strict';
+		$document = new bigDoc();
+		$this->backEndModule->doc = $document;
+		$document->backPath = $GLOBALS['BACK_PATH'];
+		$document->docType = 'xhtml_strict';
 
 		$this->fixture = new tx_seminars_BackEnd_RegistrationsList(
 			$this->backEndModule
 		);
 	}
 
-	public function tearDown() {
+	protected function tearDown() {
 		$GLOBALS['LANG']->lang = $this->backEndLanguageBackup;
 
 		$this->testingFramework->cleanUp();
 		tx_seminars_registration::purgeCachedSeminars();
-
-		unset(
-			$this->backEndModule, $this->fixture, $this->testingFramework,
-			$_GET['eventUid']
-		);
 	}
 
 

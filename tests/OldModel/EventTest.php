@@ -43,17 +43,17 @@ class tx_seminars_OldModel_EventTest extends tx_phpunit_testcase {
 	protected $testingFramework = NULL;
 
 	/**
-	 * @var integer
+	 * @var int
 	 */
 	protected $beginDate = 0;
 
 	/**
-	 * @var integer
+	 * @var int
 	 */
 	protected $unregistrationDeadline = 0;
 
 	/**
-	 * @var integer
+	 * @var int
 	 */
 	protected $now = 0;
 
@@ -103,7 +103,6 @@ class tx_seminars_OldModel_EventTest extends tx_phpunit_testcase {
 		$this->testingFramework->cleanUp();
 
 		tx_seminars_registrationmanager::purgeInstance();
-		unset($this->fixture, $this->pi1, $this->testingFramework);
 	}
 
 
@@ -114,7 +113,7 @@ class tx_seminars_OldModel_EventTest extends tx_phpunit_testcase {
 	/**
 	 * Creates a fake front end and a pi1 instance in $this->pi1.
 	 *
-	 * @param integer $detailPageUid UID of the detail view page
+	 * @param int $detailPageUid UID of the detail view page
 	 *
 	 * @return void
 	 */
@@ -138,7 +137,7 @@ class tx_seminars_OldModel_EventTest extends tx_phpunit_testcase {
 	 *
 	 * @param array $placeData data of the place to add, may be empty
 	 *
-	 * @return integer the UID of the created record, will be > 0
+	 * @return int the UID of the created record, will be > 0
 	 */
 	private function addPlaceRelation(array $placeData = array()) {
 		$uid = $this->testingFramework->createRecord(
@@ -163,7 +162,7 @@ class tx_seminars_OldModel_EventTest extends tx_phpunit_testcase {
 	 *
 	 * @param array $targetGroupData data of the target group to add, may be empty
 	 *
-	 * @return integer the UID of the created record, will be > 0
+	 * @return int the UID of the created record, will be > 0
 	 */
 	private function addTargetGroupRelation(array $targetGroupData = array()) {
 		$uid = $this->testingFramework->createRecord(
@@ -187,7 +186,7 @@ class tx_seminars_OldModel_EventTest extends tx_phpunit_testcase {
 	 *
 	 * @param array $paymentMethodData data of the payment method to add, may be empty
 	 *
-	 * @return integer the UID of the created record, will be > 0
+	 * @return int the UID of the created record, will be > 0
 	 */
 	private function addPaymentMethodRelation(
 		array $paymentMethodData = array()
@@ -212,7 +211,7 @@ class tx_seminars_OldModel_EventTest extends tx_phpunit_testcase {
 	 *
 	 * @param array $organizerData data of the organizer to add, may be empty
 	 *
-	 * @return integer the UID of the created record, will be > 0
+	 * @return int the UID of the created record, will be > 0
 	 */
 	private function addOrganizingPartnerRelation(
 		array $organizerData = array()
@@ -237,9 +236,9 @@ class tx_seminars_OldModel_EventTest extends tx_phpunit_testcase {
 	 * from the fixture.
 	 *
 	 * @param array $categoryData data of the category to add, may be empty
-	 * @param integer $sorting the sorting index of the category to add, must be >= 0
+	 * @param int $sorting the sorting index of the category to add, must be >= 0
 	 *
-	 * @return integer the UID of the created record, will be > 0
+	 * @return int the UID of the created record, will be > 0
 	 */
 	private function addCategoryRelation(
 		array $categoryData = array(), $sorting = 0
@@ -265,7 +264,7 @@ class tx_seminars_OldModel_EventTest extends tx_phpunit_testcase {
 	 *
 	 * @param array $organizerData data of the organizer to add, may be empty
 	 *
-	 * @return integer the UID of the created record, will be > 0
+	 * @return int the UID of the created record, will be > 0
 	 */
 	private function addOrganizerRelation(array $organizerData = array()) {
 		$uid = $this->testingFramework->createRecord(
@@ -289,7 +288,7 @@ class tx_seminars_OldModel_EventTest extends tx_phpunit_testcase {
 	 *
 	 * @param array $speakerData data of the speaker to add, may be empty
 	 *
-	 * @return integer the UID of the created record, will be > 0
+	 * @return int the UID of the created record, will be > 0
 	 */
 	private function addSpeakerRelation($speakerData) {
 		$uid = $this->testingFramework->createRecord(
@@ -313,7 +312,7 @@ class tx_seminars_OldModel_EventTest extends tx_phpunit_testcase {
 	 *
 	 * @param array $speakerData data of the speaker to add, may be empty
 	 *
-	 * @return integer the UID of the created record, will be > 0
+	 * @return int the UID of the created record, will be > 0
 	 */
 	private function addPartnerRelation($speakerData) {
 		$uid = $this->testingFramework->createRecord(
@@ -337,7 +336,7 @@ class tx_seminars_OldModel_EventTest extends tx_phpunit_testcase {
 	 *
 	 * @param array $speakerData data of the speaker to add, may be empty
 	 *
-	 * @return integer the UID of the created record, will be > 0
+	 * @return int the UID of the created record, will be > 0
 	 */
 	private function addTutorRelation($speakerData) {
 		$uid = $this->testingFramework->createRecord(
@@ -361,7 +360,7 @@ class tx_seminars_OldModel_EventTest extends tx_phpunit_testcase {
 	 *
 	 * @param array $speakerData data of the speaker to add, may be empty
 	 *
-	 * @return integer the UID of the created record, will be > 0
+	 * @return int the UID of the created record, will be > 0
 	 */
 	private function addLeaderRelation($speakerData) {
 		$uid = $this->testingFramework->createRecord(
@@ -385,7 +384,7 @@ class tx_seminars_OldModel_EventTest extends tx_phpunit_testcase {
 	 *
 	 * @param array $eventTypeData data of the event type to add, may be empty
 	 *
-	 * @return integer the UID of the created record, will be > 0
+	 * @return int the UID of the created record, will be > 0
 	 */
 	private function addEventTypeRelation($eventTypeData) {
 		$uid = $this->testingFramework->createRecord(
@@ -8532,7 +8531,7 @@ class tx_seminars_OldModel_EventTest extends tx_phpunit_testcase {
 	 * Data provider for testing the canViewRegistrationsList function
 	 * with default access and access only for attendees and managers.
 	 *
-	 * @return array test data for canViewRegistrationsList with each row
+	 * @return array[] test data for canViewRegistrationsList with each row
 	 *               having the following elements:
 	 *               [expected] boolean: expected value (TRUE or FALSE)
 	 *               [loggedIn] boolean: whether a user is logged in
@@ -8684,12 +8683,12 @@ class tx_seminars_OldModel_EventTest extends tx_phpunit_testcase {
 	 * @dataProvider canViewRegistrationsListDataProvider
 	 *
 	 * @param string $expected
-	 * @param boolean $loggedIn
-	 * @param boolean $isRegistered
-	 * @param boolean  $isVip
+	 * @param bool $loggedIn
+	 * @param bool $isRegistered
+	 * @param bool  $isVip
 	 * @param string $whichPlugin
-	 * @param integer $registrationsListPID
-	 * @param integer $registrationsVipListPID
+	 * @param int $registrationsListPID
+	 * @param int $registrationsVipListPID
 	 *
 	 * @return void
 	 */
@@ -8729,13 +8728,13 @@ class tx_seminars_OldModel_EventTest extends tx_phpunit_testcase {
 	 *
 	 * @dataProvider canViewRegistrationsListDataProvider
 	 *
-	 * @param boolean $expected
-	 * @param boolean $loggedIn
-	 * @param boolean $isRegistered
-	 * @param boolean $isVip
+	 * @param bool $expected
+	 * @param bool $loggedIn
+	 * @param bool $isRegistered
+	 * @param bool $isVip
 	 * @param string $whichPlugin
-	 * @param integer $registrationsListPID
-	 * @param integer $registrationsVipListPID
+	 * @param int $registrationsListPID
+	 * @param int $registrationsVipListPID
 	 *
 	 * @return void
 	 */
@@ -8775,7 +8774,7 @@ class tx_seminars_OldModel_EventTest extends tx_phpunit_testcase {
 	 * Data provider for the canViewRegistrationsForCsvExportListDataProvider
 	 * test.
 	 *
-	 * @return array test data for canViewRegistrationsList with each row
+	 * @return array[] test data for canViewRegistrationsList with each row
 	 *               having the following elements:
 	 *               [expected] boolean: expected value (TRUE or FALSE)
 	 *               [loggedIn] boolean: whether a user is logged in
@@ -8813,10 +8812,10 @@ class tx_seminars_OldModel_EventTest extends tx_phpunit_testcase {
 	 *
 	 * @dataProvider canViewRegistrationsForCsvExportListDataProvider
 	 *
-	 * @param boolean $expected
-	 * @param boolean $loggedIn
-	 * @param boolean $isVip
-	 * @param boolean $allowCsvExportForVips
+	 * @param bool $expected
+	 * @param bool $loggedIn
+	 * @param bool $isVip
+	 * @param bool $allowCsvExportForVips
 	 *
 	 * @return void
 	 */
@@ -8853,7 +8852,7 @@ class tx_seminars_OldModel_EventTest extends tx_phpunit_testcase {
 	 * Data provider for testing the canViewRegistrationsList function
 	 * with login access.
 	 *
-	 * @return array test data for canViewRegistrationsList with each row
+	 * @return array[] test data for canViewRegistrationsList with each row
 	 *               having the following elements:
 	 *               [expected] boolean: expected value (TRUE or FALSE)
 	 *               [loggedIn] boolean: whether a user is logged in
@@ -9012,13 +9011,13 @@ class tx_seminars_OldModel_EventTest extends tx_phpunit_testcase {
 	 *
 	 * @dataProvider canViewRegistrationsListDataProviderForLoggedIn
 	 *
-	 * @param boolean $expected
-	 * @param boolean $loggedIn
-	 * @param boolean $isRegistered
-	 * @param boolean $isVip
+	 * @param bool $expected
+	 * @param bool $loggedIn
+	 * @param bool $isRegistered
+	 * @param bool $isVip
 	 * @param string $whichPlugin
-	 * @param integer $registrationsListPID
-	 * @param integer $registrationsVipListPID
+	 * @param int $registrationsListPID
+	 * @param int $registrationsVipListPID
 	 *
 	 * @return void
 	 */
@@ -9058,7 +9057,7 @@ class tx_seminars_OldModel_EventTest extends tx_phpunit_testcase {
 	 * Data provider for testing the canViewRegistrationsList function
 	 * with world access.
 	 *
-	 * @return array test data for canViewRegistrationsList with each row
+	 * @return array[] test data for canViewRegistrationsList with each row
 	 *               having the following elements:
 	 *               [expected] boolean: expected value (TRUE or FALSE)
 	 *               [loggedIn] boolean: whether a user is logged in
@@ -9217,13 +9216,13 @@ class tx_seminars_OldModel_EventTest extends tx_phpunit_testcase {
 	 *
 	 * @dataProvider canViewRegistrationsListDataProviderForWorld
 	 *
-	 * @param boolean $expected
-	 * @param boolean $loggedIn
-	 * @param boolean $isRegistered
-	 * @param boolean $isVip
+	 * @param bool $expected
+	 * @param bool $loggedIn
+	 * @param bool $isRegistered
+	 * @param bool $isVip
 	 * @param string $whichPlugin
-	 * @param integer $registrationsListPID
-	 * @param integer $registrationsVipListPID
+	 * @param int $registrationsListPID
+	 * @param int $registrationsVipListPID
 	 *
 	 * @return void
 	 */
@@ -9330,7 +9329,7 @@ class tx_seminars_OldModel_EventTest extends tx_phpunit_testcase {
 	 * Data provider that returns all possible access level codes for the
 	 * FE registration lists.
 	 *
-	 * @return array the possible access levels, will not be empty
+	 * @return array[] the possible access levels, will not be empty
 	 *
 	 * @see canViewRegistrationsListMessageForVipListAndNoLoginReturnsPleaseLoginMessage
 	 */
@@ -9370,7 +9369,7 @@ class tx_seminars_OldModel_EventTest extends tx_phpunit_testcase {
 	 * Data provider that returns all possible parameter combinations for
 	 * canViewRegistrationsList as called from canViewRegistrationsListMessage.
 	 *
-	 * @return array the possible parameter combinations, will not be empty
+	 * @return array[] the possible parameter combinations, will not be empty
 	 *
 	 * @see canViewRegistrationsListMessageWithLoginRoutesParameters
 	 */
@@ -9500,7 +9499,7 @@ class tx_seminars_OldModel_EventTest extends tx_phpunit_testcase {
 	/**
 	 * Data provider for hasAnyPriceWithDataProvider.
 	 *
-	 * @return array two-dimensional array with the following inner keys:
+	 * @return array[] two-dimensional array with the following inner keys:
 	 *               [expectedHasAnyPrice] the expected return value of hasAnyPrice
 	 *               [hasPriceRegular] the return value of that function
 	 *               [hasPriceSpecial] the return value of that function
@@ -9612,17 +9611,17 @@ class tx_seminars_OldModel_EventTest extends tx_phpunit_testcase {
 	 *
 	 * @dataProvider hasAnyPriceDataProvider
 	 *
-	 * @param boolean $expectedHasAnyPrice
+	 * @param bool $expectedHasAnyPrice
 	 *        the expected return value of hasAnyPrice
-	 * @param boolean $hasPriceRegular the return value of hasPriceRegular
-	 * @param boolean $hasPriceSpecial the return value of hasPriceRegular
-	 * @param boolean $earlyBirdApplies the return value of earlyBirdApplies
-	 * @param boolean $hasEarlyBirdPriceRegular the return value of earlyBirdApplies
-	 * @param boolean $hasEarlyBirdPriceSpecial
+	 * @param bool $hasPriceRegular the return value of hasPriceRegular
+	 * @param bool $hasPriceSpecial the return value of hasPriceRegular
+	 * @param bool $earlyBirdApplies the return value of earlyBirdApplies
+	 * @param bool $hasEarlyBirdPriceRegular the return value of earlyBirdApplies
+	 * @param bool $hasEarlyBirdPriceSpecial
 	 *        the return value of hasEarlyBirdPriceSpecial
-	 * @param boolean $hasPriceRegularBoard
+	 * @param bool $hasPriceRegularBoard
 	 *        the return value of hasPriceRegularBoard
-	 * @param boolean $hasPriceSpecialBoard
+	 * @param bool $hasPriceSpecialBoard
 	 *        the return value of hasPriceSpecialBoard
 	 */
 	public function hasAnyPriceWithDataProvider(

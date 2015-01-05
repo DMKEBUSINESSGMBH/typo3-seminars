@@ -40,16 +40,14 @@ class tx_seminars_Mapper_BackEndUserGroupTest extends tx_phpunit_testcase {
 	 */
 	private $fixture;
 
-	public function setUp() {
+	protected function setUp() {
 		$this->testingFramework = new tx_oelib_testingFramework('tx_oelib');
 
 		$this->fixture = tx_oelib_MapperRegistry::get('tx_seminars_Mapper_BackEndUserGroup');
 	}
 
-	public function tearDown() {
+	protected function tearDown() {
 		$this->testingFramework->cleanUp();
-
-		unset($this->fixture, $this->testingFramework);
 	}
 
 
@@ -73,6 +71,7 @@ class tx_seminars_Mapper_BackEndUserGroupTest extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function loadForExistingUserGroupCanLoadUserGroupData() {
+		/** @var tx_seminars_Model_BackEndUserGroup $userGroup */
 		$userGroup = $this->fixture->find(
 			$this->testingFramework->createBackEndUserGroup(
 				array('title' => 'foo')

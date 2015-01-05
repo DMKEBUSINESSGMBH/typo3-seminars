@@ -41,16 +41,14 @@ class tx_seminars_Mapper_TargetGroupTest extends tx_phpunit_testcase {
 	 */
 	private $fixture;
 
-	public function setUp() {
+	protected function setUp() {
 		$this->testingFramework = new tx_oelib_testingFramework('tx_seminars');
 
 		$this->fixture = new tx_seminars_Mapper_TargetGroup();
 	}
 
-	public function tearDown() {
+	protected function tearDown() {
 		$this->testingFramework->cleanUp();
-
-		unset($this->fixture, $this->testingFramework);
 	}
 
 
@@ -75,9 +73,11 @@ class tx_seminars_Mapper_TargetGroupTest extends tx_phpunit_testcase {
 			'tx_seminars_target_groups', array('title' => 'Housewives')
 		);
 
+		/** @var tx_seminars_Model_TargetGroup $model */
+		$model = $this->fixture->find($uid);
 		$this->assertEquals(
 			'Housewives',
-			$this->fixture->find($uid)->getTitle()
+			$model->getTitle()
 		);
 	}
 

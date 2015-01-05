@@ -1,7 +1,5 @@
 <?php
-if (!defined ('TYPO3_MODE')) {
-	die('Access denied.');
-}
+defined('TYPO3_MODE') or die('Access denied.');
 
 include_once(t3lib_extMgm::extPath($_EXTKEY) . 'class.tx_seminars_flexForms.php');
 include_once(t3lib_extMgm::extPath($_EXTKEY) . 'tx_seminars_modifiedSystemTables.php');
@@ -28,7 +26,7 @@ if (t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version) < 
 	t3lib_div::loadTCA('tt_content');
 }
 
-$TCA['tx_seminars_test'] = array(
+$GLOBALS['TCA']['tx_seminars_test'] = array(
 	'ctrl' => array(
 		'title' => 'LLL:EXT:seminars/locallang_db.xml:tx_seminars_test',
 		'readOnly' => 1,
@@ -51,7 +49,7 @@ $TCA['tx_seminars_test'] = array(
 	)
 );
 
-$TCA['tx_seminars_seminars'] = array(
+$GLOBALS['TCA']['tx_seminars_seminars'] = array(
 	'ctrl' => array(
 		'title' => 'LLL:EXT:seminars/locallang_db.xml:tx_seminars_seminars',
 		'label' => 'title',
@@ -81,7 +79,7 @@ $TCA['tx_seminars_seminars'] = array(
 	)
 );
 
-$TCA['tx_seminars_speakers'] = array(
+$GLOBALS['TCA']['tx_seminars_speakers'] = array(
 	'ctrl' => array(
 		'title' => 'LLL:EXT:seminars/locallang_db.xml:tx_seminars_speakers',
 		'label' => 'title',
@@ -99,7 +97,7 @@ $TCA['tx_seminars_speakers'] = array(
 	)
 );
 
-$TCA['tx_seminars_attendances'] = array(
+$GLOBALS['TCA']['tx_seminars_attendances'] = array(
 	'ctrl' => array(
 		'title' => 'LLL:EXT:seminars/locallang_db.xml:tx_seminars_attendances',
 		'label' => 'title',
@@ -118,7 +116,7 @@ $TCA['tx_seminars_attendances'] = array(
 	)
 );
 
-$TCA['tx_seminars_sites'] = array(
+$GLOBALS['TCA']['tx_seminars_sites'] = array(
 	'ctrl' => array(
 		'title' => 'LLL:EXT:seminars/locallang_db.xml:tx_seminars_sites',
 		'label' => 'title',
@@ -133,7 +131,7 @@ $TCA['tx_seminars_sites'] = array(
 	)
 );
 
-$TCA['tx_seminars_organizers'] = array(
+$GLOBALS['TCA']['tx_seminars_organizers'] = array(
 	'ctrl' => array(
 		'title' => 'LLL:EXT:seminars/locallang_db.xml:tx_seminars_organizers',
 		'label' => 'title',
@@ -148,7 +146,7 @@ $TCA['tx_seminars_organizers'] = array(
 	)
 );
 
-$TCA['tx_seminars_payment_methods'] = array(
+$GLOBALS['TCA']['tx_seminars_payment_methods'] = array(
 	'ctrl' => array(
 		'title' => 'LLL:EXT:seminars/locallang_db.xml:tx_seminars_payment_methods',
 		'label' => 'title',
@@ -163,7 +161,7 @@ $TCA['tx_seminars_payment_methods'] = array(
 	)
 );
 
-$TCA['tx_seminars_event_types'] = array(
+$GLOBALS['TCA']['tx_seminars_event_types'] = array(
 	'ctrl' => array(
 		'title' => 'LLL:EXT:seminars/locallang_db.xml:tx_seminars_event_types',
 		'label' => 'title',
@@ -178,7 +176,7 @@ $TCA['tx_seminars_event_types'] = array(
 	)
 );
 
-$TCA['tx_seminars_checkboxes'] = array(
+$GLOBALS['TCA']['tx_seminars_checkboxes'] = array(
 	'ctrl' => array(
 		'title' => 'LLL:EXT:seminars/locallang_db.xml:tx_seminars_checkboxes',
 		'label' => 'title',
@@ -193,7 +191,7 @@ $TCA['tx_seminars_checkboxes'] = array(
 	)
 );
 
-$TCA['tx_seminars_lodgings'] = array(
+$GLOBALS['TCA']['tx_seminars_lodgings'] = array(
 	'ctrl' => array(
 		'title' => 'LLL:EXT:seminars/locallang_db.xml:tx_seminars_lodgings',
 		'label' => 'title',
@@ -208,7 +206,7 @@ $TCA['tx_seminars_lodgings'] = array(
 	)
 );
 
-$TCA['tx_seminars_foods'] = array(
+$GLOBALS['TCA']['tx_seminars_foods'] = array(
 	'ctrl' => array(
 		'title' => 'LLL:EXT:seminars/locallang_db.xml:tx_seminars_foods',
 		'label' => 'title',
@@ -223,7 +221,7 @@ $TCA['tx_seminars_foods'] = array(
 	)
 );
 
-$TCA['tx_seminars_timeslots'] = array(
+$GLOBALS['TCA']['tx_seminars_timeslots'] = array(
 	'ctrl' => array(
 		'title' => 'LLL:EXT:seminars/locallang_db.xml:tx_seminars_timeslots',
 		'label' => 'title',
@@ -238,7 +236,7 @@ $TCA['tx_seminars_timeslots'] = array(
 	)
 );
 
-$TCA['tx_seminars_target_groups'] = array(
+$GLOBALS['TCA']['tx_seminars_target_groups'] = array(
 	'ctrl' => array(
 		'title' => 'LLL:EXT:seminars/locallang_db.xml:tx_seminars_target_groups',
 		'label' => 'title',
@@ -253,7 +251,7 @@ $TCA['tx_seminars_target_groups'] = array(
 	)
 );
 
-$TCA['tx_seminars_categories'] = array(
+$GLOBALS['TCA']['tx_seminars_categories'] = array(
 	'ctrl' => array(
 		'title' => 'LLL:EXT:seminars/locallang_db.xml:tx_seminars_categories',
 		'label' => 'title',
@@ -268,7 +266,7 @@ $TCA['tx_seminars_categories'] = array(
 	)
 );
 
-$TCA['tx_seminars_skills'] = array(
+$GLOBALS['TCA']['tx_seminars_skills'] = array(
 	'ctrl' => array(
 		'title' => 'LLL:EXT:seminars/locallang_db.xml:tx_seminars_skills',
 		'label' => 'title',
@@ -286,9 +284,9 @@ $TCA['tx_seminars_skills'] = array(
 t3lib_extMgm::addToInsertRecords('tx_seminars_seminars');
 t3lib_extMgm::addToInsertRecords('tx_seminars_speakers');
 
-$TCA['tt_content']['types']['list']['subtypes_excludelist'][$_EXTKEY.'_pi1']='layout,select_key,pages,recursive';
+$GLOBALS['TCA']['tt_content']['types']['list']['subtypes_excludelist'][$_EXTKEY.'_pi1']='layout,select_key,pages,recursive';
 
-$TCA['tt_content']['types']['list']['subtypes_addlist'][$_EXTKEY.'_pi1'] = 'pi_flexform';
+$GLOBALS['TCA']['tt_content']['types']['list']['subtypes_addlist'][$_EXTKEY.'_pi1'] = 'pi_flexform';
 
 t3lib_extMgm::addPiFlexFormValue(
 	$_EXTKEY . '_pi1',

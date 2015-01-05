@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * This file is part of the TYPO3 CMS project.
  *
  * It is free software; you can redistribute it and/or modify it under
@@ -49,7 +49,7 @@ class tx_seminars_cli_MailNotifier {
 			);
 		}
 
-		$uid = intval($_SERVER['argv'][1]);
+		$uid = (int)$_SERVER['argv'][1];
 		if (($uid == 0) || (tx_oelib_db::selectSingle('COUNT(*) AS number', 'pages', 'uid = ' . $uid) != array('number' => 1))) {
 			throw new InvalidArgumentException(
 				'The provided UID for the page with the configuration was ' . $_SERVER['argv'][1] .
@@ -112,9 +112,9 @@ class tx_seminars_cli_MailNotifier {
 			$attachment = $this->getCsv($event->getUid());
 		}
 
-		/** @var $organizer tx_seminars_OldModel_Organizer */
+		/** @var tx_seminars_OldModel_Organizer $organizer */
 		foreach ($event->getOrganizerBag() as $organizer) {
-			/** @var $eMail Tx_Oelib_Mail */
+			/** @var Tx_Oelib_Mail $eMail */
 			$eMail = t3lib_div::makeInstance('Tx_Oelib_Mail');
 			$eMail->setSender($sender);
 			$eMail->setSubject($subject);
@@ -134,7 +134,7 @@ class tx_seminars_cli_MailNotifier {
 	 * Returns events in confirmed state which are about to take place and for
 	 * which no reminder has been sent yet.
 	 *
-	 * @return array events for which to send the event-takes-place reminder to
+	 * @return tx_seminars_seminar[] events for which to send the event-takes-place reminder to
 	 *               their organizers, will be empty if there are none
 	 */
 	private function getEventsToSendEventTakesPlaceReminderFor() {
@@ -150,6 +150,7 @@ class tx_seminars_cli_MailNotifier {
 		$builder->limitToDaysBeforeBeginDate($days);
 		$bag = $builder->build();
 
+		/** @var tx_seminars_seminar $event */
 		foreach ($bag as $event) {
 			$result[] = $event;
 		}
@@ -161,7 +162,7 @@ class tx_seminars_cli_MailNotifier {
 	 * Returns events in planned state for which the cancellation deadline has
 	 * just passed and for which no reminder has been sent yet.
 	 *
-	 * @return array events for which to send the cancellation reminder to their
+	 * @return tx_seminars_seminar[] events for which to send the cancellation reminder to their
 	 *               organizers, will be empty if there are none
 	 */
 	private function getEventsToSendCancellationDeadlineReminderFor() {
@@ -177,7 +178,7 @@ class tx_seminars_cli_MailNotifier {
 		/** @var $bag tx_seminars_Bag_Event */
 		$bag = $builder->build();
 
-		/** @var $event tx_seminars_seminar */
+		/** @var tx_seminars_seminar $event */
 		foreach ($bag as $event) {
 			if ($event->getCancelationDeadline() < $GLOBALS['SIM_EXEC_TIME']) {
 				$result[] = $event;
@@ -191,7 +192,7 @@ class tx_seminars_cli_MailNotifier {
 	 * Returns the TS setup configuration value of
 	 * 'sendEventTakesPlaceReminderDaysBeforeBeginDate'.
 	 *
-	 * @return integer how many days before an event the event-takes-place
+	 * @return int how many days before an event the event-takes-place
 	 *                 reminder should be send, will be > 0 if this option is
 	 *                 enabled, zero disables sending the reminder
 	 */
@@ -204,12 +205,12 @@ class tx_seminars_cli_MailNotifier {
 	 * Returns a seminar bag builder already limited to upcoming events with a
 	 * begin date and status $status.
 	 *
-	 * @param integer $status status to limit the builder to, must be either tx_seminars_seminar::STATUS_PLANNED or ::CONFIRMED
+	 * @param int $status status to limit the builder to, must be either tx_seminars_seminar::STATUS_PLANNED or ::CONFIRMED
 	 *
 	 * @return tx_seminars_BagBuilder_Event builder for the seminar bag
 	 */
 	private function getSeminarBagBuilder($status) {
-		/** @var $builder tx_seminars_BagBuilder_Event */
+		/** @var tx_seminars_BagBuilder_Event $builder */
 		$builder = t3lib_div::makeInstance('tx_seminars_BagBuilder_Event');
 		$builder->setTimeFrame('upcomingWithBeginDate');
 		$builder->limitToStatus($status);
@@ -220,17 +221,17 @@ class tx_seminars_cli_MailNotifier {
 	/**
 	 * Returns the CSV output for the list of registrations for the event with the provided UID.
 	 *
-	 * @param integer $eventUid UID of the event to create the output for, must be > 0
+	 * @param int $eventUid UID of the event to create the output for, must be > 0
 	 *
 	 * @return Tx_Oelib_Attachment CSV list of registrations for the given event
 	 */
 	private function getCsv($eventUid) {
-		/** @var $csvCreator Tx_Seminars_Csv_EmailRegistrationListView */
+		/** @var Tx_Seminars_Csv_EmailRegistrationListView $csvCreator */
 		$csvCreator = t3lib_div::makeInstance('Tx_Seminars_Csv_EmailRegistrationListView');
 		$csvCreator->setEventUid($eventUid);
 		$csvString = $csvCreator->render();
 
-		/** @var $attachment Tx_Oelib_Attachment */
+		/** @var Tx_Oelib_Attachment $attachment */
 		$attachment = t3lib_div::makeInstance('Tx_Oelib_Attachment');
 		$attachment->setContent($csvString);
 		$attachment->setContentType('text/csv');
@@ -255,7 +256,11 @@ class tx_seminars_cli_MailNotifier {
 	 * @return string the localized e-mail content, will not be empty
 	 */
 	private function customizeMessage($locallangKey, tx_seminars_seminar $event, $organizerName = '') {
-		$GLOBALS['LANG']->lang = tx_oelib_MapperRegistry::get('tx_oelib_Mapper_BackEndUser')->findByCliKey()->getLanguage();
+		/** @var tx_oelib_Mapper_BackEndUser $mapper */
+		$mapper = tx_oelib_MapperRegistry::get('tx_oelib_Mapper_BackEndUser');
+		/** @var Tx_Oelib_Model_BackEndUser $user */
+		$user = $mapper->findByCliKey();
+		$GLOBALS['LANG']->lang = $user->getLanguage();
 		$GLOBALS['LANG']->includeLLFile(t3lib_extMgm::extPath('seminars') . 'locallang.xml');
 		$result = $GLOBALS['LANG']->getLL($locallangKey);
 
@@ -276,7 +281,7 @@ class tx_seminars_cli_MailNotifier {
 	/**
 	 * Returns a timestamp formatted according to the current configuration.
 	 *
-	 * @param integer $timestamp timestamp, must be >= 0
+	 * @param int $timestamp timestamp, must be >= 0
 	 *
 	 * @return string formatted date according to the TS setup configuration for
 	 *                'dateFormatYMD', will not be empty
@@ -292,7 +297,7 @@ class tx_seminars_cli_MailNotifier {
 	 *
 	 * @param tx_seminars_seminar $event the event to send the e-mail for
 	 *
-	 * @return boolean TRUE if the CSV file should be added, FALSE otherwise
+	 * @return bool TRUE if the CSV file should be added, FALSE otherwise
 	 */
 	private function shouldCsvFileBeAdded(tx_seminars_seminar $event) {
 		return tx_oelib_ConfigurationRegistry::get('plugin.tx_seminars')

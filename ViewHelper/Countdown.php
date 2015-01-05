@@ -58,7 +58,7 @@ class tx_seminars_ViewHelper_Countdown {
 	 * 50000 seconds -> "13 hours"
 	 * The function uses localized strings and also looks for proper usage of singular/plural.
 	 *
-	 * @param integer $targettime the target UNIX timestamp to count up to, must be >= 0
+	 * @param int $targettime the target UNIX timestamp to count up to, must be >= 0
 	 *
 	 * @return string a localized string representing the time left until the event starts
 	 */
@@ -81,12 +81,12 @@ class tx_seminars_ViewHelper_Countdown {
 	/**
 	 * Returns the given duration in days.
 	 *
-	 * @param integer $seconds the duration in seconds, must be >= 0
+	 * @param int $seconds the duration in seconds, must be >= 0
 	 *
 	 * @return string the duration in days
 	 */
 	protected function getAsDays($seconds) {
-		$countdownValue = intval(round($seconds / tx_oelib_Time::SECONDS_PER_DAY));
+		$countdownValue = (int)round($seconds / tx_oelib_Time::SECONDS_PER_DAY);
 		if ($countdownValue > 1 || $countdownValue === 0) {
 			$countdownText = $this->translator->translate('countdown_days_plural');
 		} else {
@@ -99,12 +99,12 @@ class tx_seminars_ViewHelper_Countdown {
 	/**
 	 * Returns the given duration in hours.
 	 *
-	 * @param integer $seconds the duration in seconds, must be >= 0
+	 * @param int $seconds the duration in seconds, must be >= 0
 	 *
 	 * @return string the duration in hours
 	 */
 	protected function getAsHours($seconds) {
-		$countdownValue = intval(round($seconds / tx_oelib_Time::SECONDS_PER_HOUR));
+		$countdownValue = (int)round($seconds / tx_oelib_Time::SECONDS_PER_HOUR);
 		if ($countdownValue > 1 || $countdownValue === 0) {
 			$countdownText = $this->translator->translate('countdown_hours_plural');
 		} else {
@@ -117,12 +117,12 @@ class tx_seminars_ViewHelper_Countdown {
 	/**
 	 * Returns the given duration in minutes.
 	 *
-	 * @param integer $seconds the duration in seconds, must be >= 0
+	 * @param int $seconds the duration in seconds, must be >= 0
 	 *
 	 * @return string the duration in minutes
 	 */
 	protected function getAsMinutes($seconds) {
-		$countdownValue = intval(round($seconds / tx_oelib_Time::SECONDS_PER_MINUTE));
+		$countdownValue = (int)round($seconds / tx_oelib_Time::SECONDS_PER_MINUTE);
 		if ($countdownValue > 1 || $countdownValue === 0) {
 			$countdownText = $this->translator->translate('countdown_minutes_plural');
 		} else {
@@ -135,7 +135,7 @@ class tx_seminars_ViewHelper_Countdown {
 	/**
 	 * Returns the given duration in seconds.
 	 *
-	 * @param integer $seconds the duration in seconds, must be >= 0
+	 * @param int $seconds the duration in seconds, must be >= 0
 	 *
 	 * @return string the duration in seconds
 	 */
@@ -149,7 +149,7 @@ class tx_seminars_ViewHelper_Countdown {
 	/**
 	 * Returns the formatted countdown message using $countdownValue and $countdownText.
 	 *
-	 * @param integer $countdownValue
+	 * @param int $countdownValue
 	 * @param string $countdownText
 	 *
 	 * @return string the formatted countdown message

@@ -48,16 +48,24 @@ class tx_seminars_FrontEnd_EventHeadlineTest extends tx_phpunit_testcase {
 	private $mapper;
 
 	/**
-	 * @var integer event begin date
+	 * @var int event begin date
 	 */
 	private $eventDate = 0;
 
 	/**
-	 * @var integer UID of the event to create the headline for
+	 * @var int UID of the event to create the headline for
 	 */
 	private $eventId = 0;
 
-	public function setUp() {
+	protected function setUp() {
+		$pluginConfiguration = new Tx_Oelib_Configuration();
+		$pluginConfiguration->setAsString('dateFormatYMD', '%d.%m.%Y');
+		$configurationRegistry = Tx_Oelib_ConfigurationRegistry::getInstance();
+		$configurationRegistry->set('plugin.tx_seminars', $pluginConfiguration);
+		$configurationRegistry->set('config', new Tx_Oelib_Configuration());
+		$configurationRegistry->set('page.config', new Tx_Oelib_Configuration());
+		$configurationRegistry->set('plugin.tx_seminars._LOCAL_LANG.default', new Tx_Oelib_Configuration());
+
 		tx_oelib_configurationProxy::getInstance('seminars')->setAsBoolean('enableConfigCheck', FALSE);
 
 		$this->testingFramework	= new tx_oelib_testingFramework('tx_seminars');
@@ -84,11 +92,10 @@ class tx_seminars_FrontEnd_EventHeadlineTest extends tx_phpunit_testcase {
 		$this->fixture->injectEventMapper($this->mapper);
 	}
 
-	public function tearDown() {
+	protected function tearDown() {
 		$this->testingFramework->cleanUp();
 
 		tx_seminars_registrationmanager::purgeInstance();
-		unset($this->fixture, $this->mapper, $this->testingFramework);
 	}
 
 
@@ -123,7 +130,9 @@ class tx_seminars_FrontEnd_EventHeadlineTest extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function renderWithUidOfExistingEventReturnsHtmlSpecialCharedTitleOfSelectedEvent() {
-		$this->mapper->find($this->eventId)->setTitle('<test>Test event</test>');
+		/** @var tx_seminars_Model_Event $event */
+		$event = $this->mapper->find($this->eventId);
+		$event->setTitle('<test>Test event</test>');
 		$this->fixture->piVars['uid'] = $this->eventId;
 
 		$this->assertContains(

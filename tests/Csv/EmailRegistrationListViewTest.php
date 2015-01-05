@@ -50,18 +50,18 @@ class Tx_Seminars_Tests_Csv_EmailRegistrationListViewTest extends Tx_Phpunit_Tes
 	/**
 	 * PID of the system folder in which we store our test data
 	 *
-	 * @var integer
+	 * @var int
 	 */
 	protected $pageUid = 0;
 
 	/**
 	 * UID of a test event record
 	 *
-	 * @var integer
+	 * @var int
 	 */
 	protected $eventUid = 0;
 
-	public function setUp() {
+	protected function setUp() {
 		$GLOBALS['LANG']->includeLLFile(t3lib_extMgm::extPath('seminars') . 'locallang_db.xml');
 		$GLOBALS['LANG']->includeLLFile(t3lib_extMgm::extPath('lang') . 'locallang_general.xml');
 
@@ -86,10 +86,8 @@ class Tx_Seminars_Tests_Csv_EmailRegistrationListViewTest extends Tx_Phpunit_Tes
 		$this->subject->setEventUid($this->eventUid);
 	}
 
-	public function tearDown() {
+	protected function tearDown() {
 		$this->testingFramework->cleanUp();
-
-		unset($this->subject, $this->testingFramework, $this->configuration);
 	}
 
 	/**

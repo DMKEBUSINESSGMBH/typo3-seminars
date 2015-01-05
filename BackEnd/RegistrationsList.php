@@ -48,19 +48,19 @@ class tx_seminars_BackEnd_RegistrationsList extends tx_seminars_BackEnd_Abstract
 	protected $templateFile = 'EXT:seminars/Resources/Private/Templates/BackEnd/RegistrationsList.html';
 
 	/**
-	 * @var integer parameter for setRegistrationTableMarkers to show the list
+	 * @var int parameter for setRegistrationTableMarkers to show the list
 	 *              of registrations on the queue
 	 */
 	const REGISTRATIONS_ON_QUEUE = 1;
 
 	/**
-	 * @var integer parameter for setRegistrationTableMarkers to show the list
+	 * @var int parameter for setRegistrationTableMarkers to show the list
 	 *              of regular registrations
 	 */
 	const REGULAR_REGISTRATIONS = 2;
 
 	/**
-	 * @var integer the UID of the event to show the registrations for
+	 * @var int the UID of the event to show the registrations for
 	 */
 	private $eventUid = 0;
 
@@ -91,14 +91,13 @@ class tx_seminars_BackEnd_RegistrationsList extends tx_seminars_BackEnd_Abstract
 			$GLOBALS['LANG']->getLL('registrationlist.seminar.date')
 		);
 
-		$eventUid = intval(t3lib_div::_GP('eventUid'));
-		if (($eventUid > 0)
-		 	&& tx_oelib_MapperRegistry::get('tx_seminars_Mapper_Event')
-		 		->existsModel($eventUid)
-		) {
+		$eventUid = (int)t3lib_div::_GP('eventUid');
+		/** @var tx_seminars_Mapper_Event $mapper */
+		$mapper = tx_oelib_MapperRegistry::get('tx_seminars_Mapper_Event');
+		if (($eventUid > 0) && $mapper->existsModel($eventUid)) {
 			$this->eventUid = $eventUid;
-			$event = tx_oelib_MapperRegistry::get('tx_seminars_Mapper_Event')
-				->find($eventUid);
+			/** @var tx_seminars_Model_Event $event */
+			$event = $mapper->find($eventUid);
 			$registrationsHeading = sprintf(
 				$GLOBALS['LANG']->getLL('registrationlist.label_registrationsHeading'),
 				htmlspecialchars($event->getTitle()),
@@ -144,15 +143,16 @@ class tx_seminars_BackEnd_RegistrationsList extends tx_seminars_BackEnd_Abstract
 	 * event will be listed, otherwise the registrations on the current page and
 	 * subpages will be listed.
 	 *
-	 * @param integer $registrationsToShow
+	 * @param int $registrationsToShow
 	 *        the switch to decide which registrations should be shown, must
 	 *        be either
 	 *        tx_seminars_BackEnd_RegistrationsList::REGISTRATIONS_ON_QUEUE or
 	 *        tx_seminars_BackEnd_RegistrationsList::REGULAR_REGISTRATIONS
 	 *
-	 * @return boolean TRUE if the generated list is not empty, FALSE otherwise
+	 * @return bool TRUE if the generated list is not empty, FALSE otherwise
 	 */
 	private function setRegistrationTableMarkers($registrationsToShow) {
+		/** @var tx_seminars_BagBuilder_Registration $builder */
 		$builder = t3lib_div::makeInstance('tx_seminars_BagBuilder_Registration');
 		$pageData = $this->page->getPageData();
 
@@ -177,6 +177,7 @@ class tx_seminars_BackEnd_RegistrationsList extends tx_seminars_BackEnd_Abstract
 
 		$tableRows = '';
 
+		/** @var tx_seminars_registration $registration */
 		foreach ($registrationBag as $registration) {
 			try {
 				$userName = htmlspecialchars($registration->getUserName());
@@ -243,7 +244,7 @@ class tx_seminars_BackEnd_RegistrationsList extends tx_seminars_BackEnd_Abstract
 	 * This will be determined by the registration folder storage setting of the
 	 * currently logged-in BE-user.
 	 *
-	 * @return integer the PID for new registration records, will be >= 0
+	 * @return int the PID for new registration records, will be >= 0
 	 */
 	protected function getNewRecordPid() {
 		return $this->getLoggedInUser()->getRegistrationFolderFromGroup();

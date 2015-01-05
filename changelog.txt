@@ -1,4 +1,22 @@
 0.10.0 (currently working on)
+- [#4343] Fix: Some unit tests read the real TS setup
+- [#5209] Cleanup: Use makeInstance in the unit tests only for singletons
+- [#5207] Cleanup: Drop unnecessary CDATA
+- [#4320] Cleanup: Add @var type hinting to help static analysis
+- [#5206] Cleanup: Drop the unset from tearDown()
+- [#5198] Cleanup: Make setUp and tearDown protected
+- [#4319} Fix: Change != to <> in SQL
+- [#5203] Cleanup: Shorten the boolean casts
+- [#5201] Cleanup: Convert intval/float to casts
+- [#5200] Cleanup: boolean -> bool, integer -> int
+- [#5088] Cleanup: Shorten the die() line
+- [#4943] Cleanup: Add missing @throws annotations
+- [#5199] Cleanup: Use $GLOBALS['TCA'] instead of $TCA
+- [#5197] Cleanup: Use comments instead of PHPDoc style comments in copyright block
+- [#5178] Fix: Use time() instead of mktime()
+- [#5176] Change: Update maximum PHP version to 5.6
+- [#5163] Fix: Make the insert record shortcut TS compatible with 6.2
+- [#5174] Fix: Avoid feInterface deprecation warnings in 6.2
 - [#5085] Fix: Allow first_name and last_name in the registration form
 - [#5086] Fix: Old reference to locallang.php in flexform configuration
 - [#5098] Feature: Switch seminars to SwiftMailer

@@ -41,14 +41,14 @@ class tx_seminars_module2 extends tx_seminars_BackEnd_Module {
 	/**
 	 * available sub modules
 	 *
-	 * @var array
+	 * @var string[]
 	 */
 	protected $availableSubModules = array();
 
 	/**
 	 * the ID of the currently selected sub module
 	 *
-	 * @var integer
+	 * @var int
 	 */
 	protected $subModule = 0;
 
@@ -60,7 +60,7 @@ class tx_seminars_module2 extends tx_seminars_BackEnd_Module {
 	public function init() {
 		parent::init();
 
-		$this->id = intval($this->id);
+		$this->id = (int)$this->id;
 	}
 
 	/**
@@ -98,7 +98,7 @@ class tx_seminars_module2 extends tx_seminars_BackEnd_Module {
 		$this->content .= $this->doc->spacer(5);
 
 		if ($this->id <= 0) {
-			/** @var $message t3lib_FlashMessage */
+			/** @var t3lib_FlashMessage $message */
 			$message = t3lib_div::makeInstance(
 				't3lib_FlashMessage',
 				$GLOBALS['LANG']->getLL('message_noPageTypeSelected'),
@@ -118,7 +118,7 @@ class tx_seminars_module2 extends tx_seminars_BackEnd_Module {
 		}
 
 		if (!$this->hasStaticTemplate()) {
-			/** @var $message t3lib_FlashMessage */
+			/** @var t3lib_FlashMessage $message */
 			$message = t3lib_div::makeInstance(
 				't3lib_FlashMessage',
 				$GLOBALS['LANG']->getLL('message_noStaticTemplateFound'),
@@ -134,8 +134,7 @@ class tx_seminars_module2 extends tx_seminars_BackEnd_Module {
 		$this->setPageData($pageAccess);
 
 		// JavaScript function called within getDeleteIcon()
-		$this->doc->JScode = '<script type="text/javascript">/*<![CDATA[*/' .
-			'function jumpToUrl(URL) {document.location = URL;}/*]]>*/</script>';
+		$this->doc->JScode = '<script type="text/javascript">function jumpToUrl(URL) {document.location = URL;}</script>';
 
 		// define the sub modules that should be available in the tab menu
 		$this->availableSubModules = array();
@@ -159,7 +158,7 @@ class tx_seminars_module2 extends tx_seminars_BackEnd_Module {
 		}
 
 		// Read the selected sub module (from the tab menu) and make it available within this class.
-		$this->subModule = intval(t3lib_div::_GET('subModule'));
+		$this->subModule = (int)t3lib_div::_GET('subModule');
 
 		// If $this->subModule is not a key of $this->availableSubModules,
 		// set it to the key of the first element in $this->availableSubModules
@@ -184,17 +183,17 @@ class tx_seminars_module2 extends tx_seminars_BackEnd_Module {
 		// If no sub module is specified, an empty page will be displayed.
 		switch ($this->subModule) {
 			case 2:
-				/** @var $registrationsList tx_seminars_BackEnd_RegistrationsList */
+				/** @var tx_seminars_BackEnd_RegistrationsList $registrationsList */
 				$registrationsList = t3lib_div::makeInstance('tx_seminars_BackEnd_RegistrationsList', $this);
 				$this->content .= $registrationsList->show();
 				break;
 			case 3:
-				/** @var $speakersList tx_seminars_BackEnd_SpeakersList */
+				/** @var tx_seminars_BackEnd_SpeakersList $speakersList */
 				$speakersList = t3lib_div::makeInstance('tx_seminars_BackEnd_SpeakersList', $this);
 				$this->content .= $speakersList->show();
 				break;
 			case 4:
-				/** @var $organizersList tx_seminars_BackEnd_OrganizersList */
+				/** @var tx_seminars_BackEnd_OrganizersList $organizersList */
 				$organizersList = t3lib_div::makeInstance('tx_seminars_BackEnd_OrganizersList', $this);
 				$this->content .= $organizersList->show();
 				break;
@@ -206,7 +205,7 @@ class tx_seminars_module2 extends tx_seminars_BackEnd_Module {
 				} elseif ($this->isCancelEventFormRequested()) {
 					$this->content .= $this->getCancelEventMailForm();
 				} else {
-					/** @var $eventsList tx_seminars_BackEnd_EventsList */
+					/** @var tx_seminars_BackEnd_EventsList $eventsList */
 					$eventsList = t3lib_div::makeInstance('tx_seminars_BackEnd_EventsList', $this);
 					$this->content .= $eventsList->show();
 				}
@@ -225,11 +224,11 @@ class tx_seminars_module2 extends tx_seminars_BackEnd_Module {
 	 */
 	protected function addFlashMessage(t3lib_FlashMessage $flashMessage) {
 		if (class_exists('TYPO3\\CMS\\Core\\Messaging\\FlashMessageService', TRUE)) {
-			/** @var $flashMessageService \TYPO3\CMS\Core\Messaging\FlashMessageService */
+			/** @var \TYPO3\CMS\Core\Messaging\FlashMessageService $flashMessageService */
 			$flashMessageService = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
 				'TYPO3\\CMS\\Core\\Messaging\\FlashMessageService'
 			);
-			/** @var $defaultFlashMessageQueue \TYPO3\CMS\Core\Messaging\FlashMessageQueue */
+			/** @var \TYPO3\CMS\Core\Messaging\FlashMessageQueue $defaultFlashMessageQueue */
 			$defaultFlashMessageQueue = $flashMessageService->getMessageQueueByIdentifier();
 			$defaultFlashMessageQueue->enqueue($flashMessage);
 		} else {
@@ -244,9 +243,9 @@ class tx_seminars_module2 extends tx_seminars_BackEnd_Module {
 	 */
 	protected function getRenderedFlashMessages() {
 		if (class_exists('TYPO3\\CMS\\Core\\Messaging\\FlashMessageService', TRUE)) {
-			/** @var $flashMessageService \TYPO3\CMS\Core\Messaging\FlashMessageService */
+			/** @var \TYPO3\CMS\Core\Messaging\FlashMessageService $flashMessageService */
 			$flashMessageService = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Messaging\\FlashMessageService');
-			/** @var $defaultFlashMessageQueue \TYPO3\CMS\Core\Messaging\FlashMessageQueue */
+			/** @var \TYPO3\CMS\Core\Messaging\FlashMessageQueue $defaultFlashMessageQueue */
 			$defaultFlashMessageQueue = $flashMessageService->getMessageQueueByIdentifier();
 			$renderedFlashMessages = $defaultFlashMessageQueue->renderFlashMessages();
 		} else {
@@ -260,10 +259,10 @@ class tx_seminars_module2 extends tx_seminars_BackEnd_Module {
 	 * Checks whether the user requested the form for sending an e-mail and
 	 * whether all pre-conditions for showing the form are met.
 	 *
-	 * @return boolean TRUE if the form was requested and pre-conditions are met, FALSE otherwise
+	 * @return bool TRUE if the form was requested and pre-conditions are met, FALSE otherwise
 	 */
 	private function isGeneralEmailFormRequested() {
-		if (!(intval(t3lib_div::_POST('eventUid')) > 0)) {
+		if ((int)t3lib_div::_POST('eventUid') <= 0) {
 			return FALSE;
 		}
 
@@ -274,10 +273,10 @@ class tx_seminars_module2 extends tx_seminars_BackEnd_Module {
 	 * Checks whether the user requested the form for confirming an event and
 	 * whether all pre-conditions for showing the form are met.
 	 *
-	 * @return boolean TRUE if the form was requested and pre-conditions are met, FALSE otherwise
+	 * @return bool TRUE if the form was requested and pre-conditions are met, FALSE otherwise
 	 */
 	private function isConfirmEventFormRequested() {
-		if ((!intval(t3lib_div::_POST('eventUid')) > 0)) {
+		if ((int)t3lib_div::_POST('eventUid') <= 0) {
 			return FALSE;
 		}
 
@@ -288,11 +287,11 @@ class tx_seminars_module2 extends tx_seminars_BackEnd_Module {
 	 * Checks whether the user requested the form for canceling an event and
 	 * whether all pre-conditions for showing the form are met.
 	 *
-	 * @return boolean TRUE if the form was requested and pre-conditions are
+	 * @return bool TRUE if the form was requested and pre-conditions are
 	 *                 met, FALSE otherwise
 	 */
 	private function isCancelEventFormRequested() {
-		if (!(intval(t3lib_div::_POST('eventUid')) > 0)) {
+		if ((int)t3lib_div::_POST('eventUid') <= 0) {
 			return FALSE;
 		}
 
@@ -305,9 +304,9 @@ class tx_seminars_module2 extends tx_seminars_BackEnd_Module {
 	 * @return string the HTML source for the form
 	 */
 	private function getGeneralMailForm() {
-		/** @var $form tx_seminars_BackEnd_GeneralEventMailForm */
+		/** @var tx_seminars_BackEnd_GeneralEventMailForm $form */
 		$form = t3lib_div::makeInstance(
-			'tx_seminars_BackEnd_GeneralEventMailForm', intval(t3lib_div::_GP('eventUid'))
+			'tx_seminars_BackEnd_GeneralEventMailForm', (int)t3lib_div::_GP('eventUid')
 		);
 		$form->setPostData(t3lib_div::_POST());
 
@@ -320,9 +319,9 @@ class tx_seminars_module2 extends tx_seminars_BackEnd_Module {
 	 * @return string the HTML source for the form
 	 */
 	private function getConfirmEventMailForm() {
-		/** @var $form tx_seminars_BackEnd_ConfirmEventMailForm */
+		/** @var tx_seminars_BackEnd_ConfirmEventMailForm $form */
 		$form = t3lib_div::makeInstance(
-			'tx_seminars_BackEnd_ConfirmEventMailForm', intval(t3lib_div::_GP('eventUid'))
+			'tx_seminars_BackEnd_ConfirmEventMailForm', (int)t3lib_div::_GP('eventUid')
 		);
 		$form->setPostData(t3lib_div::_POST());
 
@@ -335,9 +334,9 @@ class tx_seminars_module2 extends tx_seminars_BackEnd_Module {
 	 * @return string the HTML source for the form
 	 */
 	private function getCancelEventMailForm() {
-		/** @var $form tx_seminars_BackEnd_CancelEventMailForm */
+		/** @var tx_seminars_BackEnd_CancelEventMailForm $form */
 		$form = t3lib_div::makeInstance(
-			'tx_seminars_BackEnd_CancelEventMailForm', intval(t3lib_div::_GP('eventUid'))
+			'tx_seminars_BackEnd_CancelEventMailForm', (int)t3lib_div::_GP('eventUid')
 		);
 		$form->setPostData(t3lib_div::_POST());
 
@@ -348,7 +347,7 @@ class tx_seminars_module2 extends tx_seminars_BackEnd_Module {
 	 * Checks whether this extension's static template is included on the
 	 * current page.
 	 *
-	 * @return boolean TRUE if the static template has been included, FALSE otherwise
+	 * @return bool TRUE if the static template has been included, FALSE otherwise
 	 */
 	private function hasStaticTemplate() {
 		return tx_oelib_ConfigurationRegistry::get('plugin.tx_seminars')->getAsBoolean('isStaticTemplateLoaded');
@@ -365,13 +364,13 @@ if (t3lib_div::_GET('csv') !== '1') {
 	$GLOBALS['LANG']->includeLLFile('EXT:seminars/BackEnd/locallang.xml');
 	$GLOBALS['LANG']->includeLLFile('EXT:seminars/pi2/locallang.xml');
 
-	/** @var $SOBE tx_seminars_module2 */
+	/** @var tx_seminars_module2 $SOBE */
 	$SOBE = t3lib_div::makeInstance('tx_seminars_module2');
 	$SOBE->init();
 
 	$SOBE->main();
 } else {
-	/** @var $csvExporter tx_seminars_pi2 */
+	/** @var tx_seminars_pi2 $csvExporter */
 	$csvExporter = t3lib_div::makeInstance('tx_seminars_pi2');
 	echo $csvExporter->main();
 }
