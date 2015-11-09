@@ -1,26 +1,16 @@
 <?php
-/***************************************************************
-* Copyright notice
-*
-* (c) 2005-2014 Oliver Klee (typo3-coding@oliverklee.de)
-* All rights reserved
-*
-* This script is part of the TYPO3 project. The TYPO3 project is
-* free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* The GNU General Public License can be found at
-* http://www.gnu.org/copyleft/gpl.html.
-*
-* This script is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* This copyright notice MUST APPEAR in all copies of the script!
-***************************************************************/
+/*
+ * This file is part of the TYPO3 CMS project.
+ *
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
+ *
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
+ *
+ * The TYPO3 project - inspiring people to share!
+ */
 
 require_once(t3lib_extMgm::extPath('static_info_tables') . 'pi1/class.tx_staticinfotables_pi1.php');
 
@@ -1141,7 +1131,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	/**
 	 * Gets our regular price as a decimal.
 	 *
-	 * @return float the regular event price
+	 * @return string the regular event price
 	 */
 	private function getPriceRegularAmount() {
 		return $this->getTopicDecimal('price_regular');
@@ -1149,7 +1139,6 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 
 	/**
 	 * Returns the price, formatted as configured in TS.
-	 * The price must be supplied as integer or floating point value.
 	 *
 	 * @param string $value the price
 	 *
@@ -1159,10 +1148,9 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 		/** @var tx_oelib_ViewHelper_Price $priceViewHelper */
 		$priceViewHelper = t3lib_div::makeInstance('tx_oelib_ViewHelper_Price');
 		$priceViewHelper->setCurrencyFromIsoAlpha3Code(
-			tx_oelib_ConfigurationRegistry::get('plugin.tx_seminars')
-				->getAsString('currency')
+			tx_oelib_ConfigurationRegistry::get('plugin.tx_seminars')->getAsString('currency')
 		);
-		$priceViewHelper->setValue($value);
+		$priceViewHelper->setValue((float)$value);
 
 		return $priceViewHelper->render();
 	}
@@ -2614,46 +2602,34 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 		$hasListPid = ($registrationsListPID > 0);
 		$hasVipListPid = ($registrationsVipListPID > 0);
 
-		$currentUserUid = $this->getFeUserUid();
+		$loginManager = Tx_Oelib_FrontEndLoginManager::getInstance();
+		$currentUserUid = $loginManager->isLoggedIn()
+			? $loginManager->getLoggedInUser('tx_seminars_Mapper_FrontEndUser')->getUid() : 0;
 
 		switch ($whichPlugin) {
 			case 'seminar_list':
 				// In the standard list view, we could have any kind of link.
-				$result = $this->canViewRegistrationsList(
-						'my_events',
-						$registrationsListPID)
-					|| $this->canViewRegistrationsList(
-						'my_vip_events',
-						0,
-						$registrationsVipListPID,
-						$defaultEventVipsFeGroupID);
+				$result = $this->canViewRegistrationsList('my_events', $registrationsListPID)
+					|| $this->canViewRegistrationsList('my_vip_events', 0, $registrationsVipListPID, $defaultEventVipsFeGroupID);
 				break;
 			case 'my_events':
-				$result = $this->isUserRegistered($currentUserUid)
-					&& $hasListPid;
+				$result = $this->isUserRegistered($currentUserUid) && $hasListPid;
 				break;
 			case 'my_vip_events':
-				$result = $this->isUserVip(
-						$currentUserUid,
-						$defaultEventVipsFeGroupID)
-					&& $hasVipListPid;
+				$result = $this->isUserVip($currentUserUid, $defaultEventVipsFeGroupID) && $hasVipListPid;
 				break;
 			case 'list_registrations':
 				$result = $this->isUserRegistered($currentUserUid);
 				break;
 			case 'list_vip_registrations':
-				$result = $this->isUserVip(
-					$currentUserUid, $defaultEventVipsFeGroupID
-				);
+				$result = $this->isUserVip($currentUserUid, $defaultEventVipsFeGroupID);
 				break;
 			case 'csv_export':
-				$result = $this->isUserVip(
-					$currentUserUid, $defaultEventVipsFeGroupID
-				) && $this->getConfValueBoolean('allowCsvExportForVips');
+				$result = $this->isUserVip($currentUserUid, $defaultEventVipsFeGroupID)
+					&& $this->getConfValueBoolean('allowCsvExportForVips');
 				break;
 			default:
 				$result = FALSE;
-				break;
 		}
 
 		return $result;
@@ -2684,33 +2660,27 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	 *                 page, FALSE otherwise
 	 */
 	protected function canViewRegistrationsListForLoginAccess(
-		$whichPlugin, $registrationsListPID = 0, $registrationsVipListPID = 0,
-		$defaultEventVipsFeGroupID = 0
+		$whichPlugin, $registrationsListPID = 0, $registrationsVipListPID = 0, $defaultEventVipsFeGroupID = 0
 	) {
-		if (!tx_oelib_FrontEndLoginManager::getInstance()->isLoggedIn()) {
+		$loginManager = Tx_Oelib_FrontEndLoginManager::getInstance();
+		if (!$loginManager->isLoggedIn()) {
 			return FALSE;
 		}
 
+		$currentUserUid = $loginManager->getLoggedInUser('tx_seminars_Mapper_FrontEndUser')->getUid();
 		$hasListPid = ($registrationsListPID > 0);
 		$hasVipListPid = ($registrationsVipListPID > 0);
 
-		$currentUserUid = $this->getFeUserUid();
 		switch ($whichPlugin) {
 			case 'csv_export':
-				$result = $this->isUserVip(
-					$currentUserUid, $defaultEventVipsFeGroupID
-				) && $this->getConfValueBoolean('allowCsvExportForVips');
+				$result = $this->isUserVip($currentUserUid, $defaultEventVipsFeGroupID)
+					&& $this->getConfValueBoolean('allowCsvExportForVips');
 				break;
 			case 'my_vip_events':
-				$result = $this->isUserVip(
-						$currentUserUid,
-						$defaultEventVipsFeGroupID)
-					&& $hasVipListPid;
+				$result = $this->isUserVip($currentUserUid, $defaultEventVipsFeGroupID) && $hasVipListPid;
 				break;
 			case 'list_vip_registrations':
-				$result = $this->isUserVip(
-					$currentUserUid, $defaultEventVipsFeGroupID
-				);
+				$result = $this->isUserVip($currentUserUid, $defaultEventVipsFeGroupID);
 				break;
 			case 'list_registrations':
 				$result = TRUE;
@@ -2747,30 +2717,25 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	 *                 page, FALSE otherwise
 	 */
 	protected function canViewRegistrationsListForWorldAccess(
-		$whichPlugin, $registrationsListPID = 0, $registrationsVipListPID = 0,
-		$defaultEventVipsFeGroupID = 0
+		$whichPlugin, $registrationsListPID = 0, $registrationsVipListPID = 0, $defaultEventVipsFeGroupID = 0
 	) {
-		$isLoggedIn = tx_oelib_FrontEndLoginManager::getInstance()->isLoggedIn();
+		$loginManager = Tx_Oelib_FrontEndLoginManager::getInstance();
+		$isLoggedIn = $loginManager->isLoggedIn();
 
 		$hasListPid = ($registrationsListPID > 0);
 		$hasVipListPid = ($registrationsVipListPID > 0);
+		$currentUserUid = $isLoggedIn ? $loginManager->getLoggedInUser('tx_seminars_Mapper_FrontEndUser')->getUid() : 0;
 
 		switch ($whichPlugin) {
 			case 'csv_export':
-				$result = $isLoggedIn && $this->isUserVip(
-					$this->getFeUserUid(), $defaultEventVipsFeGroupID
-				) && $this->getConfValueBoolean('allowCsvExportForVips');
+				$result = $isLoggedIn && $this->isUserVip($currentUserUid, $defaultEventVipsFeGroupID)
+					&& $this->getConfValueBoolean('allowCsvExportForVips');
 				break;
 			case 'my_vip_events':
-				$result = $isLoggedIn && $this->isUserVip(
-						$this->getFeUserUid(),
-						$defaultEventVipsFeGroupID)
-					&& $hasVipListPid;
+				$result = $isLoggedIn && $this->isUserVip($currentUserUid, $defaultEventVipsFeGroupID) && $hasVipListPid;
 				break;
 			case 'list_vip_registrations':
-				$result = $isLoggedIn && $this->isUserVip(
-					$this->getFeUserUid(), $defaultEventVipsFeGroupID
-				);
+				$result = $isLoggedIn && $this->isUserVip($currentUserUid, $defaultEventVipsFeGroupID);
 				break;
 			case 'list_registrations':
 				$result = TRUE;
@@ -2797,23 +2762,21 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	 * @return string an empty string if everything is OK, a localized error
 	 *                error message otherwise
 	 */
-	public function canViewRegistrationsListMessage(
-		$whichPlugin, $accessLevel = 'attendees_and_managers'
-	) {
-		$result = '';
-
+	public function canViewRegistrationsListMessage($whichPlugin, $accessLevel = 'attendees_and_managers') {
 		if (!$this->needsRegistration()) {
-			$result = $this->translate('message_noRegistrationNecessary');
-		} elseif (
-			($accessLevel != 'world')
-				&& !tx_oelib_FrontEndLoginManager::getInstance()->isLoggedIn()
-		) {
-			$result = $this->translate('message_notLoggedIn');
-		} elseif (!$this->canViewRegistrationsList($whichPlugin, $accessLevel)) {
-			$result = $this->translate('message_accessDenied');
+			return $this->translate('message_noRegistrationNecessary');
+		}
+		if ($accessLevel === 'world') {
+			return '';
+		}
+		if (!tx_oelib_FrontEndLoginManager::getInstance()->isLoggedIn()) {
+			return $this->translate('message_notLoggedIn');
+		}
+		if (!$this->canViewRegistrationsList($whichPlugin, $accessLevel)) {
+			return $this->translate('message_accessDenied');
 		}
 
-		return $result;
+		return '';
 	}
 
 	/**
@@ -3165,7 +3128,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	 *
 	 * @return string the corresponding element from the record data array
 	 */
-	private function getTopicString($key) {
+	protected function getTopicString($key) {
 		$result = '';
 
 		if ($this->isTopicOkay()) {
@@ -3209,7 +3172,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	 *
 	 * @return string the corresponding element from the record data array
 	 */
-	private function getTopicDecimal($key) {
+	protected function getTopicDecimal($key) {
 		$result = '';
 
 		if ($this->isTopicOkay()) {
@@ -3232,7 +3195,7 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	 *
 	 * @return bool the corresponding element from the record data array
 	 */
-	private function getTopicBoolean($key) {
+	protected function getTopicBoolean($key) {
 		return ($this->isTopicOkay())
 			? $this->topic->getRecordPropertyBoolean($key)
 			: $this->getRecordPropertyBoolean($key);
@@ -3461,9 +3424,13 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	 *                 the owner of this event, FALSE otherwise
 	 */
 	public function isOwnerFeUser() {
-		return $this->hasRecordPropertyInteger('owner_feuser')
-			&& ($this->getRecordPropertyInteger('owner_feuser')
-				== $this->getFeUserUid());
+		$loginManager = Tx_Oelib_FrontEndLoginManager::getInstance();
+		if (!$loginManager->isLoggedIn()) {
+			return FALSE;
+		}
+
+		return $this->getRecordPropertyInteger('owner_feuser')
+			=== $loginManager->getLoggedInUser('tx_seminars_Mapper_FrontEndUser')->getUid();
 	}
 
 	/**
@@ -3689,9 +3656,8 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 	 *
 	 * The return array's pointer will already be reset to its first element.
 	 *
-	 * @return array[] the available prices as a reset array of arrays
-	 *               with the keys "caption" (for the title) and "value"
-	 *               (for the price code), might be empty
+	 * @return string[][] the available prices as a reset array of arrays with the keys "caption" (for the title) and "value
+	 *                    (for the price code), might be empty
 	 */
 	public function getAvailablePrices() {
 		$result = array();
@@ -4375,18 +4341,21 @@ class tx_seminars_seminar extends tx_seminars_timespan {
 			return '';
 		}
 
-		$imageWidth = array();
-		$imageHeight = array();
-		$imageUrl = array();
-		$imageWithTag = $this->createRestrictedImage(
-			tx_seminars_FrontEnd_AbstractView::UPLOAD_PATH . $this->getImage(),
-			'',
-			$maxImageWidth,
-			$maxImageHeight
+		$imageConfiguration = array(
+			'altText' => '',
+			'file' => tx_seminars_FrontEnd_AbstractView::UPLOAD_PATH . $this->getImage(),
+			'file.' => array(
+				'width' => $maxImageWidth,
+				'height' => $maxImageHeight,
+			),
 		);
+		$imageWithTag = $this->cObj->IMAGE($imageConfiguration);
 
+		$imageWidth = array();
 		preg_match('/width="([^"]*)"/', $imageWithTag, $imageWidth);
+		$imageHeight = array();
 		preg_match('/height="([^"]*)"/', $imageWithTag, $imageHeight);
+		$imageUrl = array();
 		preg_match('/src="([^"]*)"/', $imageWithTag, $imageUrl);
 
 		return ' style="' .

@@ -1,26 +1,16 @@
 <?php
-/***************************************************************
-* Copyright notice
-*
-* (c) 2007-2013 Oliver Klee (typo3-coding@oliverklee.de)
-* All rights reserved
-*
-* This script is part of the TYPO3 project. The TYPO3 project is
-* free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* The GNU General Public License can be found at
-* http://www.gnu.org/copyleft/gpl.html.
-*
-* This script is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* This copyright notice MUST APPEAR in all copies of the script!
-***************************************************************/
+/*
+ * This file is part of the TYPO3 CMS project.
+ *
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
+ *
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
+ *
+ * The TYPO3 project - inspiring people to share!
+ */
 
 /**
  * Test case.
@@ -81,7 +71,7 @@ class tx_seminars_OldModel_OrganizerTest extends tx_phpunit_testcase {
 	//////////////////////////////////////////
 
 	public function testCreateFromUid() {
-		$this->assertTrue(
+		self::assertTrue(
 			$this->fixture->isOk()
 		);
 	}
@@ -95,30 +85,30 @@ class tx_seminars_OldModel_OrganizerTest extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function getNameWithNameReturnsName() {
-		$this->assertEquals(
+		self::assertEquals(
 			'Test organizer',
 			$this->fixture->getName()
 		);
 	}
 
 	public function testHasHomepageWithEmptyHomepageReturnsFalse() {
-		$this->assertFalse(
+		self::assertFalse(
 			$this->fixture->hasHomepage()
 		);
 	}
 
 	public function testHasHomepageWithHomepageReturnsTrue() {
-		$this->assertTrue(
+		self::assertTrue(
 			$this->maximalFixture->hasHomepage()
 		);
 	}
 
 	public function testGetHomepage() {
-		$this->assertEquals(
+		self::assertEquals(
 			'',
 			$this->fixture->getHomepage()
 		);
-		$this->assertEquals(
+		self::assertEquals(
 			'http://www.test.com/',
 			$this->maximalFixture->getHomepage()
 		);
@@ -128,7 +118,7 @@ class tx_seminars_OldModel_OrganizerTest extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function getEmailFooterForEmptyFooterReturnsEmptyString() {
-		$this->assertEquals(
+		self::assertEquals(
 			'',
 			$this->fixture->getEmailFooter()
 		);
@@ -138,7 +128,7 @@ class tx_seminars_OldModel_OrganizerTest extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function getEmailFooterForNonEmptyFooterReturnsThisFooter() {
-		$this->assertEquals(
+		self::assertEquals(
 			'line 1'.LF.'line 2',
 			$this->maximalFixture->getEmailFooter()
 		);
@@ -148,21 +138,21 @@ class tx_seminars_OldModel_OrganizerTest extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function getEMailAddressWithEMailAddressReturnsEMailAddress() {
-		$this->assertEquals(
+		self::assertEquals(
 			'foo@test.com',
 			$this->fixture->getEMailAddress()
 		);
 	}
 
 	public function testGetAttendancesPidWithNoAttendancesPidReturnsZero() {
-		$this->assertEquals(
+		self::assertEquals(
 			0,
 			$this->fixture->getAttendancesPid()
 		);
 	}
 
 	public function testGetAttendancesPidWithAttendancesPidReturnsAttendancesPid() {
-		$this->assertEquals(
+		self::assertEquals(
 			99,
 			$this->maximalFixture->getAttendancesPid()
 		);
@@ -177,7 +167,7 @@ class tx_seminars_OldModel_OrganizerTest extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function hasDescriptionForOrganizerWithoutDescriptionReturnsFalse() {
-		$this->assertFalse(
+		self::assertFalse(
 			$this->fixture->hasDescription()
 		);
 	}
@@ -186,7 +176,7 @@ class tx_seminars_OldModel_OrganizerTest extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function hasDescriptionForOrganizerWithDescriptionReturnsTrue() {
-		$this->assertTrue(
+		self::assertTrue(
 			$this->maximalFixture->hasDescription()
 		);
 	}
@@ -195,7 +185,7 @@ class tx_seminars_OldModel_OrganizerTest extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function getDescriptionForOrganizerWithoutDescriptionReturnsEmptyString() {
-		$this->assertEquals(
+		self::assertEquals(
 			'',
 			$this->fixture->getDescription()
 		);
@@ -205,7 +195,7 @@ class tx_seminars_OldModel_OrganizerTest extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function getDescriptionForOrganizerWithDescriptionReturnsDescription() {
-		$this->assertEquals(
+		self::assertEquals(
 			'foo',
 			$this->maximalFixture->getDescription()
 		);

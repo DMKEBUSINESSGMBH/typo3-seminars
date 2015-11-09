@@ -1,26 +1,16 @@
 <?php
-/***************************************************************
-* Copyright notice
-*
-* (c) 2008-2013 Niels Pardon (mail@niels-pardon.de)
-* All rights reserved
-*
-* This script is part of the TYPO3 project. The TYPO3 project is
-* free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* The GNU General Public License can be found at
-* http://www.gnu.org/copyleft/gpl.html.
-*
-* This script is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* This copyright notice MUST APPEAR in all copies of the script!
-***************************************************************/
+/*
+ * This file is part of the TYPO3 CMS project.
+ *
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
+ *
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
+ *
+ * The TYPO3 project - inspiring people to share!
+ */
 
 /**
  * Test case.
@@ -114,7 +104,7 @@ class tx_seminars_BackEnd_RegistrationsListTest extends tx_phpunit_testcase {
 			)
 		);
 
-		$this->assertContains(
+		self::assertContains(
 			'accreditation number 123',
 			$this->fixture->show()
 		);
@@ -138,7 +128,7 @@ class tx_seminars_BackEnd_RegistrationsListTest extends tx_phpunit_testcase {
 			)
 		);
 
-		$this->assertContains(
+		self::assertContains(
 			'&amp;&quot;&lt;&gt;',
 			$this->fixture->show()
 		);
@@ -161,7 +151,7 @@ class tx_seminars_BackEnd_RegistrationsListTest extends tx_phpunit_testcase {
 			)
 		);
 
-		$this->assertContains(
+		self::assertContains(
 			'foo_user',
 			$this->fixture->show()
 		);
@@ -185,7 +175,7 @@ class tx_seminars_BackEnd_RegistrationsListTest extends tx_phpunit_testcase {
 			)
 		);
 
-		$this->assertNotContains(
+		self::assertNotContains(
 			'foo_user',
 			$this->fixture->show()
 		);
@@ -207,7 +197,7 @@ class tx_seminars_BackEnd_RegistrationsListTest extends tx_phpunit_testcase {
 			)
 		);
 
-		$this->assertNotContains(
+		self::assertNotContains(
 			'foo_user',
 			$this->fixture->show()
 		);
@@ -230,7 +220,7 @@ class tx_seminars_BackEnd_RegistrationsListTest extends tx_phpunit_testcase {
 			)
 		);
 
-		$this->assertContains(
+		self::assertContains(
 			'event_1',
 			$this->fixture->show()
 		);
@@ -254,7 +244,7 @@ class tx_seminars_BackEnd_RegistrationsListTest extends tx_phpunit_testcase {
 			)
 		);
 
-		$this->assertNotContains(
+		self::assertNotContains(
 			'event_1',
 			$this->fixture->show()
 		);
@@ -277,7 +267,7 @@ class tx_seminars_BackEnd_RegistrationsListTest extends tx_phpunit_testcase {
 			)
 		);
 
-		$this->assertContains(
+		self::assertContains(
 			'user_foo',
 			$this->fixture->show()
 		);
@@ -306,7 +296,7 @@ class tx_seminars_BackEnd_RegistrationsListTest extends tx_phpunit_testcase {
 			)
 		);
 
-		$this->assertContains(
+		self::assertContains(
 			'event for registration in subfolder',
 			$this->fixture->show()
 		);
@@ -329,7 +319,7 @@ class tx_seminars_BackEnd_RegistrationsListTest extends tx_phpunit_testcase {
 			)
 		);
 
-		$this->assertContains(
+		self::assertContains(
 			'csv=1',
 			$this->fixture->show()
 		);
@@ -344,7 +334,7 @@ class tx_seminars_BackEnd_RegistrationsListTest extends tx_phpunit_testcase {
 			)
 		);
 
-		$this->assertNotContains(
+		self::assertNotContains(
 			'mod.php?M=web_txseminarsM2&amp;csv=1',
 			$this->fixture->show()
 		);
@@ -362,7 +352,7 @@ class tx_seminars_BackEnd_RegistrationsListTest extends tx_phpunit_testcase {
 			)
 		);
 
-		$this->assertContains(
+		self::assertContains(
 			'event_1',
 			$this->fixture->show()
 		);
@@ -381,7 +371,7 @@ class tx_seminars_BackEnd_RegistrationsListTest extends tx_phpunit_testcase {
 		);
 		$_GET['eventUid'] = $eventUid;
 
-		$this->assertContains(
+		self::assertContains(
 			'(UID ' . $eventUid . ')',
 			$this->fixture->show()
 		);
@@ -405,7 +395,7 @@ class tx_seminars_BackEnd_RegistrationsListTest extends tx_phpunit_testcase {
 
 		$_GET['eventUid'] = $eventUid;
 
-		$this->assertContains(
+		self::assertContains(
 			'user_foo',
 			$this->fixture->show()
 		);
@@ -430,7 +420,7 @@ class tx_seminars_BackEnd_RegistrationsListTest extends tx_phpunit_testcase {
 			'tx_seminars_seminars'
 		);
 
-		$this->assertNotContains(
+		self::assertNotContains(
 			'user_foo',
 			$this->fixture->show()
 		);
@@ -454,7 +444,7 @@ class tx_seminars_BackEnd_RegistrationsListTest extends tx_phpunit_testcase {
 
 		$_GET['eventUid'] = $eventUid;
 
-		$this->assertContains(
+		self::assertContains(
 			'tx_seminars_pi2[eventUid]=' . $eventUid,
 			$this->fixture->show()
 		);
@@ -478,7 +468,7 @@ class tx_seminars_BackEnd_RegistrationsListTest extends tx_phpunit_testcase {
 
 		$_GET['eventUid'] = $eventUid;
 
-		$this->assertNotContains(
+		self::assertNotContains(
 			'tx_seminars_pi2[pid]=',
 			$this->fixture->show()
 		);
@@ -500,7 +490,7 @@ class tx_seminars_BackEnd_RegistrationsListTest extends tx_phpunit_testcase {
 			)
 		);
 
-		$this->assertNotContains(
+		self::assertNotContains(
 			'tx_seminars_pi2[eventUid]=',
 			$this->fixture->show()
 		);
@@ -525,7 +515,7 @@ class tx_seminars_BackEnd_RegistrationsListTest extends tx_phpunit_testcase {
 			$backEndUser
 		);
 
-		$this->assertContains(
+		self::assertContains(
 			'edit[tx_seminars_attendances][' . $newRegistrationFolder . ']=new',
 			$this->fixture->show()
 		);

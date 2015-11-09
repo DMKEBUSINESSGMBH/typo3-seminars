@@ -1,25 +1,15 @@
-/***************************************************************
-* Copyright notice
-*
-* (c) 2008-2013 Saskia Metzler <saskia@merlin.owl.de>
-* All rights reserved
-*
-* This script is part of the TYPO3 project. The TYPO3 project is
-* free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* The GNU General Public License can be found at
-* http://www.gnu.org/copyleft/gpl.html.
-*
-* This script is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* This copyright notice MUST APPEAR in all copies of the script!
-***************************************************************/
+/*
+ * This file is part of the TYPO3 CMS project.
+ *
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
+ *
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
+ *
+ * The TYPO3 project - inspiring people to share!
+ */
 
 /*
  * This file provides some JavaScript functions for the seminars front-end
@@ -32,6 +22,9 @@
  * @author Oliver Klee <typo3-coding@oliverklee.de>
  * @author Niels Pardon <mail@niels-pardon.de>
  */
+
+var TYPO3 = TYPO3 || {};
+TYPO3.seminars = {};
 
 /**
  * Marks the current attachment as deleted if the confirm becomes submitted.
@@ -338,23 +331,21 @@ function appendTargetGroupInEditor(uid, title, buttonData) {
 function clearSearchWidgetFields() {
 	var prefix = 'tx_seminars_pi1';
 	var textElements = ['sword', 'search_age', 'price_from', 'price_to'];
-	for (var i=0; i < textElements.length; i++) {
+	for (var i = 0; i < textElements.length; i++) {
 		var textElement = document.getElementById(prefix + '_' + textElements[i]);
 		if (textElement) {
-			textElement.value = '';
+			textElement.value = null;
 		}
 	}
 
 	var suffixes = ['from_day', 'from_month', 'from_year', 'to_day', 'to_month',
 		'to_year', 'event_type', 'language', 'country', 'city', 'place', 'date',
-		'organizer'
+		'organizer', 'categories'
 	];
 
 	for (var i = 0; i < suffixes.length; i++) {
 		var suffix = suffixes[i];
-		var element = document.getElementById(
-			prefix + '-' + suffix
-		);
+		var element = document.getElementById(prefix + '-' + suffix);
 		if (element) {
 			for (var j = 0; j < element.options.length; j++) {
 				element.options[j].selected = false;
@@ -362,3 +353,60 @@ function clearSearchWidgetFields() {
 		}
 	}
 }
+
+/**
+ * Converts the links that have a data-method="post" to JavaScript-powered on-the-fly forms.
+ */
+TYPO3.seminars.convertActionLinks = function() {
+	var linkElements = document.querySelectorAll('a[data-method]');
+	for (var i = 0; i < linkElements.length; i++) {
+		linkElements[i].onclick = TYPO3.seminars.executeLinkAction;
+	}
+};
+
+/**
+ * Executes the action on a link.
+ *
+ * @param {MouseEvent} event
+ */
+TYPO3.seminars.executeLinkAction = function(event) {
+	var linkElement = event.target
+	var linkHref = linkElement.getAttribute('href');
+
+	TYPO3.seminars.disableAllActionLinks();
+
+	var formElement = document.createElement("form");
+	formElement.style.display = 'none';
+	formElement.setAttribute('method', 'post');
+	formElement.setAttribute('action', linkHref);
+
+	for (var j = 0; j < linkElement.attributes.length; j++) {
+		var attribute = linkElement.attributes[j];
+		var name = attribute.name;
+		if (/^data-post-/.test(name)) {
+			var dataParts = name.split('-');
+			var inputElement = document.createElement('input');
+			inputElement.setAttribute('type', 'hidden');
+			inputElement.setAttribute('name', dataParts[2] + '[' + dataParts[3] + ']');
+			inputElement.setAttribute('value', attribute.value);
+			formElement.appendChild(inputElement);
+		}
+	}
+
+	linkElement.appendChild(formElement);
+	formElement.submit();
+
+	return false;
+};
+
+/**
+ * Disables all action links (so that they cannot be clicked again once an action is being processed).
+ */
+TYPO3.seminars.disableAllActionLinks = function() {
+	var linkElements = document.querySelectorAll('a[data-method]');
+	for (var i = 0; i < linkElements.length; i++) {
+		linkElements[i].onclick = function () {
+			return false;
+		};
+	}
+};

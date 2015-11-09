@@ -1,26 +1,16 @@
 <?php
-/***************************************************************
-* Copyright notice
-*
-* (c) 2009-2013 Niels Pardon (mail@niels-pardon.de)
-* All rights reserved
-*
-* This script is part of the TYPO3 project. The TYPO3 project is
-* free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* The GNU General Public License can be found at
-* http://www.gnu.org/copyleft/gpl.html.
-*
-* This script is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* This copyright notice MUST APPEAR in all copies of the script!
-***************************************************************/
+/*
+ * This file is part of the TYPO3 CMS project.
+ *
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
+ *
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
+ *
+ * The TYPO3 project - inspiring people to share!
+ */
 
 /**
  * Test case.
@@ -62,7 +52,7 @@ class tx_seminars_Mapper_EventTest extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function findWithUidReturnsEventInstance() {
-		$this->assertTrue(
+		self::assertTrue(
 			$this->fixture->find(1) instanceof tx_seminars_Model_Event
 		);
 	}
@@ -77,7 +67,7 @@ class tx_seminars_Mapper_EventTest extends tx_phpunit_testcase {
 
 		/** @var tx_seminars_Model_Event $model */
 		$model = $this->fixture->find($uid);
-		$this->assertEquals(
+		self::assertEquals(
 			'Big event',
 			$model->getTitle()
 		);
@@ -92,7 +82,7 @@ class tx_seminars_Mapper_EventTest extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function getTimeSlotsReturnsListInstance() {
-		$this->assertTrue(
+		self::assertTrue(
 			$this->fixture->getLoadedTestingModel(array())->getTimeSlots()
 			instanceof tx_oelib_List
 		);
@@ -112,7 +102,7 @@ class tx_seminars_Mapper_EventTest extends tx_phpunit_testcase {
 
 		/** @var tx_seminars_Model_Event $model */
 		$model = $this->fixture->find($uid);
-		$this->assertTrue(
+		self::assertTrue(
 			$model->getTimeSlots()->first() instanceof tx_seminars_Model_TimeSlot
 		);
 	}
@@ -131,7 +121,7 @@ class tx_seminars_Mapper_EventTest extends tx_phpunit_testcase {
 
 		/** @var tx_seminars_Model_Event $model */
 		$model = $this->fixture->find($uid);
-		$this->assertEquals(
+		self::assertEquals(
 			$timeSlotUid,
 			$model->getTimeSlots()->getUids()
 		);
@@ -146,7 +136,7 @@ class tx_seminars_Mapper_EventTest extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function getPlacesReturnsListInstance() {
-		$this->assertTrue(
+		self::assertTrue(
 			$this->fixture->getLoadedTestingModel(array())->getPlaces()
 			instanceof tx_oelib_List
 		);
@@ -165,7 +155,7 @@ class tx_seminars_Mapper_EventTest extends tx_phpunit_testcase {
 
 		/** @var tx_seminars_Model_Event $model */
 		$model = $this->fixture->find($uid);
-		$this->assertTrue(
+		self::assertTrue(
 			$model->getPlaces()->first() instanceof tx_seminars_Model_Place
 		);
 	}
@@ -183,7 +173,7 @@ class tx_seminars_Mapper_EventTest extends tx_phpunit_testcase {
 
 		/** @var tx_seminars_Model_Event $model */
 		$model = $this->fixture->find($uid);
-		$this->assertEquals(
+		self::assertEquals(
 			$place->getUid(),
 			$model->getPlaces()->getUids()
 		);
@@ -198,7 +188,7 @@ class tx_seminars_Mapper_EventTest extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function getLodgingsReturnsListInstance() {
-		$this->assertTrue(
+		self::assertTrue(
 			$this->fixture->getLoadedTestingModel(array())->getLodgings()
 			instanceof tx_oelib_List
 		);
@@ -217,7 +207,7 @@ class tx_seminars_Mapper_EventTest extends tx_phpunit_testcase {
 
 		/** @var tx_seminars_Model_Event $model */
 		$model = $this->fixture->find($uid);
-		$this->assertTrue(
+		self::assertTrue(
 			$model->getLodgings()->first() instanceof tx_seminars_Model_Lodging
 		);
 	}
@@ -235,7 +225,7 @@ class tx_seminars_Mapper_EventTest extends tx_phpunit_testcase {
 
 		/** @var tx_seminars_Model_Event $model */
 		$model = $this->fixture->find($uid);
-		$this->assertEquals(
+		self::assertEquals(
 			$lodging->getUid(),
 			$model->getLodgings()->getUids()
 		);
@@ -250,7 +240,7 @@ class tx_seminars_Mapper_EventTest extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function getFoodsReturnsListInstance() {
-		$this->assertTrue(
+		self::assertTrue(
 			$this->fixture->getLoadedTestingModel(array())->getFoods()
 			instanceof tx_oelib_List
 		);
@@ -269,7 +259,7 @@ class tx_seminars_Mapper_EventTest extends tx_phpunit_testcase {
 
 		/** @var tx_seminars_Model_Event $model */
 		$model = $this->fixture->find($uid);
-		$this->assertTrue(
+		self::assertTrue(
 			$model->getFoods()->first() instanceof tx_seminars_Model_Food
 		);
 	}
@@ -287,7 +277,7 @@ class tx_seminars_Mapper_EventTest extends tx_phpunit_testcase {
 
 		/** @var tx_seminars_Model_Event $model */
 		$model = $this->fixture->find($uid);
-		$this->assertEquals(
+		self::assertEquals(
 			$food->getUid(),
 			$model->getFoods()->getUids()
 		);
@@ -302,7 +292,7 @@ class tx_seminars_Mapper_EventTest extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function getSpeakersReturnsListInstance() {
-		$this->assertTrue(
+		self::assertTrue(
 			$this->fixture->getLoadedTestingModel(array())->getSpeakers()
 			instanceof tx_oelib_List
 		);
@@ -321,7 +311,7 @@ class tx_seminars_Mapper_EventTest extends tx_phpunit_testcase {
 
 		/** @var tx_seminars_Model_Event $model */
 		$model = $this->fixture->find($uid);
-		$this->assertTrue(
+		self::assertTrue(
 			$model->getSpeakers()->first() instanceof tx_seminars_Model_Speaker
 		);
 	}
@@ -339,7 +329,7 @@ class tx_seminars_Mapper_EventTest extends tx_phpunit_testcase {
 
 		/** @var tx_seminars_Model_Event $model */
 		$model = $this->fixture->find($uid);
-		$this->assertEquals(
+		self::assertEquals(
 			$speaker->getUid(),
 			$model->getSpeakers()->getUids()
 		);
@@ -354,7 +344,7 @@ class tx_seminars_Mapper_EventTest extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function getPartnersReturnsListInstance() {
-		$this->assertTrue(
+		self::assertTrue(
 			$this->fixture->getLoadedTestingModel(array())->getPartners()
 			instanceof tx_oelib_List
 		);
@@ -373,7 +363,7 @@ class tx_seminars_Mapper_EventTest extends tx_phpunit_testcase {
 
 		/** @var tx_seminars_Model_Event $model */
 		$model = $this->fixture->find($uid);
-		$this->assertTrue(
+		self::assertTrue(
 			$model->getPartners()->first() instanceof tx_seminars_Model_Speaker
 		);
 	}
@@ -391,7 +381,7 @@ class tx_seminars_Mapper_EventTest extends tx_phpunit_testcase {
 
 		/** @var tx_seminars_Model_Event $model */
 		$model = $this->fixture->find($uid);
-		$this->assertEquals(
+		self::assertEquals(
 			$speaker->getUid(),
 			$model->getPartners()->getUids()
 		);
@@ -406,7 +396,7 @@ class tx_seminars_Mapper_EventTest extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function getTutorsReturnsListInstance() {
-		$this->assertTrue(
+		self::assertTrue(
 			$this->fixture->getLoadedTestingModel(array())->getTutors()
 			instanceof tx_oelib_List
 		);
@@ -425,7 +415,7 @@ class tx_seminars_Mapper_EventTest extends tx_phpunit_testcase {
 
 		/** @var tx_seminars_Model_Event $model */
 		$model = $this->fixture->find($uid);
-		$this->assertTrue(
+		self::assertTrue(
 			$model->getTutors()->first() instanceof tx_seminars_Model_Speaker
 		);
 	}
@@ -443,7 +433,7 @@ class tx_seminars_Mapper_EventTest extends tx_phpunit_testcase {
 
 		/** @var tx_seminars_Model_Event $model */
 		$model = $this->fixture->find($uid);
-		$this->assertEquals(
+		self::assertEquals(
 			$speaker->getUid(),
 			$model->getTutors()->getUids()
 		);
@@ -458,7 +448,7 @@ class tx_seminars_Mapper_EventTest extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function getLeadersReturnsListInstance() {
-		$this->assertTrue(
+		self::assertTrue(
 			$this->fixture->getLoadedTestingModel(array())->getLeaders()
 			instanceof tx_oelib_List
 		);
@@ -477,7 +467,7 @@ class tx_seminars_Mapper_EventTest extends tx_phpunit_testcase {
 
 		/** @var tx_seminars_Model_Event $model */
 		$model = $this->fixture->find($uid);
-		$this->assertTrue(
+		self::assertTrue(
 			$model->getLeaders()->first() instanceof tx_seminars_Model_Speaker
 		);
 	}
@@ -495,7 +485,7 @@ class tx_seminars_Mapper_EventTest extends tx_phpunit_testcase {
 
 		/** @var tx_seminars_Model_Event $model */
 		$model = $this->fixture->find($uid);
-		$this->assertEquals(
+		self::assertEquals(
 			$speaker->getUid(),
 			$model->getLeaders()->getUids()
 		);
@@ -510,7 +500,7 @@ class tx_seminars_Mapper_EventTest extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function getOrganizersReturnsListInstance() {
-		$this->assertTrue(
+		self::assertTrue(
 			$this->fixture->getLoadedTestingModel(array())->getOrganizers()
 			instanceof tx_oelib_List
 		);
@@ -531,7 +521,7 @@ class tx_seminars_Mapper_EventTest extends tx_phpunit_testcase {
 
 		/** @var tx_seminars_Model_Event $model */
 		$model = $this->fixture->find($uid);
-		$this->assertTrue(
+		self::assertTrue(
 			$model->getOrganizers()->first() instanceof tx_seminars_Model_Organizer
 		);
 	}
@@ -551,7 +541,7 @@ class tx_seminars_Mapper_EventTest extends tx_phpunit_testcase {
 
 		/** @var tx_seminars_Model_Event $model */
 		$model = $this->fixture->find($uid);
-		$this->assertEquals(
+		self::assertEquals(
 			$organizer->getUid(),
 			$model->getOrganizers()->getUids()
 		);
@@ -566,7 +556,7 @@ class tx_seminars_Mapper_EventTest extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function getOrganizingPartnersReturnsListInstance() {
-		$this->assertTrue(
+		self::assertTrue(
 			$this->fixture->getLoadedTestingModel(array())->getOrganizingPartners()
 				instanceof tx_oelib_List
 		);
@@ -585,7 +575,7 @@ class tx_seminars_Mapper_EventTest extends tx_phpunit_testcase {
 
 		/** @var tx_seminars_Model_Event $model */
 		$model = $this->fixture->find($uid);
-		$this->assertTrue(
+		self::assertTrue(
 			$model->getOrganizingPartners()->first() instanceof tx_seminars_Model_Organizer
 		);
 	}
@@ -603,7 +593,7 @@ class tx_seminars_Mapper_EventTest extends tx_phpunit_testcase {
 
 		/** @var tx_seminars_Model_Event $model */
 		$model = $this->fixture->find($uid);
-		$this->assertEquals(
+		self::assertEquals(
 			$organizer->getUid(),
 			$model->getOrganizingPartners()->getUids()
 		);
@@ -619,7 +609,7 @@ class tx_seminars_Mapper_EventTest extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function getOwnerWithoutOwnerReturnsNull() {
-		$this->assertNull(
+		self::assertNull(
 			$this->fixture->getLoadedTestingModel(array())->getOwner()
 		);
 	}
@@ -631,7 +621,7 @@ class tx_seminars_Mapper_EventTest extends tx_phpunit_testcase {
 		$frontEndUser = tx_oelib_MapperRegistry::
 			get('tx_oelib_Mapper_FrontEndUser')->getLoadedTestingModel(array());
 
-		$this->assertTrue(
+		self::assertTrue(
 			$this->fixture->getLoadedTestingModel(
 				array('owner_feuser' => $frontEndUser->getUid())
 			)->getOwner() instanceof
@@ -648,7 +638,7 @@ class tx_seminars_Mapper_EventTest extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function getEventManagersReturnsListInstance() {
-		$this->assertTrue(
+		self::assertTrue(
 			$this->fixture->getLoadedTestingModel(array())->getEventManagers()
 			instanceof tx_oelib_List
 		);
@@ -667,7 +657,7 @@ class tx_seminars_Mapper_EventTest extends tx_phpunit_testcase {
 
 		/** @var tx_seminars_Model_Event $model */
 		$model = $this->fixture->find($uid);
-		$this->assertTrue(
+		self::assertTrue(
 			$model->getEventManagers()->first() instanceof tx_oelib_Model_FrontEndUser
 		);
 	}
@@ -685,7 +675,7 @@ class tx_seminars_Mapper_EventTest extends tx_phpunit_testcase {
 
 		/** @var tx_seminars_Model_Event $model */
 		$model = $this->fixture->find($uid);
-		$this->assertEquals(
+		self::assertEquals(
 			$frontEndUser->getUid(),
 			$model->getEventManagers()->getUids()
 		);
@@ -718,7 +708,7 @@ class tx_seminars_Mapper_EventTest extends tx_phpunit_testcase {
 			'tx_seminars_seminars', array('publication_hash' => $publicationHash)
 		);
 
-		$this->assertEquals(
+		self::assertEquals(
 			$eventUid,
 			$this->fixture->findByPublicationHash($publicationHash)->getUid()
 		);
@@ -730,7 +720,7 @@ class tx_seminars_Mapper_EventTest extends tx_phpunit_testcase {
 	public function findByPublicationForNoEventWithProvidedPublicationHashReturnsNull() {
 		$this->testingFramework->createRecord('tx_seminars_seminars');
 
-		$this->assertNull(
+		self::assertNull(
 			$this->fixture->findByPublicationHash('foo')
 		);
 	}
@@ -745,7 +735,7 @@ class tx_seminars_Mapper_EventTest extends tx_phpunit_testcase {
 			'tx_seminars_seminars', array('publication_hash' => $publicationHash)
 		);
 
-		$this->assertTrue(
+		self::assertTrue(
 			$this->fixture->findByPublicationHash($publicationHash)
 				instanceof tx_seminars_Model_Event
 		);
@@ -769,7 +759,7 @@ class tx_seminars_Mapper_EventTest extends tx_phpunit_testcase {
 
 		/** @var tx_seminars_Model_Event $event */
 		$event = $this->fixture->find($eventUid);
-		$this->assertEquals(
+		self::assertEquals(
 			$registrationUid,
 			$event->getRegistrations()->getUids()
 		);
@@ -836,7 +826,7 @@ class tx_seminars_Mapper_EventTest extends tx_phpunit_testcase {
 			'tx_seminars_seminars', array('begin_date' => 41)
 		);
 
-		$this->assertTrue(
+		self::assertTrue(
 			$this->fixture->findAllByBeginDate(42, 91)->isEmpty()
 		);
 	}
@@ -849,7 +839,7 @@ class tx_seminars_Mapper_EventTest extends tx_phpunit_testcase {
 			'tx_seminars_seminars', array('begin_date' => 42)
 		);
 
-		$this->assertTrue(
+		self::assertTrue(
 			$this->fixture->findAllByBeginDate(42, 91)->hasUid($uid)
 		);
 	}
@@ -862,7 +852,7 @@ class tx_seminars_Mapper_EventTest extends tx_phpunit_testcase {
 			'tx_seminars_seminars', array('begin_date' => 2)
 		);
 
-		$this->assertTrue(
+		self::assertTrue(
 			$this->fixture->findAllByBeginDate(1, 3)->hasUid($uid)
 		);
 	}
@@ -875,7 +865,7 @@ class tx_seminars_Mapper_EventTest extends tx_phpunit_testcase {
 			'tx_seminars_seminars', array('begin_date' => 91)
 		);
 
-		$this->assertTrue(
+		self::assertTrue(
 			$this->fixture->findAllByBeginDate(42, 91)->hasUid($uid)
 		);
 	}
@@ -888,7 +878,7 @@ class tx_seminars_Mapper_EventTest extends tx_phpunit_testcase {
 			'tx_seminars_seminars', array('begin_date' => 92)
 		);
 
-		$this->assertTrue(
+		self::assertTrue(
 			$this->fixture->findAllByBeginDate(42, 91)->isEmpty()
 		);
 	}
@@ -901,7 +891,7 @@ class tx_seminars_Mapper_EventTest extends tx_phpunit_testcase {
 			'tx_seminars_seminars', array('begin_date' => 0)
 		);
 
-		$this->assertTrue(
+		self::assertTrue(
 			$this->fixture->findAllByBeginDate(0, 1)->hasUid($uid)
 		);
 	}
@@ -917,7 +907,7 @@ class tx_seminars_Mapper_EventTest extends tx_phpunit_testcase {
 			'tx_seminars_seminars', array('begin_date' => 43)
 		);
 
-		$this->assertEquals(
+		self::assertEquals(
 			2,
 			$this->fixture->findAllByBeginDate(42, 91)->count()
 		);
@@ -958,7 +948,7 @@ class tx_seminars_Mapper_EventTest extends tx_phpunit_testcase {
 			array('begin_date' => $GLOBALS['SIM_ACCESS_TIME'] + 1000)
 		);
 
-		$this->assertSame(
+		self::assertSame(
 			$uid,
 			$this->fixture->findNextUpcoming()->getUid()
 		);
@@ -977,7 +967,7 @@ class tx_seminars_Mapper_EventTest extends tx_phpunit_testcase {
 				array('begin_date' => $GLOBALS['SIM_ACCESS_TIME'] + 1000)
 		);
 
-		$this->assertSame(
+		self::assertSame(
 			$uid,
 			$this->fixture->findNextUpcoming()->getUid()
 		);

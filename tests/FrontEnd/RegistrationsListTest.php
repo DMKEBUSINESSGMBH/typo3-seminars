@@ -1,26 +1,16 @@
 <?php
-/***************************************************************
-* Copyright notice
-*
-* (c) 2008-2013 Niels Pardon (mail@niels-pardon.de)
-* All rights reserved
-*
-* This script is part of the TYPO3 project. The TYPO3 project is
-* free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* The GNU General Public License can be found at
-* http://www.gnu.org/copyleft/gpl.html.
-*
-* This script is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* This copyright notice MUST APPEAR in all copies of the script!
-***************************************************************/
+/*
+ * This file is part of the TYPO3 CMS project.
+ *
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
+ *
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
+ *
+ * The TYPO3 project - inspiring people to share!
+ */
 
 /**
  * Test case.
@@ -128,7 +118,7 @@ class tx_seminars_FrontEnd_RegistrationsListTest extends tx_phpunit_testcase {
 	public function createLogInAndRegisterFrontEndUserLogsInFrontEndUser() {
 		$this->createLogInAndRegisterFrontEndUser();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$this->testingFramework->isLoggedIn()
 		);
 	}
@@ -139,7 +129,7 @@ class tx_seminars_FrontEnd_RegistrationsListTest extends tx_phpunit_testcase {
 	public function createLogInAndRegisterFrontEndUserCreatesRegistrationRecord() {
 		$this->createLogInAndRegisterFrontEndUser();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$this->testingFramework->existsExactlyOneRecord(
 				'tx_seminars_attendances'
 			)
@@ -195,7 +185,7 @@ class tx_seminars_FrontEnd_RegistrationsListTest extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function renderContainsHtmlspecialcharedEventTitle() {
-		$this->assertContains(
+		self::assertContains(
 			'Test event &amp; more',
 			$this->fixture->render()
 		);
@@ -211,7 +201,7 @@ class tx_seminars_FrontEnd_RegistrationsListTest extends tx_phpunit_testcase {
 		);
 		$fixture->render();
 
-		$this->assertEquals(
+		self::assertEquals(
 			'Status: 404 Not Found',
 			tx_oelib_headerProxyFactory::getInstance()->getHeaderProxy()->getLastAddedHeader()
 		);
@@ -227,7 +217,7 @@ class tx_seminars_FrontEnd_RegistrationsListTest extends tx_phpunit_testcase {
 		);
 		$fixture->render();
 
-		$this->assertEquals(
+		self::assertEquals(
 			'Status: 404 Not Found',
 			tx_oelib_headerProxyFactory::getInstance()->getHeaderProxy()->getLastAddedHeader()
 		);
@@ -239,7 +229,7 @@ class tx_seminars_FrontEnd_RegistrationsListTest extends tx_phpunit_testcase {
 	public function renderWithoutLoggedInFrontEndUserReturnsHeader403() {
 		$this->fixture->render();
 
-		$this->assertEquals(
+		self::assertEquals(
 			'Status: 403 Forbidden',
 			tx_oelib_headerProxyFactory::getInstance()->getHeaderProxy()->getLastAddedHeader()
 		);
@@ -252,7 +242,7 @@ class tx_seminars_FrontEnd_RegistrationsListTest extends tx_phpunit_testcase {
 		$this->testingFramework->createFrontEndUser();
 		$this->fixture->render();
 
-		$this->assertEquals(
+		self::assertEquals(
 			'Status: 403 Forbidden',
 			tx_oelib_headerProxyFactory::getInstance()->getHeaderProxy()->getLastAddedHeader()
 		);
@@ -265,7 +255,7 @@ class tx_seminars_FrontEnd_RegistrationsListTest extends tx_phpunit_testcase {
 		$this->createLogInAndRegisterFrontEndUser();
 		$this->fixture->render();
 
-		$this->assertNotContains(
+		self::assertNotContains(
 			'403',
 			tx_oelib_headerProxyFactory::getInstance()->getHeaderProxy()->getLastAddedHeader()
 		);
@@ -280,7 +270,7 @@ class tx_seminars_FrontEnd_RegistrationsListTest extends tx_phpunit_testcase {
 		);
 		$this->createLogInAndRegisterFrontEndUser();
 
-		$this->assertContains(
+		self::assertContains(
 			'<th scope="col">Number</th>',
 			$this->fixture->render()
 		);
@@ -295,7 +285,7 @@ class tx_seminars_FrontEnd_RegistrationsListTest extends tx_phpunit_testcase {
 		);
 		$this->createLogInAndRegisterFrontEndUser();
 
-		$this->assertContains(
+		self::assertContains(
 			'<td>' . $this->feUserUid . '</td>',
 			$this->fixture->render()
 		);
@@ -310,7 +300,7 @@ class tx_seminars_FrontEnd_RegistrationsListTest extends tx_phpunit_testcase {
 		);
 		$this->createLogInAndRegisterFrontEndUser();
 
-		$this->assertContains(
+		self::assertContains(
 			'<th scope="col">Name:</th>',
 			$this->fixture->render()
 		);
@@ -325,7 +315,7 @@ class tx_seminars_FrontEnd_RegistrationsListTest extends tx_phpunit_testcase {
 		);
 		$this->createLogInAndRegisterFrontEndUser();
 
-		$this->assertContains(
+		self::assertContains(
 			'<td>Tom &amp; Jerry</td>',
 			$this->fixture->render()
 		);
@@ -341,11 +331,11 @@ class tx_seminars_FrontEnd_RegistrationsListTest extends tx_phpunit_testcase {
 		$this->createLogInAndRegisterFrontEndUser();
 		$result = $this->fixture->render();
 
-		$this->assertContains(
+		self::assertContains(
 			'<th scope="col">Number</th>',
 			$result
 		);
-		$this->assertContains(
+		self::assertContains(
 			'<th scope="col">Name:</th>',
 			$result
 		);
@@ -366,11 +356,11 @@ class tx_seminars_FrontEnd_RegistrationsListTest extends tx_phpunit_testcase {
 		);
 		$result = $this->fixture->render();
 
-		$this->assertContains(
+		self::assertContains(
 			'<td>' . $this->feUserUid . '</td>',
 			$result
 		);
-		$this->assertContains(
+		self::assertContains(
 			'<td>Tom &amp; Jerry</td>',
 			$result
 		);
@@ -385,7 +375,7 @@ class tx_seminars_FrontEnd_RegistrationsListTest extends tx_phpunit_testcase {
 		);
 		$this->createLogInAndRegisterFrontEndUser();
 
-		$this->assertContains(
+		self::assertContains(
 			'<th scope="col">Ticket ID</th>',
 			$this->fixture->render()
 		);
@@ -400,7 +390,7 @@ class tx_seminars_FrontEnd_RegistrationsListTest extends tx_phpunit_testcase {
 		);
 		$this->createLogInAndRegisterFrontEndUser();
 
-		$this->assertContains(
+		self::assertContains(
 			'<td>' . $this->registrationUid . '</td>',
 			$this->fixture->render()
 		);
@@ -415,7 +405,7 @@ class tx_seminars_FrontEnd_RegistrationsListTest extends tx_phpunit_testcase {
 		);
 		$this->createLogInAndRegisterFrontEndUser();
 
-		$this->assertContains(
+		self::assertContains(
 			'<th scope="col">Seats</th>',
 			$this->fixture->render()
 		);
@@ -435,7 +425,7 @@ class tx_seminars_FrontEnd_RegistrationsListTest extends tx_phpunit_testcase {
 			array('seats' => 42)
 		);
 
-		$this->assertContains(
+		self::assertContains(
 			'<td>42</td>',
 			$this->fixture->render()
 		);
@@ -455,7 +445,7 @@ class tx_seminars_FrontEnd_RegistrationsListTest extends tx_phpunit_testcase {
 			array('interests' => 'everything practical & theoretical',)
 		);
 
-		$this->assertContains(
+		self::assertContains(
 			'<td>everything practical &amp; theoretical</td>',
 			$this->fixture->render()
 		);
@@ -470,11 +460,11 @@ class tx_seminars_FrontEnd_RegistrationsListTest extends tx_phpunit_testcase {
 		);
 		$this->createLogInAndRegisterFrontEndUser();
 
-		$this->assertContains(
+		self::assertContains(
 			'<th scope="col">Ticket ID</th>',
 			$this->fixture->render()
 		);
-		$this->assertContains(
+		self::assertContains(
 			'<th scope="col">Seats</th>',
 			$this->fixture->render()
 		);
@@ -494,11 +484,11 @@ class tx_seminars_FrontEnd_RegistrationsListTest extends tx_phpunit_testcase {
 			array('seats' => 42)
 		);
 
-		$this->assertContains(
+		self::assertContains(
 			'<td>' . $this->registrationUid . '</td>',
 			$this->fixture->render()
 		);
-		$this->assertContains(
+		self::assertContains(
 			'<td>42</td>',
 			$this->fixture->render()
 		);
@@ -513,7 +503,7 @@ class tx_seminars_FrontEnd_RegistrationsListTest extends tx_phpunit_testcase {
 			'showFeUserFieldsInRegistrationsList', ''
 		);
 
-		$this->assertNotContains(
+		self::assertNotContains(
 			'label_',
 			$this->fixture->render()
 		);
@@ -528,7 +518,7 @@ class tx_seminars_FrontEnd_RegistrationsListTest extends tx_phpunit_testcase {
 			'showRegistrationFieldsInRegistrationList', ''
 		);
 
-		$this->assertNotContains(
+		self::assertNotContains(
 			'label_',
 			$this->fixture->render()
 		);
@@ -548,7 +538,7 @@ class tx_seminars_FrontEnd_RegistrationsListTest extends tx_phpunit_testcase {
 			'fe_users', $this->feUserUid, array('deleted' => 1)
 		);
 
-		$this->assertNotContains(
+		self::assertNotContains(
 			(string) $this->registrationUid,
 			$this->fixture->render()
 		);
@@ -573,7 +563,7 @@ class tx_seminars_FrontEnd_RegistrationsListTest extends tx_phpunit_testcase {
 			)
 		);
 
-		$this->assertRegExp(
+		self::assertRegExp(
 			'/' . $this->registrationUid . '<\/td>.*<\/tr>' .
 				'.*<tr>.*<td>' . $secondRegistration . '/s',
 			$this->fixture->render()
@@ -589,7 +579,7 @@ class tx_seminars_FrontEnd_RegistrationsListTest extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function renderForNoWaitingListRegistrationsNotContainsWaitingListLabel() {
-		$this->assertNotContains(
+		self::assertNotContains(
 			$this->fixture->translate('label_waiting_list'),
 			$this->fixture->render()
 		);
@@ -614,7 +604,7 @@ class tx_seminars_FrontEnd_RegistrationsListTest extends tx_phpunit_testcase {
 			)
 		);
 
-		$this->assertContains(
+		self::assertContains(
 			$this->fixture->translate('label_waiting_list'),
 			$this->fixture->render()
 		);
@@ -639,7 +629,7 @@ class tx_seminars_FrontEnd_RegistrationsListTest extends tx_phpunit_testcase {
 			)
 		);
 
-		$this->assertRegExp(
+		self::assertRegExp(
 			'/<td>' . $secondRegistration . '/s',
 			$this->fixture->render()
 		);

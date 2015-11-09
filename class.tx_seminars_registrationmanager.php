@@ -385,7 +385,7 @@ class tx_seminars_registrationmanager extends tx_oelib_templatehelper {
 	 * @return bool TRUE if user is already registered, FALSE otherwise.
 	 */
 	public function isUserRegistered(tx_seminars_seminar $seminar) {
-		return $seminar->isUserRegistered($this->getFeUserUid());
+		return $seminar->isUserRegistered($this->getLoggedInFrontEndUserUid());
 	}
 
 	/**
@@ -398,7 +398,7 @@ class tx_seminars_registrationmanager extends tx_oelib_templatehelper {
 	 * @return string empty string if everything is OK, else a localized error message
 	 */
 	public function isUserRegisteredMessage(tx_seminars_seminar $seminar) {
-		return $seminar->isUserRegisteredMessage($this->getFeUserUid());
+		return $seminar->isUserRegisteredMessage($this->getLoggedInFrontEndUserUid());
 	}
 
 	/**
@@ -411,7 +411,7 @@ class tx_seminars_registrationmanager extends tx_oelib_templatehelper {
 	 * @return bool TRUE if user is blocked by another registration, FALSE otherwise
 	 */
 	private function isUserBlocked(tx_seminars_seminar $seminar) {
-		return $seminar->isUserBlocked($this->getFeUserUid());
+		return $seminar->isUserBlocked($this->getLoggedInFrontEndUserUid());
 	}
 
 	/**
@@ -479,7 +479,7 @@ class tx_seminars_registrationmanager extends tx_oelib_templatehelper {
 	 */
 	public function createRegistration(tx_seminars_seminar $seminar, array $formData, tslib_pibase $plugin) {
 		$this->registration = t3lib_div::makeInstance('tx_seminars_registration', $plugin->cObj);
-		$this->registration->setRegistrationData($seminar, $this->getFeUserUid(), $formData);
+		$this->registration->setRegistrationData($seminar, $this->getLoggedInFrontEndUserUid(), $formData);
 		$this->registration->commitToDb();
 		$seminar->calculateStatistics();
 
@@ -652,7 +652,7 @@ class tx_seminars_registrationmanager extends tx_oelib_templatehelper {
 				'*', 'tx_seminars_attendances', 'uid = ' . $uid . tx_oelib_db::enableFields('tx_seminars_attendances')
 			)
 		);
-		if ($this->registration->getUser() !== $this->getFeUserUid()) {
+		if ($this->registration->getUser() !== $this->getLoggedInFrontEndUserUid()) {
 			return;
 		}
 
@@ -758,7 +758,7 @@ class tx_seminars_registrationmanager extends tx_oelib_templatehelper {
 		/** @var tx_seminars_BagBuilder_Event $builder */
 		$builder = t3lib_div::makeInstance('tx_seminars_BagBuilder_Event');
 		$builder->limitToRequiredEventTopics($event->getTopicUid());
-		$builder->limitToTopicsWithoutRegistrationByUser($this->getFeUserUid());
+		$builder->limitToTopicsWithoutRegistrationByUser($this->getLoggedInFrontEndUserUid());
 
 		return $builder->build();
 	}
@@ -1371,10 +1371,12 @@ class tx_seminars_registrationmanager extends tx_oelib_templatehelper {
 	private function setEMailIntroduction($helloSubjectPrefix, tx_seminars_registration $registration) {
 		/** @var $salutation tx_seminars_EmailSalutation */
 		$salutation = t3lib_div::makeInstance('tx_seminars_EmailSalutation');
-		$this->setMarker('salutation', $salutation->getSalutation($registration->getFrontEndUser()));
+		$salutationText = $salutation->getSalutation($registration->getFrontEndUser());
+		$this->setMarker('salutation', $salutationText);
 
 		$event = $registration->getSeminarObject();
-		$introduction = $salutation->createIntroduction($this->translate('email_' . $helloSubjectPrefix . 'Hello'), $event);
+		$introductionTemplate = $this->translate('email_' . $helloSubjectPrefix . 'Hello');
+		$introduction = $salutation->createIntroduction($introductionTemplate, $event);
 
 		if ($registration->hasTotalPrice()) {
 			$introduction .= ' ' . sprintf($this->translate('email_price'), $registration->getTotalPrice());
@@ -1463,6 +1465,16 @@ class tx_seminars_registrationmanager extends tx_oelib_templatehelper {
 	 */
 	public function injectLinkBuilder(tx_seminars_Service_SingleViewLinkBuilder $linkBuilder) {
 		$this->linkBuilder = $linkBuilder;
+	}
+
+	/**
+	 * Returns the UID of the logged-in front-end user (or 0 if no user is logged in).
+	 *
+	 * @return int
+	 */
+	protected function getLoggedInFrontEndUserUid() {
+		$loginManager = Tx_Oelib_FrontEndLoginManager::getInstance();
+		return $loginManager->isLoggedIn() ? $loginManager->getLoggedInUser('tx_seminars_Mapper_FrontEndUser')->getUid() : 0;
 	}
 }
 

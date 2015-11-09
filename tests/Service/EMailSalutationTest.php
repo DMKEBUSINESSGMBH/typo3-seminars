@@ -1,26 +1,16 @@
 <?php
-/***************************************************************
-* Copyright notice
-*
-* (c) 2009-2013 Bernd Schönbach <bernd@oliverklee.de>
-* All rights reserved
-*
-* This script is part of the TYPO3 project. The TYPO3 project is
-* free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* The GNU General Public License can be found at
-* http://www.gnu.org/copyleft/gpl.html.
-*
-* This script is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* This copyright notice MUST APPEAR in all copies of the script!
-***************************************************************/
+/*
+ * This file is part of the TYPO3 CMS project.
+ *
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
+ *
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
+ *
+ * The TYPO3 project - inspiring people to share!
+ */
 
 /**
  * Test case.
@@ -32,14 +22,14 @@
  */
 class tx_seminars_Service_EMailSalutationTest extends tx_phpunit_testcase {
 	/**
-	 * @var tx_oelib_testingFramework the testing framework
+	 * @var Tx_Oelib_TestingFramework the testing framework
 	 */
-	private $testingFramework;
+	private $testingFramework = NULL;
 
 	/**
 	 * @var tx_seminars_EmailSalutation the fixture the tests relate to
 	 */
-	private $fixture;
+	private $subject = NULL;
 
 	/**
 	 * @var array backed-up extension configuration of the TYPO3 configuration
@@ -53,12 +43,11 @@ class tx_seminars_Service_EMailSalutationTest extends tx_phpunit_testcase {
 	private $t3VarBackup = array();
 
 	protected function setUp() {
-		$this->testingFramework = new tx_oelib_testingFramework('tx_seminars');
-		$this->fixture = new tx_seminars_EmailSalutation();
-		$configuration = new tx_oelib_Configuration();
+		$this->testingFramework = new Tx_Oelib_TestingFramework('tx_seminars');
+		$this->subject = new tx_seminars_EmailSalutation();
+		$configuration = new Tx_Oelib_Configuration();
 		$configuration->setAsString('salutation', 'formal');
-		tx_oelib_ConfigurationRegistry::getInstance()
-			->set('plugin.tx_seminars', $configuration);
+		Tx_Oelib_ConfigurationRegistry::getInstance()->set('plugin.tx_seminars', $configuration);
 		$this->extConfBackup = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'];
 		$this->t3VarBackup = $GLOBALS['T3_VAR']['getUserObj'];
 	}
@@ -69,10 +58,9 @@ class tx_seminars_Service_EMailSalutationTest extends tx_phpunit_testcase {
 		$GLOBALS['T3_VAR']['getUserObj'] = $this->t3VarBackup;
 	}
 
-
-	//////////////////////
-	// Utility functions
-	//////////////////////
+	/*
+	 * Utility functions
+	 */
 
 	/**
 	 * Creates an FE-user with the given gender and the name "Foo".
@@ -102,22 +90,22 @@ class tx_seminars_Service_EMailSalutationTest extends tx_phpunit_testcase {
 	 */
 	protected function skipWithoutGenderField() {
 		if (!Tx_Oelib_Model_FrontEndUser::hasGenderField()) {
-			$this->markTestSkipped(
+			self::markTestSkipped(
 				'This test is skipped because it requires FE user to have a gender field, e.g., ' .
 					'from the sr_feuser_register extension.'
 			);
 		}
 	}
 
-	///////////////////////////////////////////
-	// Tests concerning the utility functions
-	///////////////////////////////////////////
+	/*
+	 * Tests concerning the utility functions
+	 */
 
 	/**
 	 * @test
 	 */
 	public function createFrontEndUserReturnsFeUserModel() {
-		$this->assertTrue(
+		self::assertTrue(
 			$this->createFrontEndUser() instanceof tx_seminars_Model_FrontEndUser
 		);
 	}
@@ -128,24 +116,23 @@ class tx_seminars_Service_EMailSalutationTest extends tx_phpunit_testcase {
 	public function createFrontEndUserForGivenGenderAssignsGenderToFrontEndUser() {
 		$this->skipWithoutGenderField();
 
-		$this->assertSame(
+		self::assertSame(
 			tx_oelib_Model_FrontEndUser::GENDER_FEMALE,
 			$this->createFrontEndUser(tx_oelib_Model_FrontEndUser::GENDER_FEMALE)->getGender()
 		);
 	}
 
-
-	///////////////////////////////////
-	// Tests concerning getSalutation
-	///////////////////////////////////
+	/*
+	 * Tests concerning getSalutation
+	 */
 
 	/**
 	 * @test
 	 */
 	public function getSalutationReturnsUsernameOfRegistration() {
-		$this->assertContains(
+		self::assertContains(
 			'Foo',
-			$this->fixture->getSalutation($this->createFrontEndUser())
+			$this->subject->getSalutation($this->createFrontEndUser())
 		);
 	}
 
@@ -157,9 +144,9 @@ class tx_seminars_Service_EMailSalutationTest extends tx_phpunit_testcase {
 
 		$user = $this->createFrontEndUser(tx_oelib_Model_FrontEndUser::GENDER_MALE);
 
-		$this->assertContains(
+		self::assertContains(
 			tx_oelib_TranslatorRegistry::getInstance()->get('seminars')->translate('email_hello_formal_0'),
-			$this->fixture->getSalutation($user)
+			$this->subject->getSalutation($user)
 		);
 	}
 
@@ -171,10 +158,10 @@ class tx_seminars_Service_EMailSalutationTest extends tx_phpunit_testcase {
 
 		$user = $this->createFrontEndUser(tx_oelib_Model_FrontEndUser::GENDER_MALE);
 
-		$this->assertContains(
+		self::assertContains(
 			tx_oelib_TranslatorRegistry::getInstance()->get('seminars')->translate('email_salutation_title_0') .
 				' ' . $user->getLastOrFullName(),
-			$this->fixture->getSalutation($user)
+			$this->subject->getSalutation($user)
 		);
 	}
 
@@ -186,10 +173,10 @@ class tx_seminars_Service_EMailSalutationTest extends tx_phpunit_testcase {
 
 		$user = $this->createFrontEndUser(tx_oelib_Model_FrontEndUser::GENDER_FEMALE);
 
-		$this->assertContains(
+		self::assertContains(
 			tx_oelib_TranslatorRegistry::getInstance()->get('seminars')
 				->translate('email_hello_formal_1'),
-			$this->fixture->getSalutation($user)
+			$this->subject->getSalutation($user)
 		);
 	}
 
@@ -201,10 +188,10 @@ class tx_seminars_Service_EMailSalutationTest extends tx_phpunit_testcase {
 
 		$user = $this->createFrontEndUser(tx_oelib_Model_FrontEndUser::GENDER_FEMALE);
 
-		$this->assertContains(
+		self::assertContains(
 			tx_oelib_TranslatorRegistry::getInstance()->get('seminars')->translate('email_salutation_title_1') .
 				' ' . $user->getLastOrFullName(),
-			$this->fixture->getSalutation($user)
+			$this->subject->getSalutation($user)
 		);
 	}
 
@@ -216,10 +203,10 @@ class tx_seminars_Service_EMailSalutationTest extends tx_phpunit_testcase {
 			tx_oelib_Model_FrontEndUser::GENDER_UNKNOWN
 		);
 
-		$this->assertContains(
+		self::assertContains(
 			tx_oelib_TranslatorRegistry::getInstance()->get('seminars')
 				->translate('email_hello_formal_99'),
-			$this->fixture->getSalutation($user)
+			$this->subject->getSalutation($user)
 		);
 	}
 
@@ -231,11 +218,11 @@ class tx_seminars_Service_EMailSalutationTest extends tx_phpunit_testcase {
 			tx_oelib_Model_FrontEndUser::GENDER_UNKNOWN
 		);
 
-		$this->assertContains(
+		self::assertContains(
 			tx_oelib_TranslatorRegistry::getInstance()->get('seminars')
 				->translate('email_salutation_title_99') . ' ' .
 				$user->getLastOrFullName(),
-			$this->fixture->getSalutation($user)
+			$this->subject->getSalutation($user)
 		);
 	}
 
@@ -247,10 +234,10 @@ class tx_seminars_Service_EMailSalutationTest extends tx_phpunit_testcase {
 		tx_oelib_ConfigurationRegistry::get('plugin.tx_seminars')
 			->setAsString('salutation', 'informal');
 
-		$this->assertContains(
+		self::assertContains(
 			tx_oelib_TranslatorRegistry::getInstance()->get('seminars')
 					->translate('email_hello_informal'),
-			$this->fixture->getSalutation($user)
+			$this->subject->getSalutation($user)
 		);
 	}
 
@@ -262,16 +249,99 @@ class tx_seminars_Service_EMailSalutationTest extends tx_phpunit_testcase {
 		tx_oelib_ConfigurationRegistry::get('plugin.tx_seminars')
 			->setAsString('salutation', 'informal');
 
-		$this->assertContains(
+		self::assertContains(
 			$user->getLastOrFullName(),
-			$this->fixture->getSalutation($user)
+			$this->subject->getSalutation($user)
 		);
 	}
 
+	/**
+	 * Returns all valid genders.
+	 *
+	 * @return int[][]
+	 */
+	public function genderDataProvider() {
+		return array(
+			'male' => array(0),
+			'female' => array(1),
+			'unknown (old)' => array(2),
+			'unknown' => array(99),
+		);
+	}
 
-	///////////////////////////////
-	// Tests concerning the hooks
-	///////////////////////////////
+	/**
+	 * @test
+	 * @param int $gender
+	 * @dataProvider genderDataProvider
+	 */
+	public function getSalutationForFormalSalutationModeContainsNoRawLabelKeys($gender) {
+		tx_oelib_ConfigurationRegistry::get('plugin.tx_seminars')->setAsString('salutation', 'formal');
+
+		$user = $this->createFrontEndUser($gender);
+		$salutation = $this->subject->getSalutation($user);
+
+		self::assertNotContains(
+			'_',
+			$salutation
+		);
+		self::assertNotContains(
+			'salutation',
+			$salutation
+		);
+		self::assertNotContains(
+			'email',
+			$salutation
+		);
+		self::assertNotContains(
+			'formal',
+			$salutation
+		);
+	}
+
+	/**
+	 * @test
+	 * @param int $gender
+	 * @dataProvider genderDataProvider
+	 */
+	public function getSalutationForInformalSalutationModeContainsNoRawLabelKeys($gender) {
+		tx_oelib_ConfigurationRegistry::get('plugin.tx_seminars')->setAsString('salutation', 'informal');
+
+		$user = $this->createFrontEndUser($gender);
+		$salutation = $this->subject->getSalutation($user);
+
+		$this->assertNotContainsRawLabelKey($salutation);
+	}
+
+	/**
+	 * @test
+	 * @param int $gender
+	 * @dataProvider genderDataProvider
+	 */
+	public function getSalutationForNoSalutationModeContainsNoRawLabelKeys($gender) {
+		tx_oelib_ConfigurationRegistry::get('plugin.tx_seminars')->setAsString('salutation', '');
+
+		$user = $this->createFrontEndUser($gender);
+		$salutation = $this->subject->getSalutation($user);
+
+		$this->assertNotContainsRawLabelKey($salutation);
+	}
+
+	/**
+	 * Checks that $string does not contain a raw label key.
+	 *
+	 * @param string $string
+	 *
+	 * @return void
+	 */
+	private function assertNotContainsRawLabelKey($string) {
+		self::assertNotContains('_', $string);
+		self::assertNotContains('salutation', $string);
+		self::assertNotContains('formal', $string);
+	}
+
+	/*
+	 * Tests concerning the hooks
+	 */
 
 	/**
 	 * @test
@@ -281,14 +351,14 @@ class tx_seminars_Service_EMailSalutationTest extends tx_phpunit_testcase {
 		$salutationHookMock = $this->getMock(
 			$hookClassName, array('modifySalutation')
 		);
-		$salutationHookMock->expects($this->atLeastOnce())
+		$salutationHookMock->expects(self::atLeastOnce())
 			->method('modifySalutation');
 
 		$GLOBALS['T3_VAR']['getUserObj'][$hookClassName] = $salutationHookMock;
 		$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['seminars']
 			['modifyEmailSalutation'][$hookClassName] = $hookClassName;
 
-		$this->fixture->getSalutation($this->createFrontEndUser());
+		$this->subject->getSalutation($this->createFrontEndUser());
 	}
 
 	/**
@@ -299,7 +369,7 @@ class tx_seminars_Service_EMailSalutationTest extends tx_phpunit_testcase {
 		$salutationHookMock1 = $this->getMock(
 			$hookClassName1, array('modifySalutation')
 		);
-		$salutationHookMock1->expects($this->atLeastOnce())
+		$salutationHookMock1->expects(self::atLeastOnce())
 			->method('modifySalutation');
 		$GLOBALS['T3_VAR']['getUserObj'][$hookClassName1] = $salutationHookMock1;
 		$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['seminars']
@@ -309,19 +379,30 @@ class tx_seminars_Service_EMailSalutationTest extends tx_phpunit_testcase {
 		$salutationHookMock2 = $this->getMock(
 			$hookClassName2, array('modifySalutation')
 		);
-		$salutationHookMock2->expects($this->atLeastOnce())
+		$salutationHookMock2->expects(self::atLeastOnce())
 			->method('modifySalutation');
 		$GLOBALS['T3_VAR']['getUserObj'][$hookClassName2] = $salutationHookMock2;
 		$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['seminars']
 			['modifyEmailSalutation'][$hookClassName2] = $hookClassName2;
 
-		$this->fixture->getSalutation($this->createFrontEndUser());
+		$this->subject->getSalutation($this->createFrontEndUser());
 	}
 
+	/*
+	 * Tests concerning createIntroduction
+	 */
 
-	////////////////////////////////////////
-	// Tests concerning createIntroduction
-	////////////////////////////////////////
+	/**
+	 * @test
+	 * @expectedException \InvalidArgumentException
+	 */
+	public function createIntroductionWithEmptyBeginThrowsException() {
+		$eventUid = $this->testingFramework->createRecord('tx_seminars_seminars');
+
+		$event = new tx_seminars_seminarchild($eventUid, array());
+
+		$this->subject->createIntroduction('', $event);
+	}
 
 	/**
 	 * @test
@@ -337,9 +418,9 @@ class tx_seminars_Service_EMailSalutationTest extends tx_phpunit_testcase {
 			'dateFormatYMD' => $dateFormatYMD
 		));
 
-		$this->assertContains(
+		self::assertContains(
 			strftime($dateFormatYMD, $GLOBALS['SIM_EXEC_TIME']),
-			$this->fixture->createIntroduction('%s', $event)
+			$this->subject->createIntroduction('%s', $event)
 		);
 	}
 
@@ -363,11 +444,11 @@ class tx_seminars_Service_EMailSalutationTest extends tx_phpunit_testcase {
 			'abbreviateDateRanges' => 1,
 		));
 
-		$this->assertContains(
+		self::assertContains(
 			strftime($dateFormatD, $GLOBALS['SIM_EXEC_TIME']) .
 				'-' .
 				strftime($dateFormatYMD, $GLOBALS['SIM_EXEC_TIME'] + tx_oelib_Time::SECONDS_PER_DAY),
-			$this->fixture->createIntroduction('%s', $event)
+			$this->subject->createIntroduction('%s', $event)
 		);
 	}
 
@@ -387,9 +468,9 @@ class tx_seminars_Service_EMailSalutationTest extends tx_phpunit_testcase {
 			'timeFormat' => $timeFormat,
 		));
 
-		$this->assertContains(
+		self::assertContains(
 			strftime($timeFormat, $GLOBALS['SIM_EXEC_TIME']),
-			$this->fixture->createIntroduction('%s', $event)
+			$this->subject->createIntroduction('%s', $event)
 		);
 	}
 
@@ -407,20 +488,107 @@ class tx_seminars_Service_EMailSalutationTest extends tx_phpunit_testcase {
 			)
 		);
 
-		$event = new tx_seminars_seminarchild($eventUid, array(
-			'timeFormat' => $timeFormat,
-		));
+		$event = new tx_seminars_seminarchild($eventUid, array('timeFormat' => $timeFormat,));
 		$translator = tx_oelib_TranslatorRegistry::getInstance()->get('seminars');
 		$timeInsert = strftime($timeFormat, $GLOBALS['SIM_EXEC_TIME']) . ' ' .
 			$translator->translate('email_timeTo') . ' ' .
 			strftime($timeFormat, $endDate);
 
-		$this->assertContains(
-			sprintf(
-				$translator->translate('email_timeFrom'),
-				$timeInsert
-			),
-			$this->fixture->createIntroduction('%s', $event)
+		self::assertContains(
+			sprintf($translator->translate('email_timeFrom'), $timeInsert),
+			$this->subject->createIntroduction('%s', $event)
 		);
+	}
+
+	/**
+	 * @test
+	 */
+	public function createIntroductionForEventWithStartAndEndOnOneDayContainsDate() {
+		$dateFormat = '%d.%m.%Y';
+		$endDate = $GLOBALS['SIM_EXEC_TIME'] + 3600;
+		$eventUid = $this->testingFramework->createRecord(
+			'tx_seminars_seminars',
+			array(
+				'begin_date' => $GLOBALS['SIM_EXEC_TIME'],
+				'end_date' => $endDate,
+			)
+		);
+
+		$event = new tx_seminars_seminarchild($eventUid, array('dateFormatYMD' => $dateFormat));
+		$formattedDate = strftime($dateFormat, $GLOBALS['SIM_EXEC_TIME']);
+
+		self::assertContains(
+			$formattedDate,
+			$this->subject->createIntroduction('%s', $event)
+		);
+	}
+
+	/**
+	 * @test
+	 */
+	public function createIntroductionForFormalSalutationModeContainsNoRawLabelKeys() {
+		$salutation = 'formal';
+		tx_oelib_ConfigurationRegistry::get('plugin.tx_seminars')->setAsString('salutation', $salutation);
+
+		$dateFormatYMD = '%d.%m.%Y';
+		$eventUid = $this->testingFramework->createRecord(
+			'tx_seminars_seminars',
+			array('begin_date' => $GLOBALS['SIM_EXEC_TIME'])
+		);
+
+		$event = new tx_seminars_seminarchild(
+			$eventUid,
+			array('dateFormatYMD' => $dateFormatYMD, 'salutation' => $salutation)
+		);
+
+		$introduction = $this->subject->createIntroduction('%s', $event);
+
+		$this->assertNotContainsRawLabelKey($introduction);
+	}
+
+	/**
+	 * @test
+	 */
+	public function createIntroductionForInformalSalutationModeContainsNoRawLabelKeys() {
+		$salutation = 'informal';
+		tx_oelib_ConfigurationRegistry::get('plugin.tx_seminars')->setAsString('salutation', $salutation);
+
+		$dateFormatYMD = '%d.%m.%Y';
+		$eventUid = $this->testingFramework->createRecord(
+			'tx_seminars_seminars',
+			array('begin_date' => $GLOBALS['SIM_EXEC_TIME'])
+		);
+
+		$event = new tx_seminars_seminarchild(
+			$eventUid,
+			array('dateFormatYMD' => $dateFormatYMD, 'salutation' => $salutation)
+		);
+
+		$introduction = $this->subject->createIntroduction('%s', $event);
+
+		$this->assertNotContainsRawLabelKey($introduction);
+	}
+
+	/**
+	 * @test
+	 */
+	public function createIntroductionForNoSalutationModeContainsNoRawLabelKeys() {
+		$salutation = '';
+		tx_oelib_ConfigurationRegistry::get('plugin.tx_seminars')->setAsString('salutation', $salutation);
+
+		$dateFormatYMD = '%d.%m.%Y';
+		$eventUid = $this->testingFramework->createRecord(
+			'tx_seminars_seminars',
+			array('begin_date' => $GLOBALS['SIM_EXEC_TIME'])
+		);
+
+		$event = new tx_seminars_seminarchild(
+			$eventUid,
+			array('dateFormatYMD' => $dateFormatYMD, 'salutation' => $salutation)
+		);
+
+		$introduction = $this->subject->createIntroduction('%s', $event);
+
+		$this->assertNotContainsRawLabelKey($introduction);
 	}
 }

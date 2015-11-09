@@ -1,26 +1,16 @@
 <?php
-/***************************************************************
-* Copyright notice
-*
-* (c) 2008-2013 Niels Pardon (mail@niels-pardon.de)
-* All rights reserved
-*
-* This script is part of the TYPO3 project. The TYPO3 project is
-* free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* The GNU General Public License can be found at
-* http://www.gnu.org/copyleft/gpl.html.
-*
-* This script is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* This copyright notice MUST APPEAR in all copies of the script!
-***************************************************************/
+/*
+ * This file is part of the TYPO3 CMS project.
+ *
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
+ *
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
+ *
+ * The TYPO3 project - inspiring people to share!
+ */
 
 /**
  * Test case.
@@ -60,7 +50,7 @@ class tx_seminars_BagBuilder_RegistrationTest extends tx_phpunit_testcase {
 	///////////////////////////////////////////
 
 	public function testBagBuilderBuildsARegistrationBag() {
-		$this->assertTrue(
+		self::assertTrue(
 			$this->fixture->build() instanceof tx_seminars_Bag_Registration
 		);
 	}
@@ -76,16 +66,16 @@ class tx_seminars_BagBuilder_RegistrationTest extends tx_phpunit_testcase {
 		);
 
 		$registrationBag = $this->fixture->build();
-		$this->assertEquals(
+		self::assertEquals(
 			2,
 			$registrationBag->count()
 		);
 
-		$this->assertEquals(
+		self::assertEquals(
 			'Title 1',
 			$registrationBag->current()->getTitle()
 		);
-		$this->assertEquals(
+		self::assertEquals(
 			'Title 2',
 			$registrationBag->next()->getTitle()
 		);
@@ -105,7 +95,7 @@ class tx_seminars_BagBuilder_RegistrationTest extends tx_phpunit_testcase {
 		);
 		$registrationBag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertEquals(
 			2,
 			$registrationBag->count()
 		);
@@ -145,7 +135,7 @@ class tx_seminars_BagBuilder_RegistrationTest extends tx_phpunit_testcase {
 		$this->fixture->limitToEvent($eventUid1);
 		$registrationBag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertEquals(
 			'Attendance 1',
 			$registrationBag->current()->getTitle()
 		);
@@ -165,7 +155,7 @@ class tx_seminars_BagBuilder_RegistrationTest extends tx_phpunit_testcase {
 		$this->fixture->limitToEvent($eventUid1);
 		$registrationBag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$registrationBag->isEmpty()
 		);
 	}
@@ -183,7 +173,7 @@ class tx_seminars_BagBuilder_RegistrationTest extends tx_phpunit_testcase {
 		$this->fixture->limitToPaid();
 		$registrationBag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$registrationBag->current()->isPaid()
 		);
 	}
@@ -196,7 +186,7 @@ class tx_seminars_BagBuilder_RegistrationTest extends tx_phpunit_testcase {
 		$this->fixture->limitToPaid();
 		$registrationBag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$registrationBag->isEmpty()
 		);
 	}
@@ -214,7 +204,7 @@ class tx_seminars_BagBuilder_RegistrationTest extends tx_phpunit_testcase {
 		$this->fixture->limitToUnpaid();
 		$registrationBag = $this->fixture->build();
 
-		$this->assertFalse(
+		self::assertFalse(
 			$registrationBag->current()->isPaid()
 		);
 	}
@@ -227,7 +217,7 @@ class tx_seminars_BagBuilder_RegistrationTest extends tx_phpunit_testcase {
 		$this->fixture->limitToUnpaid();
 		$registrationBag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$registrationBag->isEmpty()
 		);
 	}
@@ -246,7 +236,7 @@ class tx_seminars_BagBuilder_RegistrationTest extends tx_phpunit_testcase {
 		$this->fixture->removePaymentLimitation();
 		$registrationBag = $this->fixture->build();
 
-		$this->assertFalse(
+		self::assertFalse(
 			$registrationBag->current()->isPaid()
 		);
 	}
@@ -260,7 +250,7 @@ class tx_seminars_BagBuilder_RegistrationTest extends tx_phpunit_testcase {
 		$this->fixture->removePaymentLimitation();
 		$registrationBag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$registrationBag->current()->isPaid()
 		);
 	}
@@ -278,7 +268,7 @@ class tx_seminars_BagBuilder_RegistrationTest extends tx_phpunit_testcase {
 		$this->fixture->limitToOnQueue();
 		$registrationBag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$registrationBag->current()->isOnRegistrationQueue()
 		);
 	}
@@ -291,7 +281,7 @@ class tx_seminars_BagBuilder_RegistrationTest extends tx_phpunit_testcase {
 		$this->fixture->limitToOnQueue();
 		$registrationBag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$registrationBag->isEmpty()
 		);
 	}
@@ -309,7 +299,7 @@ class tx_seminars_BagBuilder_RegistrationTest extends tx_phpunit_testcase {
 		$this->fixture->limitToRegular();
 		$registrationBag = $this->fixture->build();
 
-		$this->assertFalse(
+		self::assertFalse(
 			$registrationBag->current()->isOnRegistrationQueue()
 		);
 	}
@@ -322,7 +312,7 @@ class tx_seminars_BagBuilder_RegistrationTest extends tx_phpunit_testcase {
 		$this->fixture->limitToRegular();
 		$registrationBag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$registrationBag->isEmpty()
 		);
 	}
@@ -341,7 +331,7 @@ class tx_seminars_BagBuilder_RegistrationTest extends tx_phpunit_testcase {
 		$this->fixture->removeQueueLimitation();
 		$registrationBag = $this->fixture->build();
 
-		$this->assertFalse(
+		self::assertFalse(
 			$registrationBag->current()->isOnRegistrationQueue()
 		);
 	}
@@ -355,7 +345,7 @@ class tx_seminars_BagBuilder_RegistrationTest extends tx_phpunit_testcase {
 		$this->fixture->removeQueueLimitation();
 		$registrationBag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$registrationBag->current()->isOnRegistrationQueue()
 		);
 	}
@@ -382,7 +372,7 @@ class tx_seminars_BagBuilder_RegistrationTest extends tx_phpunit_testcase {
 		$this->fixture->limitToSeatsAtMost(2);
 		$registrationBag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertEquals(
 			2,
 			$registrationBag->current()->getSeats()
 		);
@@ -396,7 +386,7 @@ class tx_seminars_BagBuilder_RegistrationTest extends tx_phpunit_testcase {
 		$this->fixture->limitToSeatsAtMost(2);
 		$registrationBag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertEquals(
 			1,
 			$registrationBag->current()->getSeats()
 		);
@@ -410,7 +400,7 @@ class tx_seminars_BagBuilder_RegistrationTest extends tx_phpunit_testcase {
 		$this->fixture->limitToSeatsAtMost(1);
 		$registrationBag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$registrationBag->isEmpty()
 		);
 	}
@@ -424,7 +414,7 @@ class tx_seminars_BagBuilder_RegistrationTest extends tx_phpunit_testcase {
 		$this->fixture->limitToSeatsAtMost(0);
 		$registrationBag = $this->fixture->build();
 
-		$this->assertFalse(
+		self::assertFalse(
 			$registrationBag->isEmpty()
 		);
 	}
@@ -452,7 +442,7 @@ class tx_seminars_BagBuilder_RegistrationTest extends tx_phpunit_testcase {
 		$this->fixture->limitToAttendee($user);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertEquals(
 			$registrationUid,
 			$bag->current()->getUid()
 		);
@@ -478,7 +468,7 @@ class tx_seminars_BagBuilder_RegistrationTest extends tx_phpunit_testcase {
 		$this->fixture->limitToAttendee($user);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertEquals(
 			$registrationUid,
 			$bag->current()->getUid()
 		);
@@ -496,7 +486,7 @@ class tx_seminars_BagBuilder_RegistrationTest extends tx_phpunit_testcase {
 		$this->fixture->limitToAttendee($user);
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -519,7 +509,7 @@ class tx_seminars_BagBuilder_RegistrationTest extends tx_phpunit_testcase {
 		$this->fixture->limitToAttendee($user);
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -543,7 +533,7 @@ class tx_seminars_BagBuilder_RegistrationTest extends tx_phpunit_testcase {
 		$this->fixture->limitToAttendee(NULL);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertEquals(
 			$registrationUid,
 			$bag->current()->getUid()
 		);
@@ -573,11 +563,11 @@ class tx_seminars_BagBuilder_RegistrationTest extends tx_phpunit_testcase {
 		);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertEquals(
 			$bag->current()->getUid(),
 			$registrationUid1
 		);
-		$this->assertEquals(
+		self::assertEquals(
 			$bag->next()->getUid(),
 			$registrationUid2
 		);
@@ -602,11 +592,11 @@ class tx_seminars_BagBuilder_RegistrationTest extends tx_phpunit_testcase {
 		);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertEquals(
 			$bag->current()->getUid(),
 			$registrationUid2
 		);
-		$this->assertEquals(
+		self::assertEquals(
 			$bag->next()->getUid(),
 			$registrationUid1
 		);
@@ -625,7 +615,7 @@ class tx_seminars_BagBuilder_RegistrationTest extends tx_phpunit_testcase {
 		$this->fixture->limitToExistingUsers();
 		$bag = $this->fixture->build();
 
-		$this->assertFalse(
+		self::assertFalse(
 			$bag->isEmpty()
 		);
 	}
@@ -643,7 +633,7 @@ class tx_seminars_BagBuilder_RegistrationTest extends tx_phpunit_testcase {
 		$this->fixture->limitToExistingUsers();
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}

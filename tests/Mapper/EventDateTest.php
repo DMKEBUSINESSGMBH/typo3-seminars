@@ -1,26 +1,16 @@
 <?php
-/***************************************************************
-* Copyright notice
-*
-* (c) 2009-2013 Niels Pardon (mail@niels-pardon.de)
-* All rights reserved
-*
-* This script is part of the TYPO3 project. The TYPO3 project is
-* free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* The GNU General Public License can be found at
-* http://www.gnu.org/copyleft/gpl.html.
-*
-* This script is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* This copyright notice MUST APPEAR in all copies of the script!
-***************************************************************/
+/*
+ * This file is part of the TYPO3 CMS project.
+ *
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
+ *
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
+ *
+ * The TYPO3 project - inspiring people to share!
+ */
 
 /**
  * This test case holds all tests specific to event dates.
@@ -60,7 +50,7 @@ class tx_seminars_Mapper_EventDateTest extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function getTopicWithoutTopicReturnsNull() {
-		$this->assertNull(
+		self::assertNull(
 			$this->fixture->getLoadedTestingModel(
 				array('object_type' => tx_seminars_Model_Event::TYPE_DATE)
 			)->getTopic()
@@ -73,7 +63,7 @@ class tx_seminars_Mapper_EventDateTest extends tx_phpunit_testcase {
 	public function getTopicWithTopicReturnsEventInstance() {
 		$topic = $this->fixture->getNewGhost();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$this->fixture->getLoadedTestingModel(
 				array(
 					'topic' => $topic->getUid(),
@@ -94,7 +84,7 @@ class tx_seminars_Mapper_EventDateTest extends tx_phpunit_testcase {
 	public function getCategoriesForEventDateReturnsListInstance() {
 		$topicUid = $this->testingFramework->createRecord('tx_seminars_seminars');
 
-		$this->assertTrue(
+		self::assertTrue(
 			$this->fixture->getLoadedTestingModel(
 				array(
 					'object_type' => tx_seminars_Model_Event::TYPE_DATE,
@@ -124,7 +114,7 @@ class tx_seminars_Mapper_EventDateTest extends tx_phpunit_testcase {
 
 		/** @var tx_seminars_Model_Event $model */
 		$model = $this->fixture->find($uid);
-		$this->assertTrue(
+		self::assertTrue(
 			$model->getCategories()->first() instanceof tx_seminars_Model_Category
 		);
 	}
@@ -149,7 +139,7 @@ class tx_seminars_Mapper_EventDateTest extends tx_phpunit_testcase {
 
 		/** @var tx_seminars_Model_Event $model */
 		$model = $this->fixture->find($uid);
-		$this->assertEquals(
+		self::assertEquals(
 			$category->getUid(),
 			$model->getCategories()->getUids()
 		);
@@ -167,7 +157,7 @@ class tx_seminars_Mapper_EventDateTest extends tx_phpunit_testcase {
 		$topic = tx_oelib_MapperRegistry::get('tx_seminars_Mapper_Event')
 			->getLoadedTestingModel(array());
 
-		$this->assertNull(
+		self::assertNull(
 			$this->fixture->getLoadedTestingModel(
 				array(
 					'object_type' => tx_seminars_Model_Event::TYPE_DATE,
@@ -186,7 +176,7 @@ class tx_seminars_Mapper_EventDateTest extends tx_phpunit_testcase {
 		$topic = tx_oelib_MapperRegistry::get('tx_seminars_Mapper_Event')
 			->getLoadedTestingModel(array('event_type' => $eventType->getUid()));
 
-		$this->assertTrue(
+		self::assertTrue(
 			$this->fixture->getLoadedTestingModel(
 				array(
 					'object_type' => tx_seminars_Model_Event::TYPE_DATE,
@@ -207,7 +197,7 @@ class tx_seminars_Mapper_EventDateTest extends tx_phpunit_testcase {
 	public function getPaymentMethodsForEventDateReturnsListInstance() {
 		$topicUid = $this->testingFramework->createRecord('tx_seminars_seminars');
 
-		$this->assertTrue(
+		self::assertTrue(
 			$this->fixture->getLoadedTestingModel(
 				array(
 					'object_type' => tx_seminars_Model_Event::TYPE_DATE,
@@ -241,7 +231,7 @@ class tx_seminars_Mapper_EventDateTest extends tx_phpunit_testcase {
 
 		/** @var tx_seminars_Model_Event $model */
 		$model = $this->fixture->find($uid);
-		$this->assertTrue(
+		self::assertTrue(
 			$model->getPaymentMethods()->first() instanceof tx_seminars_Model_PaymentMethod
 		);
 	}
@@ -270,7 +260,7 @@ class tx_seminars_Mapper_EventDateTest extends tx_phpunit_testcase {
 
 		/** @var tx_seminars_Model_Event $model */
 		$model = $this->fixture->find($uid);
-		$this->assertEquals(
+		self::assertEquals(
 			$paymentMethod->getUid(),
 			$model->getPaymentMethods()->getUids()
 		);
@@ -287,7 +277,7 @@ class tx_seminars_Mapper_EventDateTest extends tx_phpunit_testcase {
 	public function getTargetGroupsForEventDateReturnsListInstance() {
 		$topicUid = $this->testingFramework->createRecord('tx_seminars_seminars');
 
-		$this->assertTrue(
+		self::assertTrue(
 			$this->fixture->getLoadedTestingModel(
 				array(
 					'object_type' => tx_seminars_Model_Event::TYPE_DATE,
@@ -317,7 +307,7 @@ class tx_seminars_Mapper_EventDateTest extends tx_phpunit_testcase {
 
 		/** @var tx_seminars_Model_Event $model */
 		$model = $this->fixture->find($uid);
-		$this->assertTrue(
+		self::assertTrue(
 			$model->getTargetGroups()->first() instanceof tx_seminars_Model_TargetGroup
 		);
 	}
@@ -342,7 +332,7 @@ class tx_seminars_Mapper_EventDateTest extends tx_phpunit_testcase {
 
 		/** @var tx_seminars_Model_Event $model */
 		$model = $this->fixture->find($uid);
-		$this->assertEquals(
+		self::assertEquals(
 			$targetGroup->getUid(),
 			$model->getTargetGroups()->getUids()
 		);
@@ -359,7 +349,7 @@ class tx_seminars_Mapper_EventDateTest extends tx_phpunit_testcase {
 	public function getCheckboxesForEventDateReturnsListInstance() {
 		$topicUid = $this->testingFramework->createRecord('tx_seminars_seminars');
 
-		$this->assertTrue(
+		self::assertTrue(
 			$this->fixture->getLoadedTestingModel(
 				array(
 					'object_type' => tx_seminars_Model_Event::TYPE_DATE,
@@ -389,7 +379,7 @@ class tx_seminars_Mapper_EventDateTest extends tx_phpunit_testcase {
 
 		/** @var tx_seminars_Model_Event $model */
 		$model = $this->fixture->find($uid);
-		$this->assertTrue(
+		self::assertTrue(
 			$model->getCheckboxes()->first() instanceof
 				tx_seminars_Model_Checkbox
 		);
@@ -415,7 +405,7 @@ class tx_seminars_Mapper_EventDateTest extends tx_phpunit_testcase {
 
 		/** @var tx_seminars_Model_Event $model */
 		$model = $this->fixture->find($uid);
-		$this->assertEquals(
+		self::assertEquals(
 			$checkbox->getUid(),
 			$model->getCheckboxes()->getUids()
 		);
@@ -435,7 +425,7 @@ class tx_seminars_Mapper_EventDateTest extends tx_phpunit_testcase {
 			array('object_type' => tx_seminars_Model_Event::TYPE_TOPIC)
 		);
 
-		$this->assertTrue(
+		self::assertTrue(
 			$this->fixture->getLoadedTestingModel(
 				array(
 					'object_type' => tx_seminars_Model_Event::TYPE_DATE,
@@ -467,7 +457,7 @@ class tx_seminars_Mapper_EventDateTest extends tx_phpunit_testcase {
 
 		/** @var tx_seminars_Model_Event $model */
 		$model = $this->fixture->find($uid);
-		$this->assertTrue(
+		self::assertTrue(
 			$model->getRequirements()->first() instanceof tx_seminars_Model_Event
 		);
 	}
@@ -494,7 +484,7 @@ class tx_seminars_Mapper_EventDateTest extends tx_phpunit_testcase {
 
 		/** @var tx_seminars_Model_Event $model */
 		$model = $this->fixture->find($uid);
-		$this->assertEquals(
+		self::assertEquals(
 			$event->getUid(),
 			$model->getRequirements()->getUids()
 		);
@@ -514,7 +504,7 @@ class tx_seminars_Mapper_EventDateTest extends tx_phpunit_testcase {
 			array('object_type' => tx_seminars_Model_Event::TYPE_TOPIC)
 		);
 
-		$this->assertTrue(
+		self::assertTrue(
 			$this->fixture->getLoadedTestingModel(
 				array(
 					'object_type' => tx_seminars_Model_Event::TYPE_DATE,
@@ -549,7 +539,7 @@ class tx_seminars_Mapper_EventDateTest extends tx_phpunit_testcase {
 
 		/** @var tx_seminars_Model_Event $model */
 		$model = $this->fixture->find($uid);
-		$this->assertTrue(
+		self::assertTrue(
 			$model->getDependencies()->first() instanceof tx_seminars_Model_Event
 		);
 	}
@@ -579,7 +569,7 @@ class tx_seminars_Mapper_EventDateTest extends tx_phpunit_testcase {
 
 		/** @var tx_seminars_Model_Event $model */
 		$model = $this->fixture->find($uid);
-		$this->assertEquals(
+		self::assertEquals(
 			$topicUid,
 			$model->getDependencies()->getUids()
 		);

@@ -1,26 +1,16 @@
 <?php
-/***************************************************************
-* Copyright notice
-*
-* (c) 2007-2013 Oliver Klee (typo3-coding@oliverklee.de)
-* All rights reserved
-*
-* This script is part of the TYPO3 project. The TYPO3 project is
-* free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* The GNU General Public License can be found at
-* http://www.gnu.org/copyleft/gpl.html.
-*
-* This script is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* This copyright notice MUST APPEAR in all copies of the script!
-***************************************************************/
+/*
+ * This file is part of the TYPO3 CMS project.
+ *
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
+ *
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
+ *
+ * The TYPO3 project - inspiring people to share!
+ */
 
 /**
  * Test case.
@@ -35,25 +25,24 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 	/**
 	 * @var tx_seminars_BagBuilder_Event
 	 */
-	private $fixture;
+	private $fixture = NULL;
 	/**
-	 * @var tx_oelib_testingFramework
+	 * @var Tx_Oelib_TestingFramework
 	 */
-	private $testingFramework;
+	private $testingFramework = NULL;
 
 	/**
 	 * @var int a UNIX timestamp in the past.
 	 */
-	private $past;
+	private $past = 0;
 
 	/**
 	 * @var int a UNIX timestamp in the future.
 	 */
-	private $future;
+	private $future = 0;
 
 	protected function setUp() {
-		$this->testingFramework
-			= new tx_oelib_testingFramework('tx_seminars');
+		$this->testingFramework = new tx_oelib_testingFramework('tx_seminars');
 
 		$this->fixture = new tx_seminars_BagBuilder_Event();
 		$this->fixture->setTestMode();
@@ -68,26 +57,29 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 	}
 
 
-	///////////////////////////////////////////
-	// Tests for the basic builder functions.
-	///////////////////////////////////////////
+	/*
+	 * Tests for the basic builder functions.
+	 */
 
 	public function testBuilderBuildsABag() {
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			is_subclass_of($bag, 'tx_seminars_Bag_Abstract')
 		);
 	}
 
-	public function testBuilderIgnoresHiddenEventsByDefault() {
+	/**
+	 * @test
+	 */
+	public function builderIgnoresHiddenEventsByDefault() {
 		$this->testingFramework->createRecord(
 			'tx_seminars_seminars',
 			array('hidden' => 1)
 		);
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -102,7 +94,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$bag = $this->fixture->build();
 
 
-		$this->assertFalse(
+		self::assertFalse(
 			$bag->isEmpty()
 		);
 	}
@@ -115,7 +107,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$bag = $this->fixture->build();
 
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -130,7 +122,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$bag = $this->fixture->build();
 
 
-		$this->assertFalse(
+		self::assertFalse(
 			$bag->isEmpty()
 		);
 	}
@@ -161,7 +153,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			2,
 			$bag->count()
 		);
@@ -190,7 +182,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToCategories('');
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			2,
 			$bag->count()
 		);
@@ -220,7 +212,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToCategories('');
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			2,
 			$bag->count()
 		);
@@ -244,7 +236,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToCategories($categoryUid);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -277,7 +269,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToCategories($categoryUid);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			2,
 			$bag->count()
 		);
@@ -306,11 +298,11 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToCategories($categoryUid);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
-		$this->assertEquals(
+		self::assertSame(
 			$eventUid,
 			$bag->current()->getUid()
 		);
@@ -345,11 +337,11 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToCategories($categoryUid1);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
-		$this->assertEquals(
+		self::assertSame(
 			$eventUid1,
 			$bag->current()->getUid()
 		);
@@ -382,7 +374,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToCategories($categoryUid2);
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -405,7 +397,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToCategories($categoryUid);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -436,16 +428,16 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToCategories($categoryUid);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			2,
 			$bag->count()
 		);
 
 		$matchingUids = explode(',', $bag->getUids());
-		$this->assertTrue(
+		self::assertTrue(
 			in_array($topicUid, $matchingUids)
 		);
-		$this->assertTrue(
+		self::assertTrue(
 			in_array($dateUid, $matchingUids)
 		);
 	}
@@ -475,7 +467,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToCategories($categoryUid);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			2,
 			$bag->count()
 		);
@@ -513,7 +505,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToCategories($categoryUid2);
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -547,7 +539,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToCategories($categoryUid1 . ','  . $categoryUid2);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			2,
 			$bag->count()
 		);
@@ -571,7 +563,11 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToPlaces(array($siteUid));
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
+			1,
+			$bag->count()
+		);
+		self::assertSame(
 			$eventUid,
 			$bag->current()->getUid()
 		);
@@ -585,7 +581,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToPlaces(array($siteUid));
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -612,7 +608,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToPlaces(array($siteUid1, $siteUid2));
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			2,
 			$bag->count()
 		);
@@ -627,7 +623,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToPlaces();
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -645,7 +641,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToPlaces(array($siteUid2));
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -665,7 +661,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToPlaces(array($siteUid1));
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -683,7 +679,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -698,7 +694,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->ignoreCanceledEvents();
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -712,7 +708,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->ignoreCanceledEvents();
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -727,7 +723,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->allowCanceledEvents();
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -743,7 +739,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->allowCanceledEvents();
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -759,7 +755,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->ignoreCanceledEvents();
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -806,7 +802,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->setTimeFrame('past');
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -824,7 +820,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->setTimeFrame('past');
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -842,7 +838,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->setTimeFrame('past');
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -859,7 +855,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->setTimeFrame('past');
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -876,7 +872,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->setTimeFrame('past');
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -894,7 +890,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$bag = $this->fixture->build();
 
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -918,7 +914,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->setTimeFrame('pastAndCurrent');
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -936,7 +932,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->setTimeFrame('pastAndCurrent');
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -954,7 +950,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->setTimeFrame('pastAndCurrent');
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -972,7 +968,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->setTimeFrame('pastAndCurrent');
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -989,7 +985,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->setTimeFrame('pastAndCurrent');
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -1006,7 +1002,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->setTimeFrame('pastAndCurrent');
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -1030,7 +1026,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->setTimeFrame('current');
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -1047,7 +1043,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->setTimeFrame('current');
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -1064,7 +1060,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->setTimeFrame('current');
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -1082,7 +1078,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->setTimeFrame('current');
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -1099,7 +1095,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->setTimeFrame('current');
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -1116,7 +1112,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->setTimeFrame('current');
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -1140,7 +1136,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->setTimeFrame('currentAndUpcoming');
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -1157,7 +1153,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->setTimeFrame('currentAndUpcoming');
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -1174,7 +1170,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->setTimeFrame('currentAndUpcoming');
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -1192,7 +1188,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->setTimeFrame('currentAndUpcoming');
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -1210,7 +1206,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->setTimeFrame('currentAndUpcoming');
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -1228,7 +1224,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->setTimeFrame('currentAndUpcoming');
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -1253,7 +1249,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->setTimeFrame('upcoming');
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -1270,7 +1266,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->setTimeFrame('upcoming');
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -1287,7 +1283,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->setTimeFrame('upcoming');
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -1304,7 +1300,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->setTimeFrame('upcoming');
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -1322,7 +1318,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->setTimeFrame('upcoming');
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -1340,7 +1336,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->setTimeFrame('upcoming');
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -1365,7 +1361,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->setTimeFrame('upcomingWithBeginDate');
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -1382,7 +1378,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->setTimeFrame('upcomingWithBeginDate');
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -1399,7 +1395,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->setTimeFrame('upcomingWithBeginDate');
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -1416,7 +1412,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->setTimeFrame('upcomingWithBeginDate');
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -1434,7 +1430,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->setTimeFrame('upcomingWithBeginDate');
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -1452,7 +1448,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->setTimeFrame('upcomingWithBeginDate');
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			0,
 			$bag->count()
 		);
@@ -1478,7 +1474,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->setTimeFrame('deadlineNotOver');
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -1496,7 +1492,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->setTimeFrame('deadlineNotOver');
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -1514,7 +1510,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->setTimeFrame('deadlineNotOver');
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -1532,7 +1528,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->setTimeFrame('deadlineNotOver');
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -1551,7 +1547,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->setTimeFrame('deadlineNotOver');
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -1570,7 +1566,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->setTimeFrame('deadlineNotOver');
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -1588,7 +1584,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->setTimeFrame('deadlineNotOver');
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -1607,7 +1603,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->setTimeFrame('deadlineNotOver');
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -1635,7 +1631,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->setTimeFrame('today');
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -1656,7 +1652,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->setTimeFrame('today');
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -1676,7 +1672,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->setTimeFrame('today');
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -1697,7 +1693,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->setTimeFrame('today');
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -1718,7 +1714,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->setTimeFrame('today');
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -1739,7 +1735,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->setTimeFrame('today');
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -1759,7 +1755,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->setTimeFrame('today');
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -1779,7 +1775,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->setTimeFrame('today');
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -1803,7 +1799,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->setTimeFrame('all');
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -1821,7 +1817,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->setTimeFrame('all');
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -1839,7 +1835,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->setTimeFrame('all');
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -1857,7 +1853,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->setTimeFrame('all');
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -1875,7 +1871,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->setTimeFrame('all');
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -1893,7 +1889,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->setTimeFrame('all');
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -1922,7 +1918,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			2,
 			$bag->count()
 		);
@@ -1948,7 +1944,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToEventTypes();
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			2,
 			$bag->count()
 		);
@@ -1975,7 +1971,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToEventTypes();
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			2,
 			$bag->count()
 		);
@@ -1996,7 +1992,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToEventTypes(array($typeUid));
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -2024,7 +2020,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToEventTypes(array($typeUid));
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			2,
 			$bag->count()
 		);
@@ -2050,11 +2046,11 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToEventTypes(array($typeUid));
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
-		$this->assertEquals(
+		self::assertSame(
 			$eventUid,
 			$bag->current()->getUid()
 		);
@@ -2086,11 +2082,11 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToEventTypes(array($typeUid1));
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
-		$this->assertEquals(
+		self::assertSame(
 			$eventUid1,
 			$bag->current()->getUid()
 		);
@@ -2120,7 +2116,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToEventTypes(array($typeUid2));
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -2140,7 +2136,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToEventTypes(array($typeUid));
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -2167,11 +2163,11 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToEventTypes(array($typeUid));
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
-		$this->assertEquals(
+		self::assertSame(
 			$dateUid,
 			$bag->current()->getUid()
 		);
@@ -2199,7 +2195,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToEventTypes(array($typeUid));
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			2,
 			$bag->count()
 		);
@@ -2232,7 +2228,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToEventTypes(array($typeUid2));
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -2263,7 +2259,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToEventTypes(array($typeUid1, $typeUid2));
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			2,
 			$bag->count()
 		);
@@ -2291,7 +2287,11 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToCities(array('test city 1'));
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
+			1,
+			$bag->count()
+		);
+		self::assertSame(
 			$eventUid,
 			$bag->current()->getUid()
 		);
@@ -2314,7 +2314,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToCities(array('test city 1'));
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -2349,7 +2349,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToCities(array('test city 1', 'test city 2'));
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			2,
 			$bag->count()
 		);
@@ -2373,7 +2373,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToCities();
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -2396,7 +2396,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToCities(array('test city 2'));
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -2415,7 +2415,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToCities(array('test city 1'));
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -2446,7 +2446,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToCities(array('test city 1', 'test city 2'));
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -2478,7 +2478,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToCities(array('test city 1'));
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -2510,7 +2510,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToCities(array('test city 2', 'test city 3'));
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -2538,7 +2538,11 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToCountries(array('DE'));
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
+			1,
+			$bag->count()
+		);
+		self::assertSame(
 			$eventUid,
 			$bag->current()->getUid()
 		);
@@ -2561,7 +2565,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToCountries(array('US'));
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -2596,7 +2600,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToCountries(array('US', 'DE'));
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			2,
 			$bag->count()
 		);
@@ -2620,7 +2624,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToCountries();
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -2643,7 +2647,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToCountries(array('US'));
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -2662,7 +2666,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToCountries(array('DE'));
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -2693,7 +2697,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToCountries(array('US'));
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -2712,7 +2716,11 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToLanguages(array('DE'));
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
+			1,
+			$bag->count()
+		);
+		self::assertSame(
 			$eventUid,
 			$bag->current()->getUid()
 		);
@@ -2730,7 +2738,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToLanguages(array('EN', 'DE'));
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			2,
 			$bag->count()
 		);
@@ -2745,7 +2753,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToLanguages();
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -2759,7 +2767,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToLanguages(array('EN'));
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -2771,7 +2779,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToLanguages(array('EN'));
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -2789,7 +2797,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToTopicRecords();
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -2803,7 +2811,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToTopicRecords();
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -2816,7 +2824,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToTopicRecords();
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -2835,7 +2843,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->removeLimitToTopicRecords();
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -2850,7 +2858,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->removeLimitToTopicRecords();
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -2879,7 +2887,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToOwner($feUserUid);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -2893,7 +2901,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToOwner($feUserUid);
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -2907,7 +2915,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToOwner($feUserUid);
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -2921,7 +2929,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToOwner(0);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -2937,7 +2945,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToOwner(0);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -2956,7 +2964,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToDateAndSingleRecords();
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -2970,7 +2978,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToDateAndSingleRecords();
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -2984,7 +2992,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToDateAndSingleRecords();
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -2998,7 +3006,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->removeLimitToDateAndSingleRecords();
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -3033,7 +3041,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToEventManager($feUserUid);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -3048,7 +3056,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToEventManager($feUserUid);
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -3063,7 +3071,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToEventManager(0);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -3090,7 +3098,11 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToEventsNextDay($event);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
+			1,
+			$bag->count()
+		);
+		self::assertSame(
 			$eventUid2,
 			$bag->current()->getUid()
 		);
@@ -3112,7 +3124,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToEventsNextDay($event);
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -3133,7 +3145,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToEventsNextDay($event);
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -3181,7 +3193,11 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToOtherDatesForTopic($date);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
+			1,
+			$bag->count()
+		);
+		self::assertSame(
 			$dateUid2,
 			$bag->current()->getUid()
 		);
@@ -3210,7 +3226,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToOtherDatesForTopic($topic);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			2,
 			$bag->count()
 		);
@@ -3257,7 +3273,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToOtherDatesForTopic($date);
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -3285,7 +3301,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToOtherDatesForTopic($date);
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -3318,7 +3334,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->removeLimitToOtherDatesForTopic();
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			4,
 			$bag->count()
 		);
@@ -3348,7 +3364,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->removeLimitToOtherDatesForTopic();
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			3,
 			$bag->count()
 		);
@@ -3361,12 +3377,16 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 
 	public function testLimitToFullTextSearchWithTwoCommasAsSearchWordFindsAllEvents() {
 		$eventUid = $this->testingFramework->createRecord(
-			'tx_seminars_seminars', array('title' => 'foo bar event')
+			'tx_seminars_seminars', array('title' => 'avocado paprika event')
 		);
 		$this->fixture->limitToFullTextSearch(',,');
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
+			1,
+			$bag->count()
+		);
+		self::assertSame(
 			$eventUid,
 			$bag->current()->getUid()
 		);
@@ -3374,12 +3394,16 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 
 	public function testLimitToFullTextSearchWithTwoSearchWordsSeparatedByTwoSpacesFindsEvents() {
 		$eventUid = $this->testingFramework->createRecord(
-			'tx_seminars_seminars', array('title' => 'foo bar event')
+			'tx_seminars_seminars', array('title' => 'avocado paprika event')
 		);
-		$this->fixture->limitToFullTextSearch('foo  bar');
+		$this->fixture->limitToFullTextSearch('avocado  paprika');
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
+			1,
+			$bag->count()
+		);
+		self::assertSame(
 			$eventUid,
 			$bag->current()->getUid()
 		);
@@ -3387,12 +3411,16 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 
 	public function testLimitToFullTextSearchWithTwoCommasSeparatedByTwoSpacesFindsAllEvents() {
 		$eventUid = $this->testingFramework->createRecord(
-			'tx_seminars_seminars', array('title' => 'foo bar event')
+			'tx_seminars_seminars', array('title' => 'avocado paprika event')
 		);
 		$this->fixture->limitToFullTextSearch(',  ,');
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
+			1,
+			$bag->count()
+		);
+		self::assertSame(
 			$eventUid,
 			$bag->current()->getUid()
 		);
@@ -3400,12 +3428,16 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 
 	public function testLimitToFullTextSearchWithTooShortSearchWordFindsAllEvents() {
 		$eventUid = $this->testingFramework->createRecord(
-			'tx_seminars_seminars', array('title' => 'foo bar event')
+			'tx_seminars_seminars', array('title' => 'avocado paprika event')
 		);
 		$this->fixture->limitToFullTextSearch('o');
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
+			1,
+			$bag->count()
+		);
+		self::assertSame(
 			$eventUid,
 			$bag->current()->getUid()
 		);
@@ -3415,14 +3447,18 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$eventUid = $this->testingFramework->createRecord(
 			'tx_seminars_seminars',
 			array(
-				'accreditation_number' => 'foo bar event',
+				'accreditation_number' => 'avocado paprika event',
 				'object_type' => tx_seminars_Model_Event::TYPE_COMPLETE,
 			)
 		);
-		$this->fixture->limitToFullTextSearch('foo');
+		$this->fixture->limitToFullTextSearch('avocado');
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
+			1,
+			$bag->count()
+		);
+		self::assertSame(
 			$eventUid,
 			$bag->current()->getUid()
 		);
@@ -3432,14 +3468,14 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->testingFramework->createRecord(
 			'tx_seminars_seminars',
 			array(
-				'accreditation_number' => 'bar event',
+				'accreditation_number' => 'paprika event',
 				'object_type' => tx_seminars_Model_Event::TYPE_COMPLETE,
 			)
 		);
-		$this->fixture->limitToFullTextSearch('foo');
+		$this->fixture->limitToFullTextSearch('avocado');
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -3447,12 +3483,16 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 	public function testLimitToFullTextSearchFindsEventWithSearchWordInTitle() {
 		$eventUid = $this->testingFramework->createRecord(
 			'tx_seminars_seminars',
-			array('title' => 'foo bar event')
+			array('title' => 'avocado paprika event')
 		);
-		$this->fixture->limitToFullTextSearch('foo');
+		$this->fixture->limitToFullTextSearch('avocado');
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
+			1,
+			$bag->count()
+		);
+		self::assertSame(
 			$eventUid,
 			$bag->current()->getUid()
 		);
@@ -3461,12 +3501,12 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 	public function testLimitToFullTextSearchIgnoresEventWithoutSearchWordInTitle() {
 		$this->testingFramework->createRecord(
 			'tx_seminars_seminars',
-			array('title' => 'bar event')
+			array('title' => 'paprika event')
 		);
-		$this->fixture->limitToFullTextSearch('foo');
+		$this->fixture->limitToFullTextSearch('avocado');
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -3474,12 +3514,16 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 	public function testLimitToFullTextSearchFindsEventWithSearchWordInSubtitle() {
 		$eventUid = $this->testingFramework->createRecord(
 			'tx_seminars_seminars',
-			array('subtitle' => 'foo bar event')
+			array('subtitle' => 'avocado paprika event')
 		);
-		$this->fixture->limitToFullTextSearch('foo');
+		$this->fixture->limitToFullTextSearch('avocado');
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
+			1,
+			$bag->count()
+		);
+		self::assertSame(
 			$eventUid,
 			$bag->current()->getUid()
 		);
@@ -3488,12 +3532,12 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 	public function testLimitToFullTextSearchIgnoresEventWithoutSearchWordInSubtitle() {
 		$this->testingFramework->createRecord(
 			'tx_seminars_seminars',
-			array('subtitle' => 'bar event')
+			array('subtitle' => 'paprika event')
 		);
-		$this->fixture->limitToFullTextSearch('foo');
+		$this->fixture->limitToFullTextSearch('avocado');
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -3501,12 +3545,16 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 	public function testLimitToFullTextSearchFindsEventWithSearchWordInDescription() {
 		$eventUid = $this->testingFramework->createRecord(
 			'tx_seminars_seminars',
-			array('description' => 'foo bar event')
+			array('description' => 'avocado paprika event')
 		);
-		$this->fixture->limitToFullTextSearch('foo');
+		$this->fixture->limitToFullTextSearch('avocado');
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
+			1,
+			$bag->count()
+		);
+		self::assertSame(
 			$eventUid,
 			$bag->current()->getUid()
 		);
@@ -3515,12 +3563,12 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 	public function testLimitToFullTextSearchIgnoresEventWithoutSearchWordInDescription() {
 		$this->testingFramework->createRecord(
 			'tx_seminars_seminars',
-			array('description' => 'bar event')
+			array('description' => 'paprika event')
 		);
-		$this->fixture->limitToFullTextSearch('foo');
+		$this->fixture->limitToFullTextSearch('avocado');
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -3528,7 +3576,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 	public function testLimitToFullTextSearchFindsEventWithSearchWordInSpeakerTitle() {
 		$speakerUid = $this->testingFramework->createRecord(
 			'tx_seminars_speakers',
-			array('title' => 'foo bar speaker')
+			array('title' => 'avocado paprika speaker')
 		);
 		$eventUid = $this->testingFramework->createRecord(
 			'tx_seminars_seminars',
@@ -3542,10 +3590,14 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 			$eventUid,
 			$speakerUid
 		);
-		$this->fixture->limitToFullTextSearch('foo');
+		$this->fixture->limitToFullTextSearch('avocado');
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
+			1,
+			$bag->count()
+		);
+		self::assertSame(
 			$eventUid,
 			$bag->current()->getUid()
 		);
@@ -3554,7 +3606,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 	public function testLimitToFullTextSearchIgnoresEventWithoutSearchWordInSpeakerTitle() {
 		$speakerUid = $this->testingFramework->createRecord(
 			'tx_seminars_speakers',
-			array('title' => 'bar speaker')
+			array('title' => 'paprika speaker')
 		);
 		$eventUid = $this->testingFramework->createRecord(
 			'tx_seminars_seminars',
@@ -3568,571 +3620,10 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 			$eventUid,
 			$speakerUid
 		);
-		$this->fixture->limitToFullTextSearch('foo');
+		$this->fixture->limitToFullTextSearch('avocado');
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
-			$bag->isEmpty()
-		);
-	}
-
-	public function testLimitToFullTextSearchFindsEventWithSearchWordInSpeakerOrganization() {
-		$speakerUid = $this->testingFramework->createRecord(
-			'tx_seminars_speakers',
-			array('organization' => 'foo bar speaker')
-		);
-		$eventUid = $this->testingFramework->createRecord(
-			'tx_seminars_seminars',
-			array(
-				'speakers' => 1,
-				'object_type' => tx_seminars_Model_Event::TYPE_COMPLETE,
-			)
-		);
-		$this->testingFramework->createRelation(
-			'tx_seminars_seminars_speakers_mm',
-			$eventUid,
-			$speakerUid
-		);
-		$this->fixture->limitToFullTextSearch('foo');
-		$bag = $this->fixture->build();
-
-		$this->assertEquals(
-			$eventUid,
-			$bag->current()->getUid()
-		);
-	}
-
-	public function testLimitToFullTextSearchIgnoresEventWithoutSearchWordInSpeakerOrganization() {
-		$speakerUid = $this->testingFramework->createRecord(
-			'tx_seminars_speakers',
-			array('organization' => 'bar speaker')
-		);
-		$eventUid = $this->testingFramework->createRecord(
-			'tx_seminars_seminars',
-			array(
-				'speakers' => 1,
-				'object_type' => tx_seminars_Model_Event::TYPE_COMPLETE,
-			)
-		);
-		$this->testingFramework->createRelation(
-			'tx_seminars_seminars_speakers_mm',
-			$eventUid,
-			$speakerUid
-		);
-		$this->fixture->limitToFullTextSearch('foo');
-		$bag = $this->fixture->build();
-
-		$this->assertTrue(
-			$bag->isEmpty()
-		);
-	}
-
-	public function testLimitToFullTextSearchFindsEventWithSearchWordInSpeakerDescription() {
-		$speakerUid = $this->testingFramework->createRecord(
-			'tx_seminars_speakers',
-			array('description' => 'foo bar speaker')
-		);
-		$eventUid = $this->testingFramework->createRecord(
-			'tx_seminars_seminars',
-			array(
-				'speakers' => 1,
-				'object_type' => tx_seminars_Model_Event::TYPE_COMPLETE,
-			)
-		);
-		$this->testingFramework->createRelation(
-			'tx_seminars_seminars_speakers_mm',
-			$eventUid,
-			$speakerUid
-		);
-		$this->fixture->limitToFullTextSearch('foo');
-		$bag = $this->fixture->build();
-
-		$this->assertEquals(
-			$eventUid,
-			$bag->current()->getUid()
-		);
-	}
-
-	public function testLimitToFullTextSearchIgnoresEventWithoutSearchWordInSpeakerDescription() {
-		$speakerUid = $this->testingFramework->createRecord(
-			'tx_seminars_speakers',
-			array('description' => 'bar speaker')
-		);
-		$eventUid = $this->testingFramework->createRecord(
-			'tx_seminars_seminars',
-			array(
-				'speakers' => 1,
-				'object_type' => tx_seminars_Model_Event::TYPE_COMPLETE,
-			)
-		);
-		$this->testingFramework->createRelation(
-			'tx_seminars_seminars_speakers_mm',
-			$eventUid,
-			$speakerUid
-		);
-		$this->fixture->limitToFullTextSearch('foo');
-		$bag = $this->fixture->build();
-
-		$this->assertTrue(
-			$bag->isEmpty()
-		);
-	}
-
-	public function testLimitToFullTextSearchFindsEventWithSearchWordInPartnerTitle() {
-		$speakerUid = $this->testingFramework->createRecord(
-			'tx_seminars_speakers',
-			array('title' => 'foo bar speaker')
-		);
-		$eventUid = $this->testingFramework->createRecord(
-			'tx_seminars_seminars',
-			array(
-				'partners' => 1,
-				'object_type' => tx_seminars_Model_Event::TYPE_COMPLETE,
-			)
-		);
-		$this->testingFramework->createRelation(
-			'tx_seminars_seminars_speakers_mm_partners',
-			$eventUid,
-			$speakerUid
-		);
-		$this->fixture->limitToFullTextSearch('foo');
-		$bag = $this->fixture->build();
-
-		$this->assertEquals(
-			$eventUid,
-			$bag->current()->getUid()
-		);
-	}
-
-	public function testLimitToFullTextSearchIgnoresEventWithoutSearchWordInPartnerTitle() {
-		$speakerUid = $this->testingFramework->createRecord(
-			'tx_seminars_speakers',
-			array('title' => 'bar speaker')
-		);
-		$eventUid = $this->testingFramework->createRecord(
-			'tx_seminars_seminars',
-			array(
-				'partners' => 1,
-				'object_type' => tx_seminars_Model_Event::TYPE_COMPLETE,
-			)
-		);
-		$this->testingFramework->createRelation(
-			'tx_seminars_seminars_speakers_mm_partners',
-			$eventUid,
-			$speakerUid
-		);
-		$this->fixture->limitToFullTextSearch('foo');
-		$bag = $this->fixture->build();
-
-		$this->assertTrue(
-			$bag->isEmpty()
-		);
-	}
-
-	public function testLimitToFullTextSearchFindsEventWithSearchWordInPartnerOrganization() {
-		$speakerUid = $this->testingFramework->createRecord(
-			'tx_seminars_speakers',
-			array('organization' => 'foo bar speaker')
-		);
-		$eventUid = $this->testingFramework->createRecord(
-			'tx_seminars_seminars',
-			array(
-				'partners' => 1,
-				'object_type' => tx_seminars_Model_Event::TYPE_COMPLETE,
-			)
-		);
-		$this->testingFramework->createRelation(
-			'tx_seminars_seminars_speakers_mm_partners',
-			$eventUid,
-			$speakerUid
-		);
-		$this->fixture->limitToFullTextSearch('foo');
-		$bag = $this->fixture->build();
-
-		$this->assertEquals(
-			$eventUid,
-			$bag->current()->getUid()
-		);
-	}
-
-	public function testLimitToFullTextSearchIgnoresEventWithoutSearchWordInPartnerOrganization() {
-		$speakerUid = $this->testingFramework->createRecord(
-			'tx_seminars_speakers',
-			array('organization' => 'bar speaker')
-		);
-		$eventUid = $this->testingFramework->createRecord(
-			'tx_seminars_seminars',
-			array(
-				'partners' => 1,
-				'object_type' => tx_seminars_Model_Event::TYPE_COMPLETE,
-			)
-		);
-		$this->testingFramework->createRelation(
-			'tx_seminars_seminars_speakers_mm_partners',
-			$eventUid,
-			$speakerUid
-		);
-		$this->fixture->limitToFullTextSearch('foo');
-		$bag = $this->fixture->build();
-
-		$this->assertTrue(
-			$bag->isEmpty()
-		);
-	}
-
-	public function testLimitToFullTextSearchFindsEventWithSearchWordInPartnerDescription() {
-		$speakerUid = $this->testingFramework->createRecord(
-			'tx_seminars_speakers',
-			array('description' => 'foo bar speaker')
-		);
-		$eventUid = $this->testingFramework->createRecord(
-			'tx_seminars_seminars',
-			array(
-				'partners' => 1,
-				'object_type' => tx_seminars_Model_Event::TYPE_COMPLETE,
-			)
-		);
-		$this->testingFramework->createRelation(
-			'tx_seminars_seminars_speakers_mm_partners',
-			$eventUid,
-			$speakerUid
-		);
-		$this->fixture->limitToFullTextSearch('foo');
-		$bag = $this->fixture->build();
-
-		$this->assertEquals(
-			$eventUid,
-			$bag->current()->getUid()
-		);
-	}
-
-	public function testLimitToFullTextSearchIgnoresEventWithoutSearchWordInPartnerDescription() {
-		$speakerUid = $this->testingFramework->createRecord(
-			'tx_seminars_speakers',
-			array('description' => 'bar speaker')
-		);
-		$eventUid = $this->testingFramework->createRecord(
-			'tx_seminars_seminars',
-			array(
-				'partners' => 1,
-				'object_type' => tx_seminars_Model_Event::TYPE_COMPLETE,
-			)
-		);
-		$this->testingFramework->createRelation(
-			'tx_seminars_seminars_speakers_mm_partners',
-			$eventUid,
-			$speakerUid
-		);
-		$this->fixture->limitToFullTextSearch('foo');
-		$bag = $this->fixture->build();
-
-		$this->assertTrue(
-			$bag->isEmpty()
-		);
-	}
-
-	public function testLimitToFullTextSearchFindsEventWithSearchWordInTutorTitle() {
-		$speakerUid = $this->testingFramework->createRecord(
-			'tx_seminars_speakers',
-			array('title' => 'foo bar speaker')
-		);
-		$eventUid = $this->testingFramework->createRecord(
-			'tx_seminars_seminars',
-			array(
-				'tutors' => 1,
-				'object_type' => tx_seminars_Model_Event::TYPE_COMPLETE,
-			)
-		);
-		$this->testingFramework->createRelation(
-			'tx_seminars_seminars_speakers_mm_tutors',
-			$eventUid,
-			$speakerUid
-		);
-		$this->fixture->limitToFullTextSearch('foo');
-		$bag = $this->fixture->build();
-
-		$this->assertEquals(
-			$eventUid,
-			$bag->current()->getUid()
-		);
-	}
-
-	public function testLimitToFullTextSearchIgnoresEventWithoutSearchWordInTutorTitle() {
-		$speakerUid = $this->testingFramework->createRecord(
-			'tx_seminars_speakers',
-			array('title' => 'bar speaker')
-		);
-		$eventUid = $this->testingFramework->createRecord(
-			'tx_seminars_seminars',
-			array(
-				'tutors' => 1,
-				'object_type' => tx_seminars_Model_Event::TYPE_COMPLETE,
-			)
-		);
-		$this->testingFramework->createRelation(
-			'tx_seminars_seminars_speakers_mm_tutors',
-			$eventUid,
-			$speakerUid
-		);
-		$this->fixture->limitToFullTextSearch('foo');
-		$bag = $this->fixture->build();
-
-		$this->assertTrue(
-			$bag->isEmpty()
-		);
-	}
-
-	public function testLimitToFullTextSearchFindsEventWithSearchWordInTutorOrganization() {
-		$speakerUid = $this->testingFramework->createRecord(
-			'tx_seminars_speakers',
-			array('organization' => 'foo bar speaker')
-		);
-		$eventUid = $this->testingFramework->createRecord(
-			'tx_seminars_seminars',
-			array(
-				'tutors' => 1,
-				'object_type' => tx_seminars_Model_Event::TYPE_COMPLETE,
-			)
-		);
-		$this->testingFramework->createRelation(
-			'tx_seminars_seminars_speakers_mm_tutors',
-			$eventUid,
-			$speakerUid
-		);
-		$this->fixture->limitToFullTextSearch('foo');
-		$bag = $this->fixture->build();
-
-		$this->assertEquals(
-			$eventUid,
-			$bag->current()->getUid()
-		);
-	}
-
-	public function testLimitToFullTextSearchIgnoresEventWithoutSearchWordInTutorOrganization() {
-		$speakerUid = $this->testingFramework->createRecord(
-			'tx_seminars_speakers',
-			array('organization' => 'bar speaker')
-		);
-		$eventUid = $this->testingFramework->createRecord(
-			'tx_seminars_seminars',
-			array(
-				'tutors' => 1,
-				'object_type' => tx_seminars_Model_Event::TYPE_COMPLETE,
-			)
-		);
-		$this->testingFramework->createRelation(
-			'tx_seminars_seminars_speakers_mm_tutors',
-			$eventUid,
-			$speakerUid
-		);
-		$this->fixture->limitToFullTextSearch('foo');
-		$bag = $this->fixture->build();
-
-		$this->assertTrue(
-			$bag->isEmpty()
-		);
-	}
-
-	public function testLimitToFullTextSearchFindsEventWithSearchWordInTutorDescription() {
-		$speakerUid = $this->testingFramework->createRecord(
-			'tx_seminars_speakers',
-			array('description' => 'foo bar speaker')
-		);
-		$eventUid = $this->testingFramework->createRecord(
-			'tx_seminars_seminars',
-			array(
-				'tutors' => 1,
-				'object_type' => tx_seminars_Model_Event::TYPE_COMPLETE,
-			)
-		);
-		$this->testingFramework->createRelation(
-			'tx_seminars_seminars_speakers_mm_tutors',
-			$eventUid,
-			$speakerUid
-		);
-		$this->fixture->limitToFullTextSearch('foo');
-		$bag = $this->fixture->build();
-
-		$this->assertEquals(
-			$eventUid,
-			$bag->current()->getUid()
-		);
-	}
-
-	public function testLimitToFullTextSearchIgnoresEventWithoutSearchWordInTutorDescription() {
-		$speakerUid = $this->testingFramework->createRecord(
-			'tx_seminars_speakers',
-			array('description' => 'bar speaker')
-		);
-		$eventUid = $this->testingFramework->createRecord(
-			'tx_seminars_seminars',
-			array(
-				'tutors' => 1,
-				'object_type' => tx_seminars_Model_Event::TYPE_COMPLETE,
-			)
-		);
-		$this->testingFramework->createRelation(
-			'tx_seminars_seminars_speakers_mm_tutors',
-			$eventUid,
-			$speakerUid
-		);
-		$this->fixture->limitToFullTextSearch('foo');
-		$bag = $this->fixture->build();
-
-		$this->assertTrue(
-			$bag->isEmpty()
-		);
-	}
-
-	public function testLimitToFullTextSearchFindsEventWithSearchWordInLeaderTitle() {
-		$speakerUid = $this->testingFramework->createRecord(
-			'tx_seminars_speakers',
-			array('title' => 'foo bar speaker')
-		);
-		$eventUid = $this->testingFramework->createRecord(
-			'tx_seminars_seminars',
-			array(
-				'leaders' => 1,
-				'object_type' => tx_seminars_Model_Event::TYPE_COMPLETE,
-			)
-		);
-		$this->testingFramework->createRelation(
-			'tx_seminars_seminars_speakers_mm_leaders',
-			$eventUid,
-			$speakerUid
-		);
-		$this->fixture->limitToFullTextSearch('foo');
-		$bag = $this->fixture->build();
-
-		$this->assertEquals(
-			$eventUid,
-			$bag->current()->getUid()
-		);
-	}
-
-	public function testLimitToFullTextSearchIgnoresEventWithoutSearchWordInLeaderTitle() {
-		$speakerUid = $this->testingFramework->createRecord(
-			'tx_seminars_speakers',
-			array('title' => 'bar speaker')
-		);
-		$eventUid = $this->testingFramework->createRecord(
-			'tx_seminars_seminars',
-			array(
-				'leaders' => 1,
-				'object_type' => tx_seminars_Model_Event::TYPE_COMPLETE,
-			)
-		);
-		$this->testingFramework->createRelation(
-			'tx_seminars_seminars_speakers_mm_leaders',
-			$eventUid,
-			$speakerUid
-		);
-		$this->fixture->limitToFullTextSearch('foo');
-		$bag = $this->fixture->build();
-
-		$this->assertTrue(
-			$bag->isEmpty()
-		);
-	}
-
-	public function testLimitToFullTextSearchFindsEventWithSearchWordInLeaderOrganization() {
-		$speakerUid = $this->testingFramework->createRecord(
-			'tx_seminars_speakers',
-			array('organization' => 'foo bar speaker')
-		);
-		$eventUid = $this->testingFramework->createRecord(
-			'tx_seminars_seminars',
-			array(
-				'leaders' => 1,
-				'object_type' => tx_seminars_Model_Event::TYPE_COMPLETE,
-			)
-		);
-		$this->testingFramework->createRelation(
-			'tx_seminars_seminars_speakers_mm_leaders',
-			$eventUid,
-			$speakerUid
-		);
-		$this->fixture->limitToFullTextSearch('foo');
-		$bag = $this->fixture->build();
-
-		$this->assertEquals(
-			$eventUid,
-			$bag->current()->getUid()
-		);
-	}
-
-	public function testLimitToFullTextSearchIgnoresEventWithoutSearchWordInLeaderOrganization() {
-		$speakerUid = $this->testingFramework->createRecord(
-			'tx_seminars_speakers',
-			array('organization' => 'bar speaker')
-		);
-		$eventUid = $this->testingFramework->createRecord(
-			'tx_seminars_seminars',
-			array(
-				'leaders' => 1,
-				'object_type' => tx_seminars_Model_Event::TYPE_COMPLETE,
-			)
-		);
-		$this->testingFramework->createRelation(
-			'tx_seminars_seminars_speakers_mm_leaders',
-			$eventUid,
-			$speakerUid
-		);
-		$this->fixture->limitToFullTextSearch('foo');
-		$bag = $this->fixture->build();
-
-		$this->assertTrue(
-			$bag->isEmpty()
-		);
-	}
-
-	public function testLimitToFullTextSearchFindsEventWithSearchWordInLeaderDescription() {
-		$speakerUid = $this->testingFramework->createRecord(
-			'tx_seminars_speakers',
-			array('description' => 'foo bar speaker')
-		);
-		$eventUid = $this->testingFramework->createRecord(
-			'tx_seminars_seminars',
-			array(
-				'leaders' => 1,
-				'object_type' => tx_seminars_Model_Event::TYPE_COMPLETE,
-			)
-		);
-		$this->testingFramework->createRelation(
-			'tx_seminars_seminars_speakers_mm_leaders',
-			$eventUid,
-			$speakerUid
-		);
-		$this->fixture->limitToFullTextSearch('foo');
-		$bag = $this->fixture->build();
-
-		$this->assertEquals(
-			$eventUid,
-			$bag->current()->getUid()
-		);
-	}
-
-	public function testLimitToFullTextSearchIgnoresEventWithoutSearchWordInLeaderDescription() {
-		$speakerUid = $this->testingFramework->createRecord(
-			'tx_seminars_speakers',
-			array('description' => 'bar speaker')
-		);
-		$eventUid = $this->testingFramework->createRecord(
-			'tx_seminars_seminars',
-			array(
-				'leaders' => 1,
-				'object_type' => tx_seminars_Model_Event::TYPE_COMPLETE,
-			)
-		);
-		$this->testingFramework->createRelation(
-			'tx_seminars_seminars_speakers_mm_leaders',
-			$eventUid,
-			$speakerUid
-		);
-		$this->fixture->limitToFullTextSearch('foo');
-		$bag = $this->fixture->build();
-
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -4140,7 +3631,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 	public function testLimitToFullTextSearchFindsEventWithSearchWordInPlaceTitle() {
 		$placeUid = $this->testingFramework->createRecord(
 			'tx_seminars_sites',
-			array('title' => 'foo bar place')
+			array('title' => 'avocado paprika place')
 		);
 		$eventUid = $this->testingFramework->createRecord(
 			'tx_seminars_seminars',
@@ -4154,10 +3645,14 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 			$eventUid,
 			$placeUid
 		);
-		$this->fixture->limitToFullTextSearch('foo');
+		$this->fixture->limitToFullTextSearch('avocado');
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
+			1,
+			$bag->count()
+		);
+		self::assertSame(
 			$eventUid,
 			$bag->current()->getUid()
 		);
@@ -4166,7 +3661,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 	public function testLimitToFullTextSearchIgnoresEventWithoutSearchWordInPlaceTitle() {
 		$placeUid = $this->testingFramework->createRecord(
 			'tx_seminars_sites',
-			array('title' => 'bar place')
+			array('title' => 'paprika place')
 		);
 		$eventUid = $this->testingFramework->createRecord(
 			'tx_seminars_seminars',
@@ -4180,61 +3675,10 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 			$eventUid,
 			$placeUid
 		);
-		$this->fixture->limitToFullTextSearch('foo');
+		$this->fixture->limitToFullTextSearch('avocado');
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
-			$bag->isEmpty()
-		);
-	}
-
-	public function testLimitToFullTextSearchFindsEventWithSearchWordInPlaceAddress() {
-		$placeUid = $this->testingFramework->createRecord(
-			'tx_seminars_sites',
-			array('address' => 'foo bar address')
-		);
-		$eventUid = $this->testingFramework->createRecord(
-			'tx_seminars_seminars',
-			array(
-				'place' => 1,
-				'object_type' => tx_seminars_Model_Event::TYPE_COMPLETE,
-			)
-		);
-		$this->testingFramework->createRelation(
-			'tx_seminars_seminars_place_mm',
-			$eventUid,
-			$placeUid
-		);
-		$this->fixture->limitToFullTextSearch('foo');
-		$bag = $this->fixture->build();
-
-		$this->assertEquals(
-			$eventUid,
-			$bag->current()->getUid()
-		);
-	}
-
-	public function testLimitToFullTextSearchIgnoresEventWithoutSearchWordInPlaceAddress() {
-		$placeUid = $this->testingFramework->createRecord(
-			'tx_seminars_sites',
-			array('address' => 'bar address')
-		);
-		$eventUid = $this->testingFramework->createRecord(
-			'tx_seminars_seminars',
-			array(
-				'place' => 1,
-				'object_type' => tx_seminars_Model_Event::TYPE_COMPLETE,
-			)
-		);
-		$this->testingFramework->createRelation(
-			'tx_seminars_seminars_place_mm',
-			$eventUid,
-			$placeUid
-		);
-		$this->fixture->limitToFullTextSearch('foo');
-		$bag = $this->fixture->build();
-
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -4242,7 +3686,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 	public function testLimitToFullTextSearchFindsEventWithSearchWordInPlaceCity() {
 		$placeUid = $this->testingFramework->createRecord(
 			'tx_seminars_sites',
-			array('city' => 'foo bar city')
+			array('city' => 'avocado paprika city')
 		);
 		$eventUid = $this->testingFramework->createRecord(
 			'tx_seminars_seminars',
@@ -4256,10 +3700,14 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 			$eventUid,
 			$placeUid
 		);
-		$this->fixture->limitToFullTextSearch('foo');
+		$this->fixture->limitToFullTextSearch('avocado');
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
+			1,
+			$bag->count()
+		);
+		self::assertSame(
 			$eventUid,
 			$bag->current()->getUid()
 		);
@@ -4268,7 +3716,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 	public function testLimitToFullTextSearchIgnoresEventWithoutSearchWordInPlaceCity() {
 		$placeUid = $this->testingFramework->createRecord(
 			'tx_seminars_sites',
-			array('city' => 'bar city')
+			array('city' => 'paprika city')
 		);
 		$eventUid = $this->testingFramework->createRecord(
 			'tx_seminars_seminars',
@@ -4282,10 +3730,10 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 			$eventUid,
 			$placeUid
 		);
-		$this->fixture->limitToFullTextSearch('foo');
+		$this->fixture->limitToFullTextSearch('avocado');
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -4293,7 +3741,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 	public function testLimitToFullTextSearchFindsEventWithSearchWordInEventTypeTitle() {
 		$eventTypeUid = $this->testingFramework->createRecord(
 			'tx_seminars_event_types',
-			array('title' => 'foo bar event type')
+			array('title' => 'avocado paprika event type')
 		);
 		$eventUid = $this->testingFramework->createRecord(
 			'tx_seminars_seminars',
@@ -4302,10 +3750,14 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 				'object_type' => tx_seminars_Model_Event::TYPE_COMPLETE,
 			)
 		);
-		$this->fixture->limitToFullTextSearch('foo');
+		$this->fixture->limitToFullTextSearch('avocado');
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
+			1,
+			$bag->count()
+		);
+		self::assertSame(
 			$eventUid,
 			$bag->current()->getUid()
 		);
@@ -4314,7 +3766,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 	public function testLimitToFullTextSearchIgnoresEventWithoutSearchWordInEventTypeTitle() {
 		$eventTypeUid = $this->testingFramework->createRecord(
 			'tx_seminars_event_types',
-			array('title' => 'bar event type')
+			array('title' => 'paprika event type')
 		);
 		$this->testingFramework->createRecord(
 			'tx_seminars_seminars',
@@ -4323,112 +3775,10 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 				'object_type' => tx_seminars_Model_Event::TYPE_COMPLETE,
 			)
 		);
-		$this->fixture->limitToFullTextSearch('foo');
+		$this->fixture->limitToFullTextSearch('avocado');
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
-			$bag->isEmpty()
-		);
-	}
-
-	public function testLimitToFullTextSearchFindsEventWithSearchWordInOrganizerTitle() {
-		$organizerUid = $this->testingFramework->createRecord(
-			'tx_seminars_organizers',
-			array('title' => 'foo bar organizer')
-		);
-		$eventUid = $this->testingFramework->createRecord(
-			'tx_seminars_seminars',
-			array(
-				'organizers' => 1,
-				'object_type' => tx_seminars_Model_Event::TYPE_COMPLETE,
-			)
-		);
-		$this->testingFramework->createRelation(
-			'tx_seminars_seminars_organizers_mm',
-			$eventUid,
-			$organizerUid
-		);
-		$this->fixture->limitToFullTextSearch('foo');
-		$bag = $this->fixture->build();
-
-		$this->assertEquals(
-			$eventUid,
-			$bag->current()->getUid()
-		);
-	}
-
-	public function testLimitToFullTextSearchIgnoresEventWithoutSearchWordInOrganizerTitle() {
-		$organizerUid = $this->testingFramework->createRecord(
-			'tx_seminars_organizers',
-			array('title' => 'bar organizer')
-		);
-		$eventUid = $this->testingFramework->createRecord(
-			'tx_seminars_seminars',
-			array(
-				'organizers' => 1,
-				'object_type' => tx_seminars_Model_Event::TYPE_COMPLETE,
-			)
-		);
-		$this->testingFramework->createRelation(
-			'tx_seminars_seminars_organizers_mm',
-			$eventUid,
-			$organizerUid
-		);
-		$this->fixture->limitToFullTextSearch('foo');
-		$bag = $this->fixture->build();
-
-		$this->assertTrue(
-			$bag->isEmpty()
-		);
-	}
-
-	public function testLimitToFullTextSearchFindsEventWithSearchWordInTargetGroupTitle() {
-		$targetGroupUid = $this->testingFramework->createRecord(
-			'tx_seminars_target_groups',
-			array('title' => 'foo bar target group')
-		);
-		$eventUid = $this->testingFramework->createRecord(
-			'tx_seminars_seminars',
-			array(
-				'target_groups' => 1,
-				'object_type' => tx_seminars_Model_Event::TYPE_COMPLETE,
-			)
-		);
-		$this->testingFramework->createRelation(
-			'tx_seminars_seminars_target_groups_mm',
-			$eventUid,
-			$targetGroupUid
-		);
-		$this->fixture->limitToFullTextSearch('foo');
-		$bag = $this->fixture->build();
-
-		$this->assertEquals(
-			$eventUid,
-			$bag->current()->getUid()
-		);
-	}
-
-	public function testLimitToFullTextSearchIgnoresEventWithoutSearchWordInTargetGroupTitle() {
-		$targetGroupUid = $this->testingFramework->createRecord(
-			'tx_seminars_target_groups',
-			array('title' => 'bar target group')
-		);
-		$eventUid = $this->testingFramework->createRecord(
-			'tx_seminars_seminars',
-			array(
-				'target_groups' => 1,
-				'object_type' => tx_seminars_Model_Event::TYPE_COMPLETE,
-			)
-		);
-		$this->testingFramework->createRelation(
-			'tx_seminars_seminars_target_groups_mm',
-			$eventUid,
-			$targetGroupUid
-		);
-		$this->fixture->limitToFullTextSearch('foo');
-		$bag = $this->fixture->build();
-
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -4436,7 +3786,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 	public function testLimitToFullTextSearchFindsEventWithSearchWordInCategoryTitle() {
 		$categoryUid = $this->testingFramework->createRecord(
 			'tx_seminars_categories',
-			array('title' => 'foo bar category')
+			array('title' => 'avocado paprika category')
 		);
 		$eventUid = $this->testingFramework->createRecord(
 			'tx_seminars_seminars',
@@ -4450,10 +3800,14 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 			$eventUid,
 			$categoryUid
 		);
-		$this->fixture->limitToFullTextSearch('foo');
+		$this->fixture->limitToFullTextSearch('avocado');
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
+			1,
+			$bag->count()
+		);
+		self::assertSame(
 			$eventUid,
 			$bag->current()->getUid()
 		);
@@ -4462,7 +3816,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 	public function testLimitToFullTextSearchIgnoresEventWithoutSearchWordInCategoryTitle() {
 		$categoryUid = $this->testingFramework->createRecord(
 			'tx_seminars_categories',
-			array('title' => 'bar category')
+			array('title' => 'paprika category')
 		);
 		$eventUid = $this->testingFramework->createRecord(
 			'tx_seminars_seminars',
@@ -4476,10 +3830,10 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 			$eventUid,
 			$categoryUid
 		);
-		$this->fixture->limitToFullTextSearch('foo');
+		$this->fixture->limitToFullTextSearch('avocado');
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -4487,12 +3841,16 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 	public function testLimitToFullTextSearchWithTwoSearchWordsSeparatedBySpaceFindsTwoEventsWithSearchWordsInTitle() {
 		$eventUid = $this->testingFramework->createRecord(
 			'tx_seminars_seminars',
-			array('title' => 'foo event bar')
+			array('title' => 'avocado event paprika')
 		);
-		$this->fixture->limitToFullTextSearch('foo bar');
+		$this->fixture->limitToFullTextSearch('avocado paprika');
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
+			1,
+			$bag->count()
+		);
+		self::assertSame(
 			$eventUid,
 			$bag->current()->getUid()
 		);
@@ -4501,17 +3859,81 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 	public function testLimitToFullTextSearchWithTwoSearchWordsSeparatedByCommaFindsTwoEventsWithSearchWordsInTitle() {
 		$eventUid = $this->testingFramework->createRecord(
 			'tx_seminars_seminars',
-			array('title' => 'foo event bar')
+			array('title' => 'avocado event paprika')
 		);
-		$this->fixture->limitToFullTextSearch('foo,bar');
+		$this->fixture->limitToFullTextSearch('avocado,paprika');
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
+			1,
+			$bag->count()
+		);
+		self::assertSame(
 			$eventUid,
 			$bag->current()->getUid()
 		);
 	}
 
+	/**
+	 * @test
+	 */
+	public function limitToFullTextSearchFindsEventWithSearchWordInTargetGroupTitle() {
+		$targetGroupUid = $this->testingFramework->createRecord(
+			'tx_seminars_target_groups',
+			array('title' => 'avocado paprika place')
+		);
+		$eventUid = $this->testingFramework->createRecord(
+			'tx_seminars_seminars',
+			array(
+				'target_groups' => 1,
+				'object_type' => tx_seminars_Model_Event::TYPE_COMPLETE,
+			)
+		);
+		$this->testingFramework->createRelation(
+			'tx_seminars_seminars_target_groups_mm',
+			$eventUid,
+			$targetGroupUid
+		);
+		$this->fixture->limitToFullTextSearch('avocado');
+		$bag = $this->fixture->build();
+
+		self::assertSame(
+			1,
+			$bag->count()
+		);
+		self::assertSame(
+			$eventUid,
+			$bag->current()->getUid()
+		);
+	}
+
+	/**
+	 * @test
+	 */
+	public function limitToFullTextSearchIgnoresEventWithoutSearchWordInTargetGroupTitle() {
+		$targetGroupUid = $this->testingFramework->createRecord(
+			'tx_seminars_target_groups',
+			array('title' => 'paprika place')
+		);
+		$eventUid = $this->testingFramework->createRecord(
+			'tx_seminars_seminars',
+			array(
+				'target_groups' => 1,
+				'object_type' => tx_seminars_Model_Event::TYPE_COMPLETE,
+			)
+		);
+		$this->testingFramework->createRelation(
+			'tx_seminars_seminars_target_groups_mm',
+			$eventUid,
+			$targetGroupUid
+		);
+		$this->fixture->limitToFullTextSearch('avocado');
+		$bag = $this->fixture->build();
+
+		self::assertTrue(
+			$bag->isEmpty()
+		);
+	}
 
 	////////////////////////////////////////////////////////////////
 	// Tests for limitToFullTextSearch() for topic event records
@@ -4521,7 +3943,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$topicUid = $this->testingFramework->createRecord(
 			'tx_seminars_seminars',
 			array(
-				'title' => 'foo bar event',
+				'title' => 'avocado paprika event',
 				'object_type' => tx_seminars_Model_Event::TYPE_TOPIC,
 			)
 		);
@@ -4532,11 +3954,15 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 				'object_type' => tx_seminars_Model_Event::TYPE_DATE,
 			)
 		);
-		$this->fixture->limitToFullTextSearch('foo');
+		$this->fixture->limitToFullTextSearch('avocado');
 		$this->fixture->limitToDateAndSingleRecords();
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
+			1,
+			$bag->count()
+		);
+		self::assertSame(
 			$dateUid,
 			$bag->current()->getUid()
 		);
@@ -4546,7 +3972,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$topicUid = $this->testingFramework->createRecord(
 			'tx_seminars_seminars',
 			array(
-				'title' => 'bar event',
+				'title' => 'paprika event',
 				'object_type' => tx_seminars_Model_Event::TYPE_TOPIC,
 			)
 		);
@@ -4557,11 +3983,11 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 				'object_type' => tx_seminars_Model_Event::TYPE_DATE,
 			)
 		);
-		$this->fixture->limitToFullTextSearch('foo');
+		$this->fixture->limitToFullTextSearch('avocado');
 		$this->fixture->limitToDateAndSingleRecords();
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -4570,7 +3996,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$topicUid = $this->testingFramework->createRecord(
 			'tx_seminars_seminars',
 			array(
-				'subtitle' => 'foo bar event',
+				'subtitle' => 'avocado paprika event',
 				'object_type' => tx_seminars_Model_Event::TYPE_TOPIC,
 			)
 		);
@@ -4581,11 +4007,15 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 				'object_type' => tx_seminars_Model_Event::TYPE_DATE,
 			)
 		);
-		$this->fixture->limitToFullTextSearch('foo');
+		$this->fixture->limitToFullTextSearch('avocado');
 		$this->fixture->limitToDateAndSingleRecords();
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
+			1,
+			$bag->count()
+		);
+		self::assertSame(
 			$dateUid,
 			$bag->current()->getUid()
 		);
@@ -4595,7 +4025,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$topicUid = $this->testingFramework->createRecord(
 			'tx_seminars_seminars',
 			array(
-				'subtitle' => 'bar event',
+				'subtitle' => 'paprika event',
 				'object_type' => tx_seminars_Model_Event::TYPE_TOPIC,
 			)
 		);
@@ -4606,11 +4036,11 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 				'object_type' => tx_seminars_Model_Event::TYPE_DATE,
 			)
 		);
-		$this->fixture->limitToFullTextSearch('foo');
+		$this->fixture->limitToFullTextSearch('avocado');
 		$this->fixture->limitToDateAndSingleRecords();
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -4619,7 +4049,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$topicUid = $this->testingFramework->createRecord(
 			'tx_seminars_seminars',
 			array(
-				'description' => 'foo bar event',
+				'description' => 'avocado paprika event',
 				'object_type' => tx_seminars_Model_Event::TYPE_TOPIC,
 			)
 		);
@@ -4630,11 +4060,15 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 				'object_type' => tx_seminars_Model_Event::TYPE_DATE,
 			)
 		);
-		$this->fixture->limitToFullTextSearch('foo');
+		$this->fixture->limitToFullTextSearch('avocado');
 		$this->fixture->limitToDateAndSingleRecords();
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
+			1,
+			$bag->count()
+		);
+		self::assertSame(
 			$dateUid,
 			$bag->current()->getUid()
 		);
@@ -4644,7 +4078,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$topicUid = $this->testingFramework->createRecord(
 			'tx_seminars_seminars',
 			array(
-				'description' => 'bar event',
+				'description' => 'paprika event',
 				'object_type' => tx_seminars_Model_Event::TYPE_TOPIC,
 			)
 		);
@@ -4655,11 +4089,11 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 				'object_type' => tx_seminars_Model_Event::TYPE_DATE,
 			)
 		);
-		$this->fixture->limitToFullTextSearch('foo');
+		$this->fixture->limitToFullTextSearch('avocado');
 		$this->fixture->limitToDateAndSingleRecords();
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -4667,7 +4101,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 	public function testLimitToFullTextSearchFindsEventWithSearchWordInTopicCategoryTitle() {
 		$categoryUid = $this->testingFramework->createRecord(
 			'tx_seminars_categories',
-			array('title' => 'foo bar category')
+			array('title' => 'avocado paprika category')
 		);
 		$topicUid = $this->testingFramework->createRecord(
 			'tx_seminars_seminars',
@@ -4688,11 +4122,15 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 				'object_type' => tx_seminars_Model_Event::TYPE_DATE,
 			)
 		);
-		$this->fixture->limitToFullTextSearch('foo');
+		$this->fixture->limitToFullTextSearch('avocado');
 		$this->fixture->limitToDateAndSingleRecords();
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
+			1,
+			$bag->count()
+		);
+		self::assertSame(
 			$dateUid,
 			$bag->current()->getUid()
 		);
@@ -4701,7 +4139,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 	public function testLimitToFullTextSearchIgnoresEventWithoutSearchWordInTopicCategoryTitle() {
 		$categoryUid = $this->testingFramework->createRecord(
 			'tx_seminars_categories',
-			array('title' => 'bar category')
+			array('title' => 'paprika category')
 		);
 		$topicUid = $this->testingFramework->createRecord(
 			'tx_seminars_seminars',
@@ -4722,78 +4160,11 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 				'object_type' => tx_seminars_Model_Event::TYPE_DATE,
 			)
 		);
-		$this->fixture->limitToFullTextSearch('foo');
+		$this->fixture->limitToFullTextSearch('avocado');
 		$this->fixture->limitToDateAndSingleRecords();
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
-			$bag->isEmpty()
-		);
-	}
-
-	public function testLimitToFullTextSearchFindsEventWithSearchWordInTopicTargetGroupTitle() {
-		$targetGroupUid = $this->testingFramework->createRecord(
-			'tx_seminars_target_groups',
-			array('title' => 'foo bar target group')
-		);
-		$topicUid = $this->testingFramework->createRecord(
-			'tx_seminars_seminars',
-			array(
-				'target_groups' => 1,
-				'object_type' => tx_seminars_Model_Event::TYPE_TOPIC,
-			)
-		);
-		$this->testingFramework->createRelation(
-			'tx_seminars_seminars_target_groups_mm',
-			$topicUid,
-			$targetGroupUid
-		);
-		$dateUid = $this->testingFramework->createRecord(
-			'tx_seminars_seminars',
-			array(
-				'topic' => $topicUid,
-				'object_type' => tx_seminars_Model_Event::TYPE_DATE,
-			)
-		);
-		$this->fixture->limitToFullTextSearch('foo');
-		$this->fixture->limitToDateAndSingleRecords();
-		$bag = $this->fixture->build();
-
-		$this->assertEquals(
-			$dateUid,
-			$bag->current()->getUid()
-		);
-	}
-
-	public function testLimitToFullTextSearchIgnoresEventWithoutSearchWordInTopicTargetGroupTitle() {
-		$targetGroupUid = $this->testingFramework->createRecord(
-			'tx_seminars_target_groups',
-			array('title' => 'bar target group')
-		);
-		$topicUid = $this->testingFramework->createRecord(
-			'tx_seminars_seminars',
-			array(
-				'target_groups' => 1,
-				'object_type' => tx_seminars_Model_Event::TYPE_TOPIC,
-			)
-		);
-		$this->testingFramework->createRelation(
-			'tx_seminars_seminars_target_groups_mm',
-			$topicUid,
-			$targetGroupUid
-		);
-		$this->testingFramework->createRecord(
-			'tx_seminars_seminars',
-			array(
-				'topic' => $topicUid,
-				'object_type' => tx_seminars_Model_Event::TYPE_DATE,
-			)
-		);
-		$this->fixture->limitToFullTextSearch('foo');
-		$this->fixture->limitToDateAndSingleRecords();
-		$bag = $this->fixture->build();
-
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -4801,7 +4172,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 	public function testLimitToFullTextSearchFindsEventWithSearchWordInTopicEventTypeTitle() {
 		$eventTypeUid = $this->testingFramework->createRecord(
 			'tx_seminars_event_types',
-			array('title' => 'foo bar event type')
+			array('title' => 'avocado paprika event type')
 		);
 		$topicUid = $this->testingFramework->createRecord(
 			'tx_seminars_seminars',
@@ -4817,11 +4188,15 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 				'object_type' => tx_seminars_Model_Event::TYPE_DATE,
 			)
 		);
-		$this->fixture->limitToFullTextSearch('foo');
+		$this->fixture->limitToFullTextSearch('avocado');
 		$this->fixture->limitToDateAndSingleRecords();
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
+			1,
+			$bag->count()
+		);
+		self::assertSame(
 			$dateUid,
 			$bag->current()->getUid()
 		);
@@ -4830,7 +4205,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 	public function testLimitToFullTextSearchIgnoresEventWithoutSearchWordInTopicEventTypeTitle() {
 		$eventTypeUid = $this->testingFramework->createRecord(
 			'tx_seminars_event_types',
-			array('title' => 'bar event type')
+			array('title' => 'paprika event type')
 		);
 		$topicUid = $this->testingFramework->createRecord(
 			'tx_seminars_seminars',
@@ -4846,11 +4221,11 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 				'object_type' => tx_seminars_Model_Event::TYPE_DATE,
 			)
 		);
-		$this->fixture->limitToFullTextSearch('foo');
+		$this->fixture->limitToFullTextSearch('avocado');
 		$this->fixture->limitToDateAndSingleRecords();
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -4864,14 +4239,18 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$eventUid = $this->testingFramework->createRecord(
 			'tx_seminars_seminars',
 			array(
-				'accreditation_number' => 'foo bar event',
+				'accreditation_number' => 'avocado paprika event',
 				'object_type' => tx_seminars_Model_Event::TYPE_DATE,
 			)
 		);
-		$this->fixture->limitToFullTextSearch('foo');
+		$this->fixture->limitToFullTextSearch('avocado');
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
+			1,
+			$bag->count()
+		);
+		self::assertSame(
 			$eventUid,
 			$bag->current()->getUid()
 		);
@@ -4881,65 +4260,14 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->testingFramework->createRecord(
 			'tx_seminars_seminars',
 			array(
-				'accreditation_number' => 'bar event',
+				'accreditation_number' => 'paprika event',
 				'object_type' => tx_seminars_Model_Event::TYPE_DATE,
 			)
 		);
-		$this->fixture->limitToFullTextSearch('foo');
+		$this->fixture->limitToFullTextSearch('avocado');
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
-			$bag->isEmpty()
-		);
-	}
-
-	public function testLimitToFullTextSearchFindsEventDateWithSearchWordInOrganizerTitle() {
-		$organizerUid = $this->testingFramework->createRecord(
-			'tx_seminars_organizers',
-			array('title' => 'foo bar organizer')
-		);
-		$eventUid = $this->testingFramework->createRecord(
-			'tx_seminars_seminars',
-			array(
-				'organizers' => 1,
-				'object_type' => tx_seminars_Model_Event::TYPE_DATE,
-			)
-		);
-		$this->testingFramework->createRelation(
-			'tx_seminars_seminars_organizers_mm',
-			$eventUid,
-			$organizerUid
-		);
-		$this->fixture->limitToFullTextSearch('foo');
-		$bag = $this->fixture->build();
-
-		$this->assertEquals(
-			$eventUid,
-			$bag->current()->getUid()
-		);
-	}
-
-	public function testLimitToFullTextSearchIgnoresEventDateWithoutSearchWordInOrganizerTitle() {
-		$organizerUid = $this->testingFramework->createRecord(
-			'tx_seminars_organizers',
-			array('title' => 'bar organizer')
-		);
-		$eventUid = $this->testingFramework->createRecord(
-			'tx_seminars_seminars',
-			array(
-				'organizers' => 1,
-				'object_type' => tx_seminars_Model_Event::TYPE_DATE,
-			)
-		);
-		$this->testingFramework->createRelation(
-			'tx_seminars_seminars_organizers_mm',
-			$eventUid,
-			$organizerUid
-		);
-		$this->fixture->limitToFullTextSearch('foo');
-		$bag = $this->fixture->build();
-
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -4947,7 +4275,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 	public function testLimitToFullTextSearchFindsEventDateWithSearchWordInSpeakerTitle() {
 		$speakerUid = $this->testingFramework->createRecord(
 			'tx_seminars_speakers',
-			array('title' => 'foo bar speaker')
+			array('title' => 'avocado paprika speaker')
 		);
 		$eventUid = $this->testingFramework->createRecord(
 			'tx_seminars_seminars',
@@ -4961,10 +4289,14 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 			$eventUid,
 			$speakerUid
 		);
-		$this->fixture->limitToFullTextSearch('foo');
+		$this->fixture->limitToFullTextSearch('avocado');
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
+			1,
+			$bag->count()
+		);
+		self::assertSame(
 			$eventUid,
 			$bag->current()->getUid()
 		);
@@ -4973,7 +4305,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 	public function testLimitToFullTextSearchIgnoresEventDateWithoutSearchWordInSpeakerTitle() {
 		$speakerUid = $this->testingFramework->createRecord(
 			'tx_seminars_speakers',
-			array('title' => 'bar speaker')
+			array('title' => 'paprika speaker')
 		);
 		$eventUid = $this->testingFramework->createRecord(
 			'tx_seminars_seminars',
@@ -4987,571 +4319,10 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 			$eventUid,
 			$speakerUid
 		);
-		$this->fixture->limitToFullTextSearch('foo');
+		$this->fixture->limitToFullTextSearch('avocado');
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
-			$bag->isEmpty()
-		);
-	}
-
-	public function testLimitToFullTextSearchFindsEventDateWithSearchWordInSpeakerOrganization() {
-		$speakerUid = $this->testingFramework->createRecord(
-			'tx_seminars_speakers',
-			array('organization' => 'foo bar speaker')
-		);
-		$eventUid = $this->testingFramework->createRecord(
-			'tx_seminars_seminars',
-			array(
-				'speakers' => 1,
-				'object_type' => tx_seminars_Model_Event::TYPE_DATE,
-			)
-		);
-		$this->testingFramework->createRelation(
-			'tx_seminars_seminars_speakers_mm',
-			$eventUid,
-			$speakerUid
-		);
-		$this->fixture->limitToFullTextSearch('foo');
-		$bag = $this->fixture->build();
-
-		$this->assertEquals(
-			$eventUid,
-			$bag->current()->getUid()
-		);
-	}
-
-	public function testLimitToFullTextSearchIgnoresEventDateWithoutSearchWordInSpeakerOrganization() {
-		$speakerUid = $this->testingFramework->createRecord(
-			'tx_seminars_speakers',
-			array('organization' => 'bar speaker')
-		);
-		$eventUid = $this->testingFramework->createRecord(
-			'tx_seminars_seminars',
-			array(
-				'speakers' => 1,
-				'object_type' => tx_seminars_Model_Event::TYPE_DATE,
-			)
-		);
-		$this->testingFramework->createRelation(
-			'tx_seminars_seminars_speakers_mm',
-			$eventUid,
-			$speakerUid
-		);
-		$this->fixture->limitToFullTextSearch('foo');
-		$bag = $this->fixture->build();
-
-		$this->assertTrue(
-			$bag->isEmpty()
-		);
-	}
-
-	public function testLimitToFullTextSearchFindsEventDateWithSearchWordInSpeakerDescription() {
-		$speakerUid = $this->testingFramework->createRecord(
-			'tx_seminars_speakers',
-			array('description' => 'foo bar speaker')
-		);
-		$eventUid = $this->testingFramework->createRecord(
-			'tx_seminars_seminars',
-			array(
-				'speakers' => 1,
-				'object_type' => tx_seminars_Model_Event::TYPE_DATE,
-			)
-		);
-		$this->testingFramework->createRelation(
-			'tx_seminars_seminars_speakers_mm',
-			$eventUid,
-			$speakerUid
-		);
-		$this->fixture->limitToFullTextSearch('foo');
-		$bag = $this->fixture->build();
-
-		$this->assertEquals(
-			$eventUid,
-			$bag->current()->getUid()
-		);
-	}
-
-	public function testLimitToFullTextSearchIgnoresEventDateWithoutSearchWordInSpeakerDescription() {
-		$speakerUid = $this->testingFramework->createRecord(
-			'tx_seminars_speakers',
-			array('description' => 'bar speaker')
-		);
-		$eventUid = $this->testingFramework->createRecord(
-			'tx_seminars_seminars',
-			array(
-				'speakers' => 1,
-				'object_type' => tx_seminars_Model_Event::TYPE_DATE,
-			)
-		);
-		$this->testingFramework->createRelation(
-			'tx_seminars_seminars_speakers_mm',
-			$eventUid,
-			$speakerUid
-		);
-		$this->fixture->limitToFullTextSearch('foo');
-		$bag = $this->fixture->build();
-
-		$this->assertTrue(
-			$bag->isEmpty()
-		);
-	}
-
-	public function testLimitToFullTextSearchFindsEventDateWithSearchWordInPartnerTitle() {
-		$speakerUid = $this->testingFramework->createRecord(
-			'tx_seminars_speakers',
-			array('title' => 'foo bar speaker')
-		);
-		$eventUid = $this->testingFramework->createRecord(
-			'tx_seminars_seminars',
-			array(
-				'partners' => 1,
-				'object_type' => tx_seminars_Model_Event::TYPE_DATE,
-			)
-		);
-		$this->testingFramework->createRelation(
-			'tx_seminars_seminars_speakers_mm_partners',
-			$eventUid,
-			$speakerUid
-		);
-		$this->fixture->limitToFullTextSearch('foo');
-		$bag = $this->fixture->build();
-
-		$this->assertEquals(
-			$eventUid,
-			$bag->current()->getUid()
-		);
-	}
-
-	public function testLimitToFullTextSearchIgnoresEventDateWithoutSearchWordInPartnerTitle() {
-		$speakerUid = $this->testingFramework->createRecord(
-			'tx_seminars_speakers',
-			array('title' => 'bar speaker')
-		);
-		$eventUid = $this->testingFramework->createRecord(
-			'tx_seminars_seminars',
-			array(
-				'partners' => 1,
-				'object_type' => tx_seminars_Model_Event::TYPE_DATE,
-			)
-		);
-		$this->testingFramework->createRelation(
-			'tx_seminars_seminars_speakers_mm_partners',
-			$eventUid,
-			$speakerUid
-		);
-		$this->fixture->limitToFullTextSearch('foo');
-		$bag = $this->fixture->build();
-
-		$this->assertTrue(
-			$bag->isEmpty()
-		);
-	}
-
-	public function testLimitToFullTextSearchFindsEventDateWithSearchWordInPartnerOrganization() {
-		$speakerUid = $this->testingFramework->createRecord(
-			'tx_seminars_speakers',
-			array('organization' => 'foo bar speaker')
-		);
-		$eventUid = $this->testingFramework->createRecord(
-			'tx_seminars_seminars',
-			array(
-				'partners' => 1,
-				'object_type' => tx_seminars_Model_Event::TYPE_DATE,
-			)
-		);
-		$this->testingFramework->createRelation(
-			'tx_seminars_seminars_speakers_mm_partners',
-			$eventUid,
-			$speakerUid
-		);
-		$this->fixture->limitToFullTextSearch('foo');
-		$bag = $this->fixture->build();
-
-		$this->assertEquals(
-			$eventUid,
-			$bag->current()->getUid()
-		);
-	}
-
-	public function testLimitToFullTextSearchIgnoresEventDateWithoutSearchWordInPartnerOrganization() {
-		$speakerUid = $this->testingFramework->createRecord(
-			'tx_seminars_speakers',
-			array('organization' => 'bar speaker')
-		);
-		$eventUid = $this->testingFramework->createRecord(
-			'tx_seminars_seminars',
-			array(
-				'partners' => 1,
-				'object_type' => tx_seminars_Model_Event::TYPE_DATE,
-			)
-		);
-		$this->testingFramework->createRelation(
-			'tx_seminars_seminars_speakers_mm_partners',
-			$eventUid,
-			$speakerUid
-		);
-		$this->fixture->limitToFullTextSearch('foo');
-		$bag = $this->fixture->build();
-
-		$this->assertTrue(
-			$bag->isEmpty()
-		);
-	}
-
-	public function testLimitToFullTextSearchFindsEventDateWithSearchWordInPartnerDescription() {
-		$speakerUid = $this->testingFramework->createRecord(
-			'tx_seminars_speakers',
-			array('description' => 'foo bar speaker')
-		);
-		$eventUid = $this->testingFramework->createRecord(
-			'tx_seminars_seminars',
-			array(
-				'partners' => 1,
-				'object_type' => tx_seminars_Model_Event::TYPE_DATE,
-			)
-		);
-		$this->testingFramework->createRelation(
-			'tx_seminars_seminars_speakers_mm_partners',
-			$eventUid,
-			$speakerUid
-		);
-		$this->fixture->limitToFullTextSearch('foo');
-		$bag = $this->fixture->build();
-
-		$this->assertEquals(
-			$eventUid,
-			$bag->current()->getUid()
-		);
-	}
-
-	public function testLimitToFullTextSearchIgnoresEventDateWithoutSearchWordInPartnerDescription() {
-		$speakerUid = $this->testingFramework->createRecord(
-			'tx_seminars_speakers',
-			array('description' => 'bar speaker')
-		);
-		$eventUid = $this->testingFramework->createRecord(
-			'tx_seminars_seminars',
-			array(
-				'partners' => 1,
-				'object_type' => tx_seminars_Model_Event::TYPE_DATE,
-			)
-		);
-		$this->testingFramework->createRelation(
-			'tx_seminars_seminars_speakers_mm_partners',
-			$eventUid,
-			$speakerUid
-		);
-		$this->fixture->limitToFullTextSearch('foo');
-		$bag = $this->fixture->build();
-
-		$this->assertTrue(
-			$bag->isEmpty()
-		);
-	}
-
-	public function testLimitToFullTextSearchFindsEventDateWithSearchWordInTutorTitle() {
-		$speakerUid = $this->testingFramework->createRecord(
-			'tx_seminars_speakers',
-			array('title' => 'foo bar speaker')
-		);
-		$eventUid = $this->testingFramework->createRecord(
-			'tx_seminars_seminars',
-			array(
-				'tutors' => 1,
-				'object_type' => tx_seminars_Model_Event::TYPE_DATE,
-			)
-		);
-		$this->testingFramework->createRelation(
-			'tx_seminars_seminars_speakers_mm_tutors',
-			$eventUid,
-			$speakerUid
-		);
-		$this->fixture->limitToFullTextSearch('foo');
-		$bag = $this->fixture->build();
-
-		$this->assertEquals(
-			$eventUid,
-			$bag->current()->getUid()
-		);
-	}
-
-	public function testLimitToFullTextSearchIgnoresEventDateWithoutSearchWordInTutorTitle() {
-		$speakerUid = $this->testingFramework->createRecord(
-			'tx_seminars_speakers',
-			array('title' => 'bar speaker')
-		);
-		$eventUid = $this->testingFramework->createRecord(
-			'tx_seminars_seminars',
-			array(
-				'tutors' => 1,
-				'object_type' => tx_seminars_Model_Event::TYPE_DATE,
-			)
-		);
-		$this->testingFramework->createRelation(
-			'tx_seminars_seminars_speakers_mm_tutors',
-			$eventUid,
-			$speakerUid
-		);
-		$this->fixture->limitToFullTextSearch('foo');
-		$bag = $this->fixture->build();
-
-		$this->assertTrue(
-			$bag->isEmpty()
-		);
-	}
-
-	public function testLimitToFullTextSearchFindsEventDateWithSearchWordInTutorOrganization() {
-		$speakerUid = $this->testingFramework->createRecord(
-			'tx_seminars_speakers',
-			array('organization' => 'foo bar speaker')
-		);
-		$eventUid = $this->testingFramework->createRecord(
-			'tx_seminars_seminars',
-			array(
-				'tutors' => 1,
-				'object_type' => tx_seminars_Model_Event::TYPE_DATE,
-			)
-		);
-		$this->testingFramework->createRelation(
-			'tx_seminars_seminars_speakers_mm_tutors',
-			$eventUid,
-			$speakerUid
-		);
-		$this->fixture->limitToFullTextSearch('foo');
-		$bag = $this->fixture->build();
-
-		$this->assertEquals(
-			$eventUid,
-			$bag->current()->getUid()
-		);
-	}
-
-	public function testLimitToFullTextSearchIgnoresEventDateWithoutSearchWordInTutorOrganization() {
-		$speakerUid = $this->testingFramework->createRecord(
-			'tx_seminars_speakers',
-			array('organization' => 'bar speaker')
-		);
-		$eventUid = $this->testingFramework->createRecord(
-			'tx_seminars_seminars',
-			array(
-				'tutors' => 1,
-				'object_type' => tx_seminars_Model_Event::TYPE_DATE,
-			)
-		);
-		$this->testingFramework->createRelation(
-			'tx_seminars_seminars_speakers_mm_tutors',
-			$eventUid,
-			$speakerUid
-		);
-		$this->fixture->limitToFullTextSearch('foo');
-		$bag = $this->fixture->build();
-
-		$this->assertTrue(
-			$bag->isEmpty()
-		);
-	}
-
-	public function testLimitToFullTextSearchFindsEventDateWithSearchWordInTutorDescription() {
-		$speakerUid = $this->testingFramework->createRecord(
-			'tx_seminars_speakers',
-			array('description' => 'foo bar speaker')
-		);
-		$eventUid = $this->testingFramework->createRecord(
-			'tx_seminars_seminars',
-			array(
-				'tutors' => 1,
-				'object_type' => tx_seminars_Model_Event::TYPE_DATE,
-			)
-		);
-		$this->testingFramework->createRelation(
-			'tx_seminars_seminars_speakers_mm_tutors',
-			$eventUid,
-			$speakerUid
-		);
-		$this->fixture->limitToFullTextSearch('foo');
-		$bag = $this->fixture->build();
-
-		$this->assertEquals(
-			$eventUid,
-			$bag->current()->getUid()
-		);
-	}
-
-	public function testLimitToFullTextSearchIgnoresEventDateWithoutSearchWordInTutorDescription() {
-		$speakerUid = $this->testingFramework->createRecord(
-			'tx_seminars_speakers',
-			array('description' => 'bar speaker')
-		);
-		$eventUid = $this->testingFramework->createRecord(
-			'tx_seminars_seminars',
-			array(
-				'tutors' => 1,
-				'object_type' => tx_seminars_Model_Event::TYPE_DATE,
-			)
-		);
-		$this->testingFramework->createRelation(
-			'tx_seminars_seminars_speakers_mm_tutors',
-			$eventUid,
-			$speakerUid
-		);
-		$this->fixture->limitToFullTextSearch('foo');
-		$bag = $this->fixture->build();
-
-		$this->assertTrue(
-			$bag->isEmpty()
-		);
-	}
-
-	public function testLimitToFullTextSearchFindsEventDateWithSearchWordInLeaderTitle() {
-		$speakerUid = $this->testingFramework->createRecord(
-			'tx_seminars_speakers',
-			array('title' => 'foo bar speaker')
-		);
-		$eventUid = $this->testingFramework->createRecord(
-			'tx_seminars_seminars',
-			array(
-				'leaders' => 1,
-				'object_type' => tx_seminars_Model_Event::TYPE_DATE,
-			)
-		);
-		$this->testingFramework->createRelation(
-			'tx_seminars_seminars_speakers_mm_leaders',
-			$eventUid,
-			$speakerUid
-		);
-		$this->fixture->limitToFullTextSearch('foo');
-		$bag = $this->fixture->build();
-
-		$this->assertEquals(
-			$eventUid,
-			$bag->current()->getUid()
-		);
-	}
-
-	public function testLimitToFullTextSearchIgnoresEventDateWithoutSearchWordInLeaderTitle() {
-		$speakerUid = $this->testingFramework->createRecord(
-			'tx_seminars_speakers',
-			array('title' => 'bar speaker')
-		);
-		$eventUid = $this->testingFramework->createRecord(
-			'tx_seminars_seminars',
-			array(
-				'leaders' => 1,
-				'object_type' => tx_seminars_Model_Event::TYPE_DATE,
-			)
-		);
-		$this->testingFramework->createRelation(
-			'tx_seminars_seminars_speakers_mm_leaders',
-			$eventUid,
-			$speakerUid
-		);
-		$this->fixture->limitToFullTextSearch('foo');
-		$bag = $this->fixture->build();
-
-		$this->assertTrue(
-			$bag->isEmpty()
-		);
-	}
-
-	public function testLimitToFullTextSearchFindsEventDateWithSearchWordInLeaderOrganization() {
-		$speakerUid = $this->testingFramework->createRecord(
-			'tx_seminars_speakers',
-			array('organization' => 'foo bar speaker')
-		);
-		$eventUid = $this->testingFramework->createRecord(
-			'tx_seminars_seminars',
-			array(
-				'leaders' => 1,
-				'object_type' => tx_seminars_Model_Event::TYPE_DATE,
-			)
-		);
-		$this->testingFramework->createRelation(
-			'tx_seminars_seminars_speakers_mm_leaders',
-			$eventUid,
-			$speakerUid
-		);
-		$this->fixture->limitToFullTextSearch('foo');
-		$bag = $this->fixture->build();
-
-		$this->assertEquals(
-			$eventUid,
-			$bag->current()->getUid()
-		);
-	}
-
-	public function testLimitToFullTextSearchIgnoresEventDateWithoutSearchWordInLeaderOrganization() {
-		$speakerUid = $this->testingFramework->createRecord(
-			'tx_seminars_speakers',
-			array('organization' => 'bar speaker')
-		);
-		$eventUid = $this->testingFramework->createRecord(
-			'tx_seminars_seminars',
-			array(
-				'leaders' => 1,
-				'object_type' => tx_seminars_Model_Event::TYPE_DATE,
-			)
-		);
-		$this->testingFramework->createRelation(
-			'tx_seminars_seminars_speakers_mm_leaders',
-			$eventUid,
-			$speakerUid
-		);
-		$this->fixture->limitToFullTextSearch('foo');
-		$bag = $this->fixture->build();
-
-		$this->assertTrue(
-			$bag->isEmpty()
-		);
-	}
-
-	public function testLimitToFullTextSearchFindsEventDateWithSearchWordInLeaderDescription() {
-		$speakerUid = $this->testingFramework->createRecord(
-			'tx_seminars_speakers',
-			array('description' => 'foo bar speaker')
-		);
-		$eventUid = $this->testingFramework->createRecord(
-			'tx_seminars_seminars',
-			array(
-				'leaders' => 1,
-				'object_type' => tx_seminars_Model_Event::TYPE_DATE,
-			)
-		);
-		$this->testingFramework->createRelation(
-			'tx_seminars_seminars_speakers_mm_leaders',
-			$eventUid,
-			$speakerUid
-		);
-		$this->fixture->limitToFullTextSearch('foo');
-		$bag = $this->fixture->build();
-
-		$this->assertEquals(
-			$eventUid,
-			$bag->current()->getUid()
-		);
-	}
-
-	public function testLimitToFullTextSearchIgnoresEventDateWithoutSearchWordInLeaderDescription() {
-		$speakerUid = $this->testingFramework->createRecord(
-			'tx_seminars_speakers',
-			array('description' => 'bar speaker')
-		);
-		$eventUid = $this->testingFramework->createRecord(
-			'tx_seminars_seminars',
-			array(
-				'leaders' => 1,
-				'object_type' => tx_seminars_Model_Event::TYPE_DATE,
-			)
-		);
-		$this->testingFramework->createRelation(
-			'tx_seminars_seminars_speakers_mm_leaders',
-			$eventUid,
-			$speakerUid
-		);
-		$this->fixture->limitToFullTextSearch('foo');
-		$bag = $this->fixture->build();
-
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -5559,7 +4330,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 	public function testLimitToFullTextSearchFindsEventDateWithSearchWordInPlaceTitle() {
 		$placeUid = $this->testingFramework->createRecord(
 			'tx_seminars_sites',
-			array('title' => 'foo bar place')
+			array('title' => 'avocado paprika place')
 		);
 		$eventUid = $this->testingFramework->createRecord(
 			'tx_seminars_seminars',
@@ -5573,10 +4344,14 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 			$eventUid,
 			$placeUid
 		);
-		$this->fixture->limitToFullTextSearch('foo');
+		$this->fixture->limitToFullTextSearch('avocado');
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
+			1,
+			$bag->count()
+		);
+		self::assertSame(
 			$eventUid,
 			$bag->current()->getUid()
 		);
@@ -5585,7 +4360,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 	public function testLimitToFullTextSearchIgnoresEventDateWithoutSearchWordInPlaceTitle() {
 		$placeUid = $this->testingFramework->createRecord(
 			'tx_seminars_sites',
-			array('title' => 'bar place')
+			array('title' => 'paprika place')
 		);
 		$eventUid = $this->testingFramework->createRecord(
 			'tx_seminars_seminars',
@@ -5599,61 +4374,10 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 			$eventUid,
 			$placeUid
 		);
-		$this->fixture->limitToFullTextSearch('foo');
+		$this->fixture->limitToFullTextSearch('avocado');
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
-			$bag->isEmpty()
-		);
-	}
-
-	public function testLimitToFullTextSearchFindsEventDateWithSearchWordInPlaceAddress() {
-		$placeUid = $this->testingFramework->createRecord(
-			'tx_seminars_sites',
-			array('address' => 'foo bar address')
-		);
-		$eventUid = $this->testingFramework->createRecord(
-			'tx_seminars_seminars',
-			array(
-				'place' => 1,
-				'object_type' => tx_seminars_Model_Event::TYPE_DATE,
-			)
-		);
-		$this->testingFramework->createRelation(
-			'tx_seminars_seminars_place_mm',
-			$eventUid,
-			$placeUid
-		);
-		$this->fixture->limitToFullTextSearch('foo');
-		$bag = $this->fixture->build();
-
-		$this->assertEquals(
-			$eventUid,
-			$bag->current()->getUid()
-		);
-	}
-
-	public function testLimitToFullTextSearchIgnoresEventDateWithoutSearchWordInPlaceAddress() {
-		$placeUid = $this->testingFramework->createRecord(
-			'tx_seminars_sites',
-			array('address' => 'bar address')
-		);
-		$eventUid = $this->testingFramework->createRecord(
-			'tx_seminars_seminars',
-			array(
-				'place' => 1,
-				'object_type' => tx_seminars_Model_Event::TYPE_DATE,
-			)
-		);
-		$this->testingFramework->createRelation(
-			'tx_seminars_seminars_place_mm',
-			$eventUid,
-			$placeUid
-		);
-		$this->fixture->limitToFullTextSearch('foo');
-		$bag = $this->fixture->build();
-
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -5661,7 +4385,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 	public function testLimitToFullTextSearchFindsEventDateWithSearchWordInPlaceCity() {
 		$placeUid = $this->testingFramework->createRecord(
 			'tx_seminars_sites',
-			array('city' => 'foo bar city')
+			array('city' => 'avocado paprika city')
 		);
 		$eventUid = $this->testingFramework->createRecord(
 			'tx_seminars_seminars',
@@ -5675,10 +4399,14 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 			$eventUid,
 			$placeUid
 		);
-		$this->fixture->limitToFullTextSearch('foo');
+		$this->fixture->limitToFullTextSearch('avocado');
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
+			1,
+			$bag->count()
+		);
+		self::assertSame(
 			$eventUid,
 			$bag->current()->getUid()
 		);
@@ -5687,7 +4415,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 	public function testLimitToFullTextSearchIgnoresEventDateWithoutSearchWordInPlaceCity() {
 		$placeUid = $this->testingFramework->createRecord(
 			'tx_seminars_sites',
-			array('city' => 'bar city')
+			array('city' => 'paprika city')
 		);
 		$eventUid = $this->testingFramework->createRecord(
 			'tx_seminars_seminars',
@@ -5701,10 +4429,10 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 			$eventUid,
 			$placeUid
 		);
-		$this->fixture->limitToFullTextSearch('foo');
+		$this->fixture->limitToFullTextSearch('avocado');
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -5731,7 +4459,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToRequiredEventTopics($eventUid);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -5763,7 +4491,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToRequiredEventTopics($eventUid);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			2,
 			$bag->count()
 		);
@@ -5795,11 +4523,11 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToRequiredEventTopics($eventUid);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
-		$this->assertNotEquals(
+		self::assertNotEquals(
 			$dependingEventUid,
 			$bag->current()->getUid()
 		);
@@ -5827,7 +4555,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToDependingEventTopics($eventUid);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -5859,7 +4587,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToDependingEventTopics($eventUid);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			2,
 			$bag->count()
 		);
@@ -5891,11 +4619,11 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToDependingEventTopics($eventUid);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
-		$this->assertNotEquals(
+		self::assertNotEquals(
 			$requiredEventUid,
 			$bag->current()->getUid()
 		);
@@ -5917,7 +4645,11 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
+			1,
+			$bag->count()
+		);
+		self::assertSame(
 			$topicUid,
 			$bag->current()->getUid()
 		);
@@ -5941,7 +4673,11 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
+			1,
+			$bag->count()
+		);
+		self::assertSame(
 			$topicUid,
 			$bag->current()->getUid()
 		);
@@ -5965,7 +4701,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -5996,7 +4732,11 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
+			1,
+			$bag->count()
+		);
+		self::assertSame(
 			$topicUid,
 			$bag->current()->getUid()
 		);
@@ -6024,7 +4764,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToTopicsWithoutRegistrationByUser($userUid);
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -6051,7 +4791,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToTopicsWithoutRegistrationByUser($userUid);
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -6078,7 +4818,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToTopicsWithoutRegistrationByUser($userUid);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -6112,7 +4852,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToTopicsWithoutRegistrationByUser($userUid);
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -6149,7 +4889,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -6168,7 +4908,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToCancelationDeadlineReminderNotSent();
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -6182,7 +4922,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToCancelationDeadlineReminderNotSent();
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			0,
 			$bag->count()
 		);
@@ -6201,7 +4941,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToEventTakesPlaceReminderNotSent();
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -6215,7 +4955,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToEventTakesPlaceReminderNotSent();
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			0,
 			$bag->count()
 		);
@@ -6235,7 +4975,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToStatus(tx_seminars_seminar::STATUS_CANCELED);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -6250,7 +4990,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToStatus(tx_seminars_seminar::STATUS_CANCELED);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			0,
 			$bag->count()
 		);
@@ -6265,7 +5005,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToStatus(tx_seminars_seminar::STATUS_CANCELED);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			0,
 			$bag->count()
 		);
@@ -6280,7 +5020,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToStatus(tx_seminars_seminar::STATUS_CONFIRMED);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -6295,7 +5035,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToStatus(tx_seminars_seminar::STATUS_CONFIRMED);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			0,
 			$bag->count()
 		);
@@ -6310,7 +5050,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToStatus(tx_seminars_seminar::STATUS_CONFIRMED);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			0,
 			$bag->count()
 		);
@@ -6325,7 +5065,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToStatus(tx_seminars_seminar::STATUS_PLANNED);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -6340,7 +5080,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToStatus(tx_seminars_seminar::STATUS_PLANNED);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			0,
 			$bag->count()
 		);
@@ -6355,7 +5095,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToStatus(tx_seminars_seminar::STATUS_PLANNED);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			0,
 			$bag->count()
 		);
@@ -6375,7 +5115,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToDaysBeforeBeginDate(2);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -6390,7 +5130,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToDaysBeforeBeginDate(3);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -6405,7 +5145,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToDaysBeforeBeginDate(1);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			0,
 			$bag->count()
 		);
@@ -6420,7 +5160,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToDaysBeforeBeginDate(1);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -6432,26 +5172,26 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToDaysBeforeBeginDate(1);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
 	}
 
 
-	//////////////////////////////////////////////
-	// Tests concerning limitToEarliestBeginDate
-	//////////////////////////////////////////////
+	/*
+	 * Tests concerning limitToEarliestBeginOrEndDate
+	 */
 
 	/**
 	 * @test
 	 */
-	public function limitToEarliestBeginDateForEventWithoutBeginDateFindsThisEvent() {
+	public function limitToEarliestBeginOrEndDateForEventWithoutBeginDateFindsThisEvent() {
 		$this->testingFramework->createRecord('tx_seminars_seminars');
-		$this->fixture->limitToEarliestBeginDate(42);
+		$this->fixture->limitToEarliestBeginOrEndDate(42);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -6460,14 +5200,14 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 	/**
 	 * @test
 	 */
-	public function limitToEarliestBeginDateForEventWithBeginDateEqualToGivenTimestampFindsThisEvent() {
+	public function limitToEarliestBeginOrEndDateForEventWithBeginDateEqualToGivenTimestampFindsThisEvent() {
 		$this->testingFramework->createRecord(
 			'tx_seminars_seminars', array('begin_date' => 42)
 		);
-		$this->fixture->limitToEarliestBeginDate(42);
+		$this->fixture->limitToEarliestBeginOrEndDate(42);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -6476,14 +5216,14 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 	/**
 	 * @test
 	 */
-	public function limitToEarliestBeginDateForEventWithGreaterBeginDateThanGivenTimestampFindsThisEvent() {
+	public function limitToEarliestBeginOrEndDateForEventWithGreaterBeginDateThanGivenTimestampFindsThisEvent() {
 		$this->testingFramework->createRecord(
 			'tx_seminars_seminars', array('begin_date' => 42)
 		);
-		$this->fixture->limitToEarliestBeginDate(21);
+		$this->fixture->limitToEarliestBeginOrEndDate(21);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -6492,14 +5232,14 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 	/**
 	 * @test
 	 */
-	public function limitToEarliestBeginDateForEventWithBeginDateLowerThanGivenTimestampDoesNotFindThisEvent() {
+	public function limitToEarliestBeginOrEndDateForEventWithBeginDateLowerThanGivenTimestampDoesNotFindThisEvent() {
 		$this->testingFramework->createRecord(
 			'tx_seminars_seminars', array('begin_date' => 42)
 		);
-		$this->fixture->limitToEarliestBeginDate(84);
+		$this->fixture->limitToEarliestBeginOrEndDate(84);
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -6507,36 +5247,50 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 	/**
 	 * @test
 	 */
-	public function limitToEarliestBeginDateForZeroGivenAsTimestampUnsetsFilter() {
+	public function limitToEarliestBeginOrEndDateForZeroGivenAsTimestampUnsetsFilter() {
 		$this->testingFramework->createRecord(
 			'tx_seminars_seminars', array('begin_date' => 21)
 		);
 
-		$this->fixture->limitToEarliestBeginDate(42);
+		$this->fixture->limitToEarliestBeginOrEndDate(42);
 
-		$this->fixture->limitToEarliestBeginDate(0);
+		$this->fixture->limitToEarliestBeginOrEndDate(0);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
+			1,
+			$bag->count()
+		);
+	}
+
+	/**
+	 * @test
+	 */
+	public function limitToEarliestBeginOrEndDateForFindsEventStartingBeforeAndEndingAfterDeadline() {
+		$this->testingFramework->createRecord('tx_seminars_seminars', array('begin_date' => 8, 'end_date' => 10));
+		$this->fixture->limitToEarliestBeginOrEndDate(9);
+		$bag = $this->fixture->build();
+
+		self::assertSame(
 			1,
 			$bag->count()
 		);
 	}
 
 
-	////////////////////////////////////////////
-	// Tests concerning limitToLatestBeginDate
-	////////////////////////////////////////////
+	/*
+	 * Tests concerning limitToLatestBeginOrEndDate
+	 */
 
 	/**
 	 * @test
 	 */
-	public function limitToLatestBeginDateForEventWithoutDateDoesNotFindThisEvent() {
+	public function limitToLatestBeginOrEndDateForEventWithoutDateDoesNotFindThisEvent() {
 		$this->testingFramework->createRecord('tx_seminars_seminars');
-		$this->fixture->limitToLatestBeginDate(42);
+		$this->fixture->limitToLatestBeginOrEndDate(42);
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -6544,14 +5298,14 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 	/**
 	 * @test
 	 */
-	public function limitToLatestBeginDateForEventBeginDateEqualToGivenTimestampFindsThisEvent() {
+	public function limitToLatestBeginOrEndDateForEventBeginDateEqualToGivenTimestampFindsThisEvent() {
 		$this->testingFramework->createRecord(
 			'tx_seminars_seminars', array('begin_date' => 42)
 		);
-		$this->fixture->limitToLatestBeginDate(42);
+		$this->fixture->limitToLatestBeginOrEndDate(42);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -6560,14 +5314,14 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 	/**
 	 * @test
 	 */
-	public function limitToLatestBeginDateForEventWithBeginDateAfterGivenTimestampDoesNotFindThisEvent() {
+	public function limitToLatestBeginOrEndDateForEventWithBeginDateAfterGivenTimestampDoesNotFindThisEvent() {
 		$this->testingFramework->createRecord(
 			'tx_seminars_seminars', array('begin_date' => 42)
 		);
-		$this->fixture->limitToLatestBeginDate(21);
+		$this->fixture->limitToLatestBeginOrEndDate(21);
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -6575,14 +5329,14 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 	/**
 	 * @test
 	 */
-	public function limitToLatestBeginDateForEventBeginDateBeforeGivenTimestampFindsThisEvent() {
+	public function limitToLatestBeginOrEndDateForEventBeginDateBeforeGivenTimestampFindsThisEvent() {
 		$this->testingFramework->createRecord(
 			'tx_seminars_seminars', array('begin_date' => 42)
 		);
-		$this->fixture->limitToLatestBeginDate(84);
+		$this->fixture->limitToLatestBeginOrEndDate(84);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -6591,14 +5345,61 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 	/**
 	 * @test
 	 */
-	public function limitToLatestBeginDateForZeroGivenUnsetsTheFilter() {
-		$this->testingFramework->createRecord('tx_seminars_seminars');
-
-		$this->fixture->limitToLatestBeginDate(42);
-		$this->fixture->limitToLatestBeginDate(0);
+	public function limitToLatestBeginOrEndDateForEventEndDateEqualToGivenTimestampFindsThisEvent() {
+		$this->testingFramework->createRecord(
+			'tx_seminars_seminars', array('end_date' => 42)
+		);
+		$this->fixture->limitToLatestBeginOrEndDate(42);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
+			1,
+			$bag->count()
+		);
+	}
+
+	/**
+	 * @test
+	 */
+	public function limitToLatestBeginOrEndDateForEventWithEndDateAfterGivenTimestampDoesNotFindThisEvent() {
+		$this->testingFramework->createRecord(
+			'tx_seminars_seminars', array('end_date' => 42)
+		);
+		$this->fixture->limitToLatestBeginOrEndDate(21);
+		$bag = $this->fixture->build();
+
+		self::assertTrue(
+			$bag->isEmpty()
+		);
+	}
+
+	/**
+	 * @test
+	 */
+	public function limitToLatestBeginOrEndDateForEventEndDateBeforeGivenTimestampFindsThisEvent() {
+		$this->testingFramework->createRecord(
+			'tx_seminars_seminars', array('end_date' => 42)
+		);
+		$this->fixture->limitToLatestBeginOrEndDate(84);
+		$bag = $this->fixture->build();
+
+		self::assertSame(
+			1,
+			$bag->count()
+		);
+	}
+
+	/**
+	 * @test
+	 */
+	public function limitToLatestBeginOrEndDateForZeroGivenUnsetsTheFilter() {
+		$this->testingFramework->createRecord('tx_seminars_seminars');
+
+		$this->fixture->limitToLatestBeginOrEndDate(42);
+		$this->fixture->limitToLatestBeginOrEndDate(0);
+		$bag = $this->fixture->build();
+
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -6620,7 +5421,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->showHiddenRecords();
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -6637,7 +5438,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->showHiddenRecords();
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -6659,7 +5460,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToEventsWithVacancies();
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -6677,7 +5478,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToEventsWithVacancies();
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -6704,7 +5505,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToEventsWithVacancies();
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -6726,7 +5527,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToEventsWithVacancies();
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -6749,7 +5550,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToEventsWithVacancies();
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -6770,7 +5571,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToEventsWithVacancies();
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -6795,7 +5596,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToEventsWithVacancies();
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -6821,7 +5622,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToEventsWithVacancies();
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -6838,7 +5639,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToEventsWithVacancies();
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -6860,7 +5661,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToEventsWithVacancies();
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -6888,7 +5689,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToOrganizers($organizerUid);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -6908,7 +5709,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToOrganizers($organizerUid);
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -6933,7 +5734,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToOrganizers($organizerUid2);
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -6959,7 +5760,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToOrganizers($organizerUid1 . ',' . $organizerUid2);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -6989,7 +5790,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToOrganizers($organizerUid);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			2,
 			$bag->count()
 		);
@@ -7022,9 +5823,13 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToOrganizers($organizerUid);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
+			1,
+			$bag->count()
+		);
+		self::assertSame(
 			$dateUid,
-			$bag->getUids()
+			$bag->current()->getUid()
 		);
 	}
 
@@ -7045,7 +5850,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToOrganizers('');
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -7074,7 +5879,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToAge(6);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -7098,7 +5903,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToAge(15);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -7122,7 +5927,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToAge(15);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -7146,7 +5951,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToAge(15);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -7170,7 +5975,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToAge(51);
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -7193,7 +5998,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToAge(15);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -7217,7 +6022,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToAge(4);
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -7233,7 +6038,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToAge(15);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -7256,7 +6061,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToAge(15);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -7287,7 +6092,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToAge(21);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -7318,7 +6123,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToAge(6);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -7342,7 +6147,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToAge(0);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -7364,7 +6169,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToMaximumPrice(43);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -7381,7 +6186,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToMaximumPrice(50);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -7398,7 +6203,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToMaximumPrice(50);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -7415,7 +6220,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToMaximumPrice(50);
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -7432,7 +6237,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToMaximumPrice(50);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -7450,7 +6255,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToMaximumPrice(42);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -7468,7 +6273,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToMaximumPrice(42);
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -7485,7 +6290,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToMaximumPrice(50);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -7503,7 +6308,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToMaximumPrice(50);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -7521,7 +6326,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToMaximumPrice(50);
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -7538,7 +6343,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToMaximumPrice(50);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -7556,7 +6361,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToMaximumPrice(50);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -7574,7 +6379,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToMaximumPrice(50);
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -7601,9 +6406,13 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToMaximumPrice(50);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
+			1,
+			$bag->count()
+		);
+		self::assertSame(
 			$dateUid,
-			$bag->getUids()
+			$bag->current()->getUid()
 		);
 	}
 
@@ -7629,7 +6438,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToMaximumPrice(50);
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -7650,7 +6459,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToMaximumPrice(50);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -7672,7 +6481,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToMaximumPrice(50);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -7694,7 +6503,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToMaximumPrice(50);
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -7715,7 +6524,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToMaximumPrice(50);
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -7736,7 +6545,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToMaximumPrice(50);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -7758,7 +6567,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToMaximumPrice(50);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -7780,7 +6589,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToMaximumPrice(50);
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -7800,7 +6609,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToMaximumPrice(50);
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -7821,7 +6630,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToMaximumPrice(50);
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -7842,7 +6651,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToMaximumPrice(50);
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -7862,7 +6671,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToMaximumPrice(50);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -7884,7 +6693,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToMaximumPrice(50);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -7905,7 +6714,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToMaximumPrice(50);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -7925,7 +6734,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToMaximumPrice(0);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -7947,7 +6756,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToMinimumPrice(15);
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -7961,7 +6770,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToMinimumPrice(16);
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -7977,7 +6786,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToMinimumPrice(15);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -7994,7 +6803,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToMinimumPrice(15);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -8011,7 +6820,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToMinimumPrice(15);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -8028,7 +6837,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToMinimumPrice(15);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -8045,7 +6854,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToMinimumPrice(15);
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -8061,7 +6870,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToMinimumPrice(15);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -8078,7 +6887,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToMinimumPrice(15);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -8095,7 +6904,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToMinimumPrice(15);
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -8111,7 +6920,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToMinimumPrice(15);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -8128,7 +6937,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToMinimumPrice(15);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -8145,7 +6954,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToMinimumPrice(15);
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -8165,7 +6974,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToMinimumPrice(15);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -8183,7 +6992,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToMinimumPrice(15);
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -8203,7 +7012,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToMinimumPrice(15);
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -8223,7 +7032,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToMinimumPrice(15);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -8244,7 +7053,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToMinimumPrice(15);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -8265,7 +7074,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToMinimumPrice(15);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -8286,7 +7095,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToMinimumPrice(15);
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -8306,7 +7115,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToMinimumPrice(15);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -8327,7 +7136,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToMinimumPrice(15);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);
@@ -8348,7 +7157,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToMinimumPrice(15);
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -8368,7 +7177,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToMinimumPrice(15);
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -8384,7 +7193,7 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 		$this->fixture->limitToMinimumPrice(0);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertSame(
 			1,
 			$bag->count()
 		);

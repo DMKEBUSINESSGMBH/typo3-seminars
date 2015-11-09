@@ -1,26 +1,16 @@
 <?php
-/***************************************************************
-* Copyright notice
-*
-* (c) 2007-2013 Oliver Klee (typo3-coding@oliverklee.de)
-* All rights reserved
-*
-* This script is part of the TYPO3 project. The TYPO3 project is
-* free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* The GNU General Public License can be found at
-* http://www.gnu.org/copyleft/gpl.html.
-*
-* This script is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* This copyright notice MUST APPEAR in all copies of the script!
-***************************************************************/
+/*
+ * This file is part of the TYPO3 CMS project.
+ *
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
+ *
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
+ *
+ * The TYPO3 project - inspiring people to share!
+ */
 
 /**
  * Test case.
@@ -30,312 +20,453 @@
  *
  * @author Oliver Klee <typo3-coding@oliverklee.de>
  */
-class tx_seminars_OldModel_TimespanTest extends tx_phpunit_testcase {
-	private $fixture;
+class tx_seminars_OldModel_TimespanTest extends Tx_Phpunit_TestCase {
+	/**
+	 * @var string
+	 */
+	const TIME_FORMAT = '%H:%M';
+
+	/**
+	 * @var tx_seminars_timespanchild
+	 */
+	private $subject = NULL;
 
 	protected function setUp() {
-		$this->fixture = new tx_seminars_timespanchild(array());
+		$GLOBALS['LANG']->includeLLFile(t3lib_extMgm::extPath('seminars') . 'locallang.xml');
+
+		$this->subject = new tx_seminars_timespanchild(array('timeFormat' => self::TIME_FORMAT));
 	}
 
-	/////////////////////////////////////////////
-	// Test for getting the begin and end date.
-	/////////////////////////////////////////////
+	/*
+	 * Test for getting the begin and end date.
+	 */
 
-	public function testInitiallyHasNoDate() {
-		$this->assertFalse(
-			$this->fixture->hasDate()
-		);
-	}
-
-	public function testBeginDateIsInitiallyZero() {
-		$this->assertEquals(
-			0, $this->fixture->getBeginDateAsTimestamp()
-		);
-	}
-
-	public function testInitiallyHasNoBeginDate() {
-		$this->assertFalse(
-			$this->fixture->hasBeginDate()
+	/**
+	 * @test
+	 */
+	public function initiallyHasNoDate() {
+		self::assertFalse(
+			$this->subject->hasDate()
 		);
 	}
 
-	public function testEndDateIsInitiallyZero() {
-		$this->assertEquals(
-			0, $this->fixture->getEndDateAsTimestamp()
+	/**
+	 * @test
+	 */
+	public function beginDateIsInitiallyZero() {
+		self::assertSame(
+			0, $this->subject->getBeginDateAsTimestamp()
 		);
 	}
 
-	public function testInitiallyHasNoEndDate() {
-		$this->assertFalse(
-			$this->fixture->hasEndDate()
+	/**
+	 * @test
+	 */
+	public function initiallyHasNoBeginDate() {
+		self::assertFalse(
+			$this->subject->hasBeginDate()
 		);
 	}
 
-	public function testEndDateForOpenEndedIsInitiallyZero() {
-		$this->assertEquals(
-			0, $this->fixture->getEndDateAsTimestampEvenIfOpenEnded()
+	/**
+	 * @test
+	 */
+	public function endDateIsInitiallyZero() {
+		self::assertSame(
+			0, $this->subject->getEndDateAsTimestamp()
 		);
 	}
 
-	public function testSetAndGetTheBeginDate() {
-		$this->fixture->setBeginDateAndTime(42);
-
-		$this->assertTrue(
-			$this->fixture->hasBeginDate()
-		);
-		$this->assertEquals(
-			42, $this->fixture->getBeginDateAsTimestamp()
+	/**
+	 * @test
+	 */
+	public function initiallyHasNoEndDate() {
+		self::assertFalse(
+			$this->subject->hasEndDate()
 		);
 	}
 
-	public function testHasDateAfterSettingBeginDate() {
-		$this->fixture->setBeginDateAndTime(42);
-
-		$this->assertTrue(
-			$this->fixture->hasDate()
+	/**
+	 * @test
+	 */
+	public function endDateForOpenEndedIsInitiallyZero() {
+		self::assertSame(
+			0, $this->subject->getEndDateAsTimestampEvenIfOpenEnded()
 		);
 	}
 
-	public function testSetAndGetTheEndDate() {
-		$this->fixture->setEndDateAndTime(42);
+	/**
+	 * @test
+	 */
+	public function setAndGetTheBeginDate() {
+		$this->subject->setBeginDateAndTime(42);
 
-		$this->assertTrue(
-			$this->fixture->hasEndDate()
+		self::assertTrue(
+			$this->subject->hasBeginDate()
 		);
-		$this->assertEquals(
-			42, $this->fixture->getEndDateAsTimestamp()
-		);
-	}
-
-	public function testHasNoDateAfterSettingEndDate() {
-		$this->fixture->setEndDateAndTime(42);
-
-		$this->assertFalse(
-			$this->fixture->hasDate()
+		self::assertSame(
+			42, $this->subject->getBeginDateAsTimestamp()
 		);
 	}
 
-	public function testEndDateForOpenEndedIsZeroIfNoBeginDate() {
-		$this->fixture->setEndDateAndTime(42);
+	/**
+	 * @test
+	 */
+	public function hasDateAfterSettingBeginDate() {
+		$this->subject->setBeginDateAndTime(42);
 
-		$this->assertEquals(
-			0, $this->fixture->getEndDateAsTimestampEvenIfOpenEnded()
+		self::assertTrue(
+			$this->subject->hasDate()
 		);
 	}
 
+	/**
+	 * @test
+	 */
+	public function setAndGetTheEndDate() {
+		$this->subject->setEndDateAndTime(42);
 
-	///////////////////////////////
-	// Test for getting the time.
-	///////////////////////////////
-
-	public function testInitiallyHasNoTime() {
-		$this->assertFalse(
-			$this->fixture->hasTime()
+		self::assertTrue(
+			$this->subject->hasEndDate()
+		);
+		self::assertSame(
+			42, $this->subject->getEndDateAsTimestamp()
 		);
 	}
 
-	public function testHasNoEndTimeIfEndsAtMidnight() {
-		$this->fixture->setEndDateAndTime(mktime(0, 0, 0, 1, 1, 2010));
+	/**
+	 * @test
+	 */
+	public function hasNoDateAfterSettingEndDate() {
+		$this->subject->setEndDateAndTime(42);
 
-		$this->assertFalse(
-			$this->fixture->hasEndTime()
+		self::assertFalse(
+			$this->subject->hasDate()
 		);
 	}
 
-	public function testHasEndTimeIfEndsDuringTheDay() {
-		$this->fixture->setEndDateAndTime(mktime(9, 0, 0, 1, 1, 2010));
+	/**
+	 * @test
+	 */
+	public function endDateForOpenEndedIsZeroIfNoBeginDate() {
+		$this->subject->setEndDateAndTime(42);
 
-		$this->assertTrue(
-			$this->fixture->hasEndTime()
+		self::assertSame(
+			0, $this->subject->getEndDateAsTimestampEvenIfOpenEnded()
 		);
 	}
 
+	/*
+	 * Test for getting the time.
+	 */
 
-	/////////////////////////////
-	// Test for open-endedness.
-	/////////////////////////////
-
-	public function testInitiallyIsOpenEnded() {
-		$this->assertTrue(
-			$this->fixture->isOpenEnded()
+	/**
+	 * @test
+	 */
+	public function initiallyHasNoTime() {
+		self::assertFalse(
+			$this->subject->hasTime()
 		);
 	}
 
-	public function testIsOpenEndedAfterSettingOnlyTheBeginDate() {
-		$this->fixture->setBeginDateAndTime(42);
+	/**
+	 * @test
+	 */
+	public function hasNoEndTimeIfEndsAtMidnight() {
+		$this->subject->setEndDateAndTime(mktime(0, 0, 0, 1, 1, 2010));
 
-		$this->assertTrue(
-			$this->fixture->isOpenEnded()
+		self::assertFalse(
+			$this->subject->hasEndTime()
 		);
 	}
 
-	public function testIsNotOpenEndedAfterSettingOnlyTheEndDateToMorning() {
-		$this->fixture->setEndDateAndTime(
-			mktime(9, 0, 0, 1, 1, 2010)
-		);
+	/**
+	 * @test
+	 */
+	public function hasEndTimeIfEndsDuringTheDay() {
+		$this->subject->setEndDateAndTime(mktime(9, 0, 0, 1, 1, 2010));
 
-		$this->assertFalse(
-			$this->fixture->isOpenEnded()
-		);
-	}
-
-	public function testIsNotOpenEndedAfterSettingBeginAndEndDateToMorning() {
-		$this->fixture->setBeginDateAndTime(
-			mktime(8, 0, 0, 1, 1, 2010)
-		);
-
-		$this->fixture->setEndDateAndTime(
-			mktime(9, 0, 0, 1, 1, 2010)
-		);
-
-		$this->assertFalse(
-			$this->fixture->isOpenEnded()
+		self::assertTrue(
+			$this->subject->hasEndTime()
 		);
 	}
 
-	public function testIsNotOpenEndedIfEndsAtMidnight() {
-		$this->fixture->setEndDateAndTime(
-			mktime(0, 0, 0, 1, 1, 2010)
-		);
-
-		$this->assertFalse(
-			$this->fixture->isOpenEnded()
+	/**
+	 * @test
+	 */
+	public function getTimeForNoTimeReturnsWillBeAnnouncesMessage() {
+		self::assertSame(
+			$this->subject->translate('message_willBeAnnounced'),
+			$this->subject->getTime()
 		);
 	}
 
+	/**
+	 * @test
+	 */
+	public function getTimeForBeginTimeOnlyReturnsBeginTime() {
+		$this->subject->setBeginDateAndTime(mktime(9, 50, 0, 1, 1, 2010));
 
-	///////////////////////////////////////////////////////////////////
-	// Tests for getting the end date and time for open-ended events.
-	///////////////////////////////////////////////////////////////////
-
-	public function testEndDateIsMidnightIfOpenEndedStartsAtOneOClock() {
-		$this->fixture->setBeginDateAndTime(
-			mktime(1, 0, 0, 1, 1, 2010)
+		self::assertSame(
+			'09:50' . ' ' . $this->subject->translate('label_hours'),
+			$this->subject->getTime()
 		);
+	}
 
-		$this->assertTrue(
-			$this->fixture->isOpenEnded()
+	/**
+	 * @test
+	 */
+	public function getTimeForBeginTimeAndEndTimeOnSameDayReturnsBothTimesWithMDashByDefault() {
+		$this->subject->setBeginDateAndTime(mktime(9, 50, 0, 1, 1, 2010));
+		$this->subject->setEndDateAndTime(mktime(18, 30, 0, 1, 1, 2010));
+
+		self::assertSame(
+			'09:50&#8211;18:30' . ' ' . $this->subject->translate('label_hours'),
+			$this->subject->getTime()
 		);
-		$this->assertEquals(
+	}
+
+	/**
+	 * @test
+	 */
+	public function getTimeForBeginTimeAndEndTimeOnSameDayReturnsBothTimesWithProvidedDash() {
+		$this->subject->setBeginDateAndTime(mktime(9, 50, 0, 1, 1, 2010));
+		$this->subject->setEndDateAndTime(mktime(18, 30, 0, 1, 1, 2010));
+
+		self::assertSame(
+			'09:50-18:30' . ' ' . $this->subject->translate('label_hours'),
+			$this->subject->getTime('-')
+		);
+	}
+
+	/**
+	 * @test
+	 */
+	public function getTimeForBeginTimeAndEndTimeOnDifferentDaysReturnsBothTimesWithMDashByDefault() {
+		$this->subject->setBeginDateAndTime(mktime(9, 50, 0, 1, 1, 2010));
+		$this->subject->setEndDateAndTime(mktime(18, 30, 0, 1, 2, 2010));
+
+		self::assertSame(
+			'09:50&#8211;18:30' . ' ' . $this->subject->translate('label_hours'),
+			$this->subject->getTime()
+		);
+	}
+
+	/*
+	 * Test for open-endedness.
+	 */
+
+	/**
+	 * @test
+	 */
+	public function initiallyIsOpenEnded() {
+		self::assertTrue(
+			$this->subject->isOpenEnded()
+		);
+	}
+
+	/**
+	 * @test
+	 */
+	public function isOpenEndedAfterSettingOnlyTheBeginDate() {
+		$this->subject->setBeginDateAndTime(42);
+
+		self::assertTrue(
+			$this->subject->isOpenEnded()
+		);
+	}
+
+	/**
+	 * @test
+	 */
+	public function isNotOpenEndedAfterSettingOnlyTheEndDateToMorning() {
+		$this->subject->setEndDateAndTime(mktime(9, 0, 0, 1, 1, 2010));
+
+		self::assertFalse(
+			$this->subject->isOpenEnded()
+		);
+	}
+
+	/**
+	 * @test
+	 */
+	public function isNotOpenEndedAfterSettingBeginAndEndDateToMorning() {
+		$this->subject->setBeginDateAndTime(mktime(8, 0, 0, 1, 1, 2010));
+		$this->subject->setEndDateAndTime(mktime(9, 0, 0, 1, 1, 2010));
+
+		self::assertFalse(
+			$this->subject->isOpenEnded()
+		);
+	}
+
+	/**
+	 * @test
+	 */
+	public function isNotOpenEndedIfEndsAtMidnight() {
+		$this->subject->setEndDateAndTime(mktime(0, 0, 0, 1, 1, 2010));
+
+		self::assertFalse(
+			$this->subject->isOpenEnded()
+		);
+	}
+
+	/*
+	 * Tests for getting the end date and time for open-ended events.
+	 */
+
+	/**
+	 * @test
+	 */
+	public function endDateIsMidnightIfOpenEndedStartsAtOneOClock() {
+		$this->subject->setBeginDateAndTime(mktime(1, 0, 0, 1, 1, 2010));
+
+		self::assertTrue(
+			$this->subject->isOpenEnded()
+		);
+		self::assertSame(
 			mktime(0, 0, 0, 1, 2, 2010),
-			$this->fixture->getEndDateAsTimestampEvenIfOpenEnded()
+			$this->subject->getEndDateAsTimestampEvenIfOpenEnded()
 		);
 	}
 
-	public function testEndDateIsMidnightIfOpenEndedStartsAtMorning() {
-		$this->fixture->setBeginDateAndTime(
-			mktime(9, 0, 0, 1, 1, 2010)
-		);
+	/**
+	 * @test
+	 */
+	public function endDateIsMidnightIfOpenEndedStartsAtMorning() {
+		$this->subject->setBeginDateAndTime(mktime(9, 0, 0, 1, 1, 2010));
 
-		$this->assertTrue(
-			$this->fixture->isOpenEnded()
+		self::assertTrue(
+			$this->subject->isOpenEnded()
 		);
-		$this->assertEquals(
+		self::assertSame(
 			mktime(0, 0, 0, 1, 2, 2010),
-			$this->fixture->getEndDateAsTimestampEvenIfOpenEnded()
+			$this->subject->getEndDateAsTimestampEvenIfOpenEnded()
 		);
 	}
 
-	public function testEndDateIsMidnightIfOpenEndedStartsAtElevenPm() {
-		$this->fixture->setBeginDateAndTime(
-			mktime(23, 0, 0, 1, 1, 2010)
-		);
+	/**
+	 * @test
+	 */
+	public function endDateIsMidnightIfOpenEndedStartsAtElevenPm() {
+		$this->subject->setBeginDateAndTime(mktime(23, 0, 0, 1, 1, 2010));
 
-		$this->assertTrue(
-			$this->fixture->isOpenEnded()
+		self::assertTrue(
+			$this->subject->isOpenEnded()
 		);
-		$this->assertEquals(
+		self::assertSame(
 			mktime(0, 0, 0, 1, 2, 2010),
-			$this->fixture->getEndDateAsTimestampEvenIfOpenEnded()
+			$this->subject->getEndDateAsTimestampEvenIfOpenEnded()
 		);
 	}
 
-	public function testEndDateIsMidnightIfOpenEndedStartsAtMidnight() {
-		$this->fixture->setBeginDateAndTime(
-			mktime(0, 0, 0, 1, 1, 2010)
-		);
+	/**
+	 * @test
+	 */
+	public function endDateIsMidnightIfOpenEndedStartsAtMidnight() {
+		$this->subject->setBeginDateAndTime(mktime(0, 0, 0, 1, 1, 2010));
 
-		$this->assertTrue(
-			$this->fixture->isOpenEnded()
+		self::assertTrue(
+			$this->subject->isOpenEnded()
 		);
-		$this->assertEquals(
+		self::assertSame(
 			mktime(0, 0, 0, 1, 2, 2010),
-			$this->fixture->getEndDateAsTimestampEvenIfOpenEnded()
+			$this->subject->getEndDateAsTimestampEvenIfOpenEnded()
 		);
 	}
 
+	/*
+	 * Tests for for the begin date.
+	 */
 
-	///////////////////////////////////////////////////////////////////
-	// Tests for for the begin date.
-	///////////////////////////////////////////////////////////////////
+	/**
+	 * @test
+	 */
+	public function hasStartedReturnsTrueForStartedEvent() {
+		$this->subject->setBeginDateAndTime(42);
 
-	public function testHasStartedReturnsTrueForStartedEvent() {
-		$this->fixture->setBeginDateAndTime(42);
-
-		$this->assertTrue(
-			$this->fixture->hasStarted()
+		self::assertTrue(
+			$this->subject->hasStarted()
 		);
 	}
 
-	public function testHasStartedReturnsFalseForUpcomingEvent() {
-		$this->fixture->setBeginDateAndTime($GLOBALS['SIM_EXEC_TIME'] + 42);
+	/**
+	 * @test
+	 */
+	public function hasStartedReturnsFalseForUpcomingEvent() {
+		$this->subject->setBeginDateAndTime($GLOBALS['SIM_EXEC_TIME'] + 42);
 
-		$this->assertFalse(
-			$this->fixture->hasStarted()
+		self::assertFalse(
+			$this->subject->hasStarted()
 		);
 	}
 
-	public function testHasStartedReturnsFalseForEventWithoutBeginDate() {
-		$this->fixture->setBeginDateAndTime(0);
+	/**
+	 * @test
+	 */
+	public function hasStartedReturnsFalseForEventWithoutBeginDate() {
+		$this->subject->setBeginDateAndTime(0);
 
-		$this->assertFalse(
-			$this->fixture->hasStarted()
+		self::assertFalse(
+			$this->subject->hasStarted()
 		);
 	}
 
+	/*
+	 * Tests concerning the places.
+	 */
 
-	/////////////////////////////////
-	// Tests concerning the places.
-	/////////////////////////////////
-
-	public function testNumberOfPlacesIsInitiallyZero() {
-		$this->assertEquals(
-			0, $this->fixture->getNumberOfPlaces()
+	/**
+	 * @test
+	 */
+	public function numberOfPlacesIsInitiallyZero() {
+		self::assertSame(
+			0, $this->subject->getNumberOfPlaces()
 		);
 	}
 
-	public function testSetNumberOfPlacesToZero() {
-		$this->fixture->setNumberOfPlaces(0);
+	/**
+	 * @test
+	 */
+	public function setNumberOfPlacesToZero() {
+		$this->subject->setNumberOfPlaces(0);
 
-		$this->assertEquals(
-			0, $this->fixture->getNumberOfPlaces()
+		self::assertSame(
+			0, $this->subject->getNumberOfPlaces()
 		);
 	}
 
-	public function testSetNumberOfPlacesToPositiveInteger() {
-		$this->fixture->setNumberOfPlaces(42);
+	/**
+	 * @test
+	 */
+	public function setNumberOfPlacesToPositiveInteger() {
+		$this->subject->setNumberOfPlaces(42);
 
-		$this->assertEquals(
-			42, $this->fixture->getNumberOfPlaces()
+		self::assertSame(
+			42, $this->subject->getNumberOfPlaces()
 		);
 	}
 
+	/*
+	 * Tests for getting the room.
+	 */
 
-	////////////////////////////////
-	// Tests for getting the room.
-	////////////////////////////////
-
-	public function testRoomIsInitiallyEmpty() {
-		$this->assertSame(
-			'', $this->fixture->getRoom()
+	/**
+	 * @test
+	 */
+	public function roomIsInitiallyEmpty() {
+		self::assertSame(
+			'', $this->subject->getRoom()
 		);
 	}
 
-	public function testSetAndGetRoom() {
-		$this->fixture->setRoom('foo');
+	/**
+	 * @test
+	 */
+	public function setAndGetRoom() {
+		$this->subject->setRoom('foo');
 
-		$this->assertEquals(
-			'foo', $this->fixture->getRoom()
+		self::assertSame(
+			'foo', $this->subject->getRoom()
 		);
 	}
 }

@@ -1,26 +1,16 @@
 <?php
-/***************************************************************
-* Copyright notice
-*
-* (c) 2009-2013 Niels Pardon (mail@niels-pardon.de)
-* All rights reserved
-*
-* This script is part of the TYPO3 project. The TYPO3 project is
-* free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* The GNU General Public License can be found at
-* http://www.gnu.org/copyleft/gpl.html.
-*
-* This script is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* This copyright notice MUST APPEAR in all copies of the script!
-***************************************************************/
+/*
+ * This file is part of the TYPO3 CMS project.
+ *
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
+ *
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
+ *
+ * The TYPO3 project - inspiring people to share!
+ */
 
 /**
  * Test case.
@@ -62,7 +52,7 @@ class tx_seminars_Mapper_SpeakerTest extends tx_phpunit_testcase {
 	public function findWithUidOfExistingRecordReturnsOrganizerInstance() {
 		$uid = $this->testingFramework->createRecord('tx_seminars_speakers');
 
-		$this->assertTrue(
+		self::assertTrue(
 			$this->fixture->find($uid) instanceof tx_seminars_Model_Speaker
 		);
 	}
@@ -77,7 +67,7 @@ class tx_seminars_Mapper_SpeakerTest extends tx_phpunit_testcase {
 
 		/** @var tx_seminars_Model_Speaker $model */
 		$model = $this->fixture->find($uid);
-		$this->assertEquals(
+		self::assertEquals(
 			'John Doe',
 			$model->getName()
 		);
@@ -96,7 +86,7 @@ class tx_seminars_Mapper_SpeakerTest extends tx_phpunit_testcase {
 
 		/** @var tx_seminars_Model_Speaker $model */
 		$model = $this->fixture->find($uid);
-		$this->assertTrue(
+		self::assertTrue(
 			$model->getSkills() instanceof tx_oelib_List
 		);
 	}
@@ -109,7 +99,7 @@ class tx_seminars_Mapper_SpeakerTest extends tx_phpunit_testcase {
 
 		/** @var tx_seminars_Model_Speaker $model */
 		$model = $this->fixture->find($uid);
-		$this->assertTrue(
+		self::assertTrue(
 			$model->getSkills()->isEmpty()
 		);
 	}
@@ -127,7 +117,7 @@ class tx_seminars_Mapper_SpeakerTest extends tx_phpunit_testcase {
 
 		/** @var tx_seminars_Model_Speaker $model */
 		$model = $this->fixture->find($speakerUid);
-		$this->assertFalse(
+		self::assertFalse(
 			$model->getSkills()->isEmpty()
 		);
 	}
@@ -145,7 +135,7 @@ class tx_seminars_Mapper_SpeakerTest extends tx_phpunit_testcase {
 
 		/** @var tx_seminars_Model_Speaker $model */
 		$model = $this->fixture->find($speakerUid);
-		$this->assertEquals(
+		self::assertEquals(
 			$skill->getUid(),
 			$model->getSkills()->getUids()
 		);
@@ -160,7 +150,7 @@ class tx_seminars_Mapper_SpeakerTest extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function getOwnerWithoutOwnerReturnsNull() {
-		$this->assertNull(
+		self::assertNull(
 			$this->fixture->getLoadedTestingModel(array())->getOwner()
 		);
 	}
@@ -172,7 +162,7 @@ class tx_seminars_Mapper_SpeakerTest extends tx_phpunit_testcase {
 		$frontEndUser = tx_oelib_MapperRegistry::
 			get('tx_seminars_Mapper_FrontEndUser')->getLoadedTestingModel(array());
 
-		$this->assertTrue(
+		self::assertTrue(
 			$this->fixture->getLoadedTestingModel(
 				array('owner' => $frontEndUser->getUid())
 			)->getOwner() instanceof

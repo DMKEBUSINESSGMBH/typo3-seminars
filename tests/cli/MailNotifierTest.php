@@ -42,7 +42,15 @@ class Tx_Seminars_Cli_MailNotifierTest extends Tx_Phpunit_TestCase {
 	 */
 	protected $mailer = NULL;
 
+	/**
+	 * @var language
+	 */
+	private $languageBackup = NULL;
+
 	protected function setUp() {
+		$this->languageBackup = $GLOBALS['LANG'];
+		$GLOBALS['LANG'] = new \language();
+
 		$this->testingFramework = new Tx_Oelib_TestingFramework('tx_seminars');
 		/** @var Tx_Oelib_MailerFactory $mailerFactory */
 		$mailerFactory = t3lib_div::makeInstance('Tx_Oelib_MailerFactory');
@@ -70,6 +78,9 @@ class Tx_Seminars_Cli_MailNotifierTest extends Tx_Phpunit_TestCase {
 
 	protected function tearDown() {
 		$this->testingFramework->cleanUp();
+
+		$GLOBALS['LANG'] = $this->languageBackup;
+		$this->languageBackup = NULL;
 	}
 
 
@@ -141,7 +152,7 @@ class Tx_Seminars_Cli_MailNotifierTest extends Tx_Phpunit_TestCase {
 	public function createSeminarWithOrganizerCreatesSeminarRecord() {
 		$this->createSeminarWithOrganizer();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$this->testingFramework->existsRecord('tx_seminars_seminars', '1=1')
 		);
 	}
@@ -152,7 +163,7 @@ class Tx_Seminars_Cli_MailNotifierTest extends Tx_Phpunit_TestCase {
 	public function createSeminarWithOrganizerCreatesSeminarRecordWithAdditionalData() {
 		$this->createSeminarWithOrganizer(array('title' => 'foo'));
 
-		$this->assertTrue(
+		self::assertTrue(
 			$this->testingFramework->existsRecord('tx_seminars_seminars', 'title = "foo"')
 		);
 	}
@@ -163,7 +174,7 @@ class Tx_Seminars_Cli_MailNotifierTest extends Tx_Phpunit_TestCase {
 	public function createSeminarWithOrganizerCreatesOrganizerRecord() {
 		$this->createSeminarWithOrganizer();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$this->testingFramework->existsRecord('tx_seminars_organizers', '1=1')
 		);
 	}
@@ -174,7 +185,7 @@ class Tx_Seminars_Cli_MailNotifierTest extends Tx_Phpunit_TestCase {
 	public function createSeminarWithOrganizerCreatesRealtionBetweenSeminarAndOrganizer() {
 		$this->createSeminarWithOrganizer();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$this->testingFramework->existsRecord('tx_seminars_seminars_organizers_mm', '1=1')
 		);
 	}
@@ -185,7 +196,7 @@ class Tx_Seminars_Cli_MailNotifierTest extends Tx_Phpunit_TestCase {
 	public function addSpeakerCreatesSpeakerRecord() {
 		$this->addSpeaker($this->createSeminarWithOrganizer());
 
-		$this->assertTrue(
+		self::assertTrue(
 			$this->testingFramework->existsRecord('tx_seminars_speakers', '1=1')
 		);
 	}
@@ -196,7 +207,7 @@ class Tx_Seminars_Cli_MailNotifierTest extends Tx_Phpunit_TestCase {
 	public function addSpeakerCreatesSpeakerRelation() {
 		$this->addSpeaker($this->createSeminarWithOrganizer());
 
-		$this->assertTrue(
+		self::assertTrue(
 			$this->testingFramework->existsRecord('tx_seminars_seminars_speakers_mm', '1=1')
 		);
 	}
@@ -207,7 +218,7 @@ class Tx_Seminars_Cli_MailNotifierTest extends Tx_Phpunit_TestCase {
 	public function addSpeakerSetsNumberOfSpeakersToOneForTheSeminarWithTheProvidedUid() {
 		$this->addSpeaker($this->createSeminarWithOrganizer());
 
-		$this->assertTrue(
+		self::assertTrue(
 			$this->testingFramework->existsRecord('tx_seminars_seminars', 'speakers = 1')
 		);
 	}
@@ -282,7 +293,7 @@ class Tx_Seminars_Cli_MailNotifierTest extends Tx_Phpunit_TestCase {
 
 		$this->fixture->setConfigurationPage();
 
-		$this->assertSame(
+		self::assertSame(
 			$pageUid,
 			tx_oelib_PageFinder::getInstance()->getPageUid()
 		);
@@ -304,7 +315,7 @@ class Tx_Seminars_Cli_MailNotifierTest extends Tx_Phpunit_TestCase {
 
 		$this->fixture->sendEventTakesPlaceReminders();
 
-		$this->assertSame(
+		self::assertSame(
 			1,
 			$this->mailer->getNumberOfSentEmails()
 		);
@@ -329,7 +340,7 @@ class Tx_Seminars_Cli_MailNotifierTest extends Tx_Phpunit_TestCase {
 
 		$this->fixture->sendEventTakesPlaceReminders();
 
-		$this->assertContains(
+		self::assertContains(
 			$subject,
 			$this->mailer->getFirstSentEmail()->getSubject()
 		);
@@ -354,7 +365,7 @@ class Tx_Seminars_Cli_MailNotifierTest extends Tx_Phpunit_TestCase {
 
 		$this->fixture->sendEventTakesPlaceReminders();
 
-		$this->assertContains(
+		self::assertContains(
 			substr($message, 0, strpos($message, '%') - 1),
 			$this->mailer->getFirstSentEmail()->getBody()
 		);
@@ -375,7 +386,7 @@ class Tx_Seminars_Cli_MailNotifierTest extends Tx_Phpunit_TestCase {
 
 		$this->fixture->sendEventTakesPlaceReminders();
 
-		$this->assertSame(
+		self::assertSame(
 			2,
 			$this->mailer->getNumberOfSentEmails()
 		);
@@ -398,7 +409,7 @@ class Tx_Seminars_Cli_MailNotifierTest extends Tx_Phpunit_TestCase {
 
 		$this->fixture->sendEventTakesPlaceReminders();
 
-		$this->assertSame(
+		self::assertSame(
 			2,
 			$this->mailer->getNumberOfSentEmails()
 		);
@@ -415,7 +426,7 @@ class Tx_Seminars_Cli_MailNotifierTest extends Tx_Phpunit_TestCase {
 
 		$this->fixture->sendEventTakesPlaceReminders();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$this->testingFramework->existsRecord(
 				'tx_seminars_seminars', 'event_takes_place_reminder_sent = 1'
 			)
@@ -434,7 +445,7 @@ class Tx_Seminars_Cli_MailNotifierTest extends Tx_Phpunit_TestCase {
 
 		$this->fixture->sendEventTakesPlaceReminders();
 
-		$this->assertNull(
+		self::assertNull(
 			$this->mailer->getFirstSentEmail()
 		);
 	}
@@ -450,7 +461,7 @@ class Tx_Seminars_Cli_MailNotifierTest extends Tx_Phpunit_TestCase {
 
 		$this->fixture->sendEventTakesPlaceReminders();
 
-		$this->assertNull(
+		self::assertNull(
 			$this->mailer->getFirstSentEmail()
 		);
 	}
@@ -466,7 +477,7 @@ class Tx_Seminars_Cli_MailNotifierTest extends Tx_Phpunit_TestCase {
 
 		$this->fixture->sendEventTakesPlaceReminders();
 
-		$this->assertNull(
+		self::assertNull(
 			$this->mailer->getFirstSentEmail()
 		);
 	}
@@ -483,7 +494,7 @@ class Tx_Seminars_Cli_MailNotifierTest extends Tx_Phpunit_TestCase {
 
 		$this->fixture->sendEventTakesPlaceReminders();
 
-		$this->assertNull(
+		self::assertNull(
 			$this->mailer->getFirstSentEmail()
 		);
 	}
@@ -499,7 +510,7 @@ class Tx_Seminars_Cli_MailNotifierTest extends Tx_Phpunit_TestCase {
 
 		$this->fixture->sendEventTakesPlaceReminders();
 
-		$this->assertNull(
+		self::assertNull(
 			$this->mailer->getFirstSentEmail()
 		);
 	}
@@ -515,7 +526,7 @@ class Tx_Seminars_Cli_MailNotifierTest extends Tx_Phpunit_TestCase {
 
 		$this->fixture->sendEventTakesPlaceReminders();
 
-		$this->assertNull(
+		self::assertNull(
 			$this->mailer->getFirstSentEmail()
 		);
 	}
@@ -536,7 +547,7 @@ class Tx_Seminars_Cli_MailNotifierTest extends Tx_Phpunit_TestCase {
 
 		$this->fixture->sendCancellationDeadlineReminders();
 
-		$this->assertSame(
+		self::assertSame(
 			1,
 			$this->mailer->getNumberOfSentEmails()
 		);
@@ -560,7 +571,7 @@ class Tx_Seminars_Cli_MailNotifierTest extends Tx_Phpunit_TestCase {
 
 		$this->fixture->sendCancellationDeadlineReminders();
 
-		$this->assertContains(
+		self::assertContains(
 			$subject,
 			$this->mailer->getFirstSentEmail()->getSubject()
 		);
@@ -585,7 +596,7 @@ class Tx_Seminars_Cli_MailNotifierTest extends Tx_Phpunit_TestCase {
 
 		$this->fixture->sendCancellationDeadlineReminders();
 
-		$this->assertContains(
+		self::assertContains(
 			substr($message, 0, strpos($message, '%') - 1),
 			$this->mailer->getFirstSentEmail()->getBody()
 		);
@@ -606,7 +617,7 @@ class Tx_Seminars_Cli_MailNotifierTest extends Tx_Phpunit_TestCase {
 
 		$this->fixture->sendCancellationDeadlineReminders();
 
-		$this->assertSame(
+		self::assertSame(
 			2,
 			$this->mailer->getNumberOfSentEmails()
 		);
@@ -634,7 +645,7 @@ class Tx_Seminars_Cli_MailNotifierTest extends Tx_Phpunit_TestCase {
 
 		$this->fixture->sendCancellationDeadlineReminders();
 
-		$this->assertSame(
+		self::assertSame(
 			2,
 			$this->mailer->getNumberOfSentEmails()
 		);
@@ -651,7 +662,7 @@ class Tx_Seminars_Cli_MailNotifierTest extends Tx_Phpunit_TestCase {
 
 		$this->fixture->sendCancellationDeadlineReminders();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$this->testingFramework->existsRecord('tx_seminars_seminars', 'cancelation_deadline_reminder_sent = 1')
 		);
 	}
@@ -668,7 +679,7 @@ class Tx_Seminars_Cli_MailNotifierTest extends Tx_Phpunit_TestCase {
 
 		$this->fixture->sendCancellationDeadlineReminders();
 
-		$this->assertNull(
+		self::assertNull(
 			$this->mailer->getFirstSentEmail()
 		);
 	}
@@ -684,7 +695,7 @@ class Tx_Seminars_Cli_MailNotifierTest extends Tx_Phpunit_TestCase {
 
 		$this->fixture->sendCancellationDeadlineReminders();
 
-		$this->assertNull(
+		self::assertNull(
 			$this->mailer->getFirstSentEmail()
 		);
 	}
@@ -700,7 +711,7 @@ class Tx_Seminars_Cli_MailNotifierTest extends Tx_Phpunit_TestCase {
 
 		$this->fixture->sendCancellationDeadlineReminders();
 
-		$this->assertNull(
+		self::assertNull(
 			$this->mailer->getFirstSentEmail()
 		);
 	}
@@ -717,7 +728,7 @@ class Tx_Seminars_Cli_MailNotifierTest extends Tx_Phpunit_TestCase {
 
 		$this->fixture->sendCancellationDeadlineReminders();
 
-		$this->assertNull(
+		self::assertNull(
 			$this->mailer->getFirstSentEmail()
 		);
 	}
@@ -733,7 +744,7 @@ class Tx_Seminars_Cli_MailNotifierTest extends Tx_Phpunit_TestCase {
 
 		$this->fixture->sendCancellationDeadlineReminders();
 
-		$this->assertNull(
+		self::assertNull(
 			$this->mailer->getFirstSentEmail()
 		);
 	}
@@ -749,7 +760,7 @@ class Tx_Seminars_Cli_MailNotifierTest extends Tx_Phpunit_TestCase {
 
 		$this->fixture->sendCancellationDeadlineReminders();
 
-		$this->assertNull(
+		self::assertNull(
 			$this->mailer->getFirstSentEmail()
 		);
 	}
@@ -772,7 +783,7 @@ class Tx_Seminars_Cli_MailNotifierTest extends Tx_Phpunit_TestCase {
 
 		$this->fixture->sendEventTakesPlaceReminders();
 
-		$this->assertArrayHasKey(
+		self::assertArrayHasKey(
 			'MrTest@example.com',
 			$this->mailer->getFirstSentEmail()->getTo()
 		);
@@ -789,7 +800,7 @@ class Tx_Seminars_Cli_MailNotifierTest extends Tx_Phpunit_TestCase {
 
 		$this->fixture->sendEventTakesPlaceReminders();
 
-		$this->assertArrayHasKey(
+		self::assertArrayHasKey(
 			'MrTest@example.com',
 			$this->mailer->getFirstSentEmail()->getFrom()
 		);
@@ -812,7 +823,7 @@ class Tx_Seminars_Cli_MailNotifierTest extends Tx_Phpunit_TestCase {
 
 		$this->fixture->sendEventTakesPlaceReminders();
 
-		$this->assertArrayHasKey(
+		self::assertArrayHasKey(
 			'MrTest@example.com',
 			$this->mailer->getFirstSentEmail()->getFrom()
 		);
@@ -836,7 +847,7 @@ class Tx_Seminars_Cli_MailNotifierTest extends Tx_Phpunit_TestCase {
 
 		$this->fixture->sendEventTakesPlaceReminders();
 
-		$this->assertSame(
+		self::assertSame(
 			array(),
 			$this->mailer->getFirstSentEmail()->getChildren()
 		);
@@ -862,7 +873,7 @@ class Tx_Seminars_Cli_MailNotifierTest extends Tx_Phpunit_TestCase {
 
 		$this->fixture->sendEventTakesPlaceReminders();
 
-		$this->assertSame(
+		self::assertSame(
 			'registrations.csv',
 			$this->getFirstEmailAttachment()->getFilename()
 		);
@@ -887,7 +898,7 @@ class Tx_Seminars_Cli_MailNotifierTest extends Tx_Phpunit_TestCase {
 
 		$this->fixture->sendEventTakesPlaceReminders();
 
-		$this->assertSame(
+		self::assertSame(
 			array(),
 			$this->mailer->getFirstSentEmail()->getChildren()
 		);
@@ -912,7 +923,7 @@ class Tx_Seminars_Cli_MailNotifierTest extends Tx_Phpunit_TestCase {
 
 		$this->fixture->sendEventTakesPlaceReminders();
 
-		$this->assertContains(
+		self::assertContains(
 			'test registration' . CRLF,
 			$this->getFirstEmailAttachment()->getBody()
 		);
@@ -940,7 +951,7 @@ class Tx_Seminars_Cli_MailNotifierTest extends Tx_Phpunit_TestCase {
 
 		$this->fixture->sendEventTakesPlaceReminders();
 
-		$this->assertContains(
+		self::assertContains(
 			'foo@bar.com',
 			$this->getFirstEmailAttachment()->getBody()
 		);
@@ -974,7 +985,7 @@ class Tx_Seminars_Cli_MailNotifierTest extends Tx_Phpunit_TestCase {
 
 		$this->fixture->sendEventTakesPlaceReminders();
 
-		$this->assertContains(
+		self::assertContains(
 			'on queue',
 			$this->getFirstEmailAttachment()->getBody()
 		);
@@ -1010,7 +1021,7 @@ class Tx_Seminars_Cli_MailNotifierTest extends Tx_Phpunit_TestCase {
 
 		$this->fixture->sendEventTakesPlaceReminders();
 
-		$this->assertNotContains(
+		self::assertNotContains(
 			'on queue',
 			$this->getFirstEmailAttachment()->getBody()
 		);
@@ -1033,7 +1044,7 @@ class Tx_Seminars_Cli_MailNotifierTest extends Tx_Phpunit_TestCase {
 
 		$this->fixture->sendEventTakesPlaceReminders();
 
-		$this->assertContains(
+		self::assertContains(
 			'test event',
 			$this->mailer->getFirstSentEmail()->getSubject()
 		);
@@ -1050,7 +1061,7 @@ class Tx_Seminars_Cli_MailNotifierTest extends Tx_Phpunit_TestCase {
 
 		$this->fixture->sendEventTakesPlaceReminders();
 
-		$this->assertContains(
+		self::assertContains(
 			'2',
 			$this->mailer->getFirstSentEmail()->getSubject()
 		);
@@ -1072,7 +1083,7 @@ class Tx_Seminars_Cli_MailNotifierTest extends Tx_Phpunit_TestCase {
 
 		$this->fixture->sendEventTakesPlaceReminders();
 
-		$this->assertContains(
+		self::assertContains(
 			'Mr. Test',
 			$this->mailer->getFirstSentEmail()->getBody()
 		);
@@ -1090,7 +1101,7 @@ class Tx_Seminars_Cli_MailNotifierTest extends Tx_Phpunit_TestCase {
 
 		$this->fixture->sendEventTakesPlaceReminders();
 
-		$this->assertContains(
+		self::assertContains(
 			'test event',
 			$this->mailer->getFirstSentEmail()->getBody()
 		);
@@ -1107,7 +1118,7 @@ class Tx_Seminars_Cli_MailNotifierTest extends Tx_Phpunit_TestCase {
 
 		$this->fixture->sendEventTakesPlaceReminders();
 
-		$this->assertContains(
+		self::assertContains(
 			(string) $uid,
 			$this->mailer->getFirstSentEmail()->getBody()
 		);
@@ -1124,7 +1135,7 @@ class Tx_Seminars_Cli_MailNotifierTest extends Tx_Phpunit_TestCase {
 
 		$this->fixture->sendEventTakesPlaceReminders();
 
-		$this->assertContains(
+		self::assertContains(
 			'2',
 			$this->mailer->getFirstSentEmail()->getBody()
 		);
@@ -1141,7 +1152,7 @@ class Tx_Seminars_Cli_MailNotifierTest extends Tx_Phpunit_TestCase {
 
 		$this->fixture->sendCancellationDeadlineReminders();
 
-		$this->assertContains(
+		self::assertContains(
 			strftime(
 				$this->configuration->getAsString('dateFormatYMD'),
 				$GLOBALS['SIM_EXEC_TIME'] + tx_oelib_Time::SECONDS_PER_DAY
@@ -1161,7 +1172,7 @@ class Tx_Seminars_Cli_MailNotifierTest extends Tx_Phpunit_TestCase {
 
 		$this->fixture->sendEventTakesPlaceReminders();
 
-		$this->assertContains(
+		self::assertContains(
 			'0',
 			$this->mailer->getFirstSentEmail()->getBody()
 		);
@@ -1185,67 +1196,9 @@ class Tx_Seminars_Cli_MailNotifierTest extends Tx_Phpunit_TestCase {
 
 		$this->fixture->sendEventTakesPlaceReminders();
 
-		$this->assertContains(
+		self::assertContains(
 			'1',
 			$this->mailer->getFirstSentEmail()->getBody()
-		);
-	}
-
-
-	/*
-	 * * used language
-	 */
-
-	/**
-	 * @test
-	 */
-	public function sendRemindersToOrganizersForCliBackendUserWithoutLanguageSendsReminderInDefaultLanguage() {
-		$this->addSpeaker($this->createSeminarWithOrganizer(array(
-			'begin_date' => $GLOBALS['SIM_EXEC_TIME'] + tx_oelib_Time::SECONDS_PER_DAY,
-			'cancelled' => tx_seminars_seminar::STATUS_PLANNED,
-		)));
-
-		$this->fixture->sendCancellationDeadlineReminders();
-
-		$GLOBALS['LANG']->includeLLFile(t3lib_extMgm::extPath('seminars') . 'locallang.xml');
-		$GLOBALS['LANG']->lang = '';
-		$subject = $GLOBALS['LANG']->getLL('email_cancelationDeadlineReminderSubject');
-		$subject = str_replace('%event', '', $subject);
-
-		$this->assertContains(
-			$subject,
-			$this->mailer->getFirstSentEmail()->getSubject()
-		);
-	}
-
-	/**
-	 * @test
-	 */
-	public function sendRemindersToOrganizersForCliBackendUserWithLanguageGermanSendsReminderInGerman() {
-		/** @var tx_seminars_Model_BackEndUser $user */
-		$user = tx_oelib_MapperRegistry::get('tx_oelib_Mapper_BackEndUser')->findByCliKey();
-		$this->testingFramework->changeRecord(
-			'be_users',
-			$user->getUid(),
-			array('lang' => 'de')
-		);
-		tx_oelib_MapperRegistry::purgeInstance();
-
-		$this->addSpeaker($this->createSeminarWithOrganizer(array(
-			'begin_date' => $GLOBALS['SIM_EXEC_TIME'] + tx_oelib_Time::SECONDS_PER_DAY,
-			'cancelled' => tx_seminars_seminar::STATUS_PLANNED,
-		)));
-
-		$this->fixture->sendCancellationDeadlineReminders();
-
-		$GLOBALS['LANG']->includeLLFile(t3lib_extMgm::extPath('seminars') . 'locallang.xml');
-		$GLOBALS['LANG']->lang = 'de';
-		$subject = $GLOBALS['LANG']->getLL('email_cancelationDeadlineReminderSubject');
-		$subject = str_replace('%event', '', $subject);
-
-		$this->assertContains(
-			$subject,
-			$this->mailer->getFirstSentEmail()->getSubject()
 		);
 	}
 }
