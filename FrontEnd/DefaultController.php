@@ -193,6 +193,21 @@ class tx_seminars_FrontEnd_DefaultController extends tx_oelib_templatehelper {
 	 */
 	private $singleViewHooksHaveBeenRetrieved = FALSE;
 
+
+	/**
+	 * hook objects for the single view
+	 *
+	 * @var tx_seminars_Interface_Hook_ListBuilder[]
+	 */
+	private $listBuilderHooks = array();
+
+	/**
+	 * whether the hooks in $this->listBuilderHooks have been retrieved
+	 *
+	 * @var bool
+	 */
+	private $listBuilderHooksHaveBeenRetrieved = FALSE;
+
 	/**
 	 * a link builder instance
 	 *
@@ -216,10 +231,12 @@ class tx_seminars_FrontEnd_DefaultController extends tx_oelib_templatehelper {
 	public function __destruct() {
 		unset(
 			$this->configGetter, $this->seminar, $this->registration, $this->feuser,
-			$this->listViewHooks, $this->singleViewHooks, $this->feuser, $this->linkBuilder
+			$this->listViewHooks, $this->singleViewHooks, $this->feuser, $this->linkBuilder,
+			$this->listBuilderHooks
 		);
 		$this->listViewHooksHaveBeenRetrieved = FALSE;
 		$this->singleViewHooksHaveBeenRetrieved = FALSE;
+		$this->listBuilderHooksHaveBeenRetrieved = FALSE;
 		parent::__destruct();
 	}
 
@@ -435,6 +452,39 @@ class tx_seminars_FrontEnd_DefaultController extends tx_oelib_templatehelper {
 		}
 
 		return $this->singleViewHooks;
+	}
+
+	/**
+	 * Gets the hooks for the pre list builder.
+	 *
+	 * @throws t3lib_exception
+	 *         if there are registered hook classes that do not implement the
+	 *         tx_seminars_Interface_Hook_ListBuilder interface
+	 *
+	 * @return tx_seminars_Interface_Hook_ListBuilder[]
+	 *         the hook objects, will be empty if no hooks have been set
+	 */
+	protected function getListBuilderHooks() {
+		if (!$this->listBuilderHooksHaveBeenRetrieved) {
+			$hookClasses = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['seminars']['listBuilder'];
+			if (is_array($hookClasses)) {
+				foreach ($hookClasses as $hookClass) {
+					$hookInstance = t3lib_div::getUserObj($hookClass);
+					if (!($hookInstance instanceof tx_seminars_Interface_Hook_ListBuilder)) {
+						throw new t3lib_exception(
+							'The class ' . get_class($hookInstance) . ' is used for the pre list builder hook, ' .
+							'but does not implement the tx_seminars_Interface_Hook_ListBuilder interface.',
+							1306432026
+						);
+					}
+					$this->listBuilderHooks[] = $hookInstance;
+				}
+			}
+
+			$this->listBuilderHooksHaveBeenRetrieved = TRUE;
+		}
+
+		return $this->listBuilderHooks;
 	}
 
 	/**
@@ -2419,6 +2469,10 @@ class tx_seminars_FrontEnd_DefaultController extends tx_oelib_templatehelper {
 		}
 
 		$this->filterByDate($builder);
+
+		foreach ($this->getListBuilderHooks() as $hook) {
+			$hook->modifySeminarBagBuilder($builder, $this->piVars);
+		}
 	}
 
 	/**
