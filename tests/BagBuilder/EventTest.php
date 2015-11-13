@@ -7198,4 +7198,44 @@ class tx_seminars_BagBuilder_EventTest extends tx_phpunit_testcase {
 			$bag->count()
 		);
 	}
+
+	/**
+	 * @test
+	 */
+	public function limitToTargetGroupsFindsOnlySingleEvents() {
+		$eventUid1 = $this->testingFramework->createRecord(
+			'tx_seminars_seminars',
+			array('object_type' => tx_seminars_Model_Event::TYPE_COMPLETE)
+		);
+		$targetGroupUid1 = $this->testingFramework->createRecord(
+			'tx_seminars_target_groups'
+		);
+		$this->testingFramework->createRelation(
+			'tx_seminars_seminars_target_groups_mm', $eventUid1, $targetGroupUid1
+		);
+
+		$eventUid2 = $this->testingFramework->createRecord(
+			'tx_seminars_seminars',
+			array('object_type' => tx_seminars_Model_Event::TYPE_DATE)
+		);
+		$targetGroupUid2 = $this->testingFramework->createRecord(
+			'tx_seminars_target_groups'
+		);
+		$this->testingFramework->createRelation(
+			'tx_seminars_seminars_target_groups_mm', $eventUid2, $targetGroupUid2
+		);
+
+		$this->fixture->limitToTargetGroups(array($targetGroupUid1, $targetGroupUid2));
+		$bag = $this->fixture->build();
+
+		self::assertSame(
+			1,
+			$bag->count()
+		);
+		self::assertSame(
+			$eventUid1,
+			$bag->current()->getUid()
+		);
+	}
+
 }

@@ -1279,6 +1279,36 @@ class tx_seminars_BagBuilder_Event extends tx_seminars_BagBuilder_Abstract {
 				'topic IN (' . $foundUids . ')))';
 		}
 	}
+
+	/**
+	 * @param array $targetGroups
+	 *
+	 * @return void
+	 */
+	public function limitToTargetGroups($targetGroups) {
+		if (empty($targetGroups)) {
+			unset($this->whereClauseParts['target_groups']);
+			return;
+		}
+
+		$safeUids = implode(
+			',', $GLOBALS['TYPO3_DB']->cleanIntArray($targetGroups)
+		);
+
+		$this->whereClauseParts['target_groups'] =
+			'EXISTS (' .
+			'SELECT * FROM tx_seminars_seminars_target_groups_mm WHERE ' .
+			'(' .
+			'	(tx_seminars_seminars.object_type!=' . tx_seminars_Model_Event::TYPE_DATE .
+			' 		AND tx_seminars_seminars_target_groups_mm.uid_local=tx_seminars_seminars.uid)' .
+			'	OR ' .
+			'	(tx_seminars_seminars.object_type=' . tx_seminars_Model_Event::TYPE_DATE .
+			' 		AND tx_seminars_seminars_target_groups_mm.uid_local=tx_seminars_seminars.topic)' .
+			')' .
+			'AND tx_seminars_seminars_target_groups_mm.uid_foreign IN(' . $safeUids . ')' .
+			')';
+
+	}
 }
 
 if (defined('TYPO3_MODE') && $GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['XCLASS']['ext/seminars/BagBuilder/Event.php']) {

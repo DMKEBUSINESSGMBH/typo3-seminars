@@ -2410,6 +2410,14 @@ class tx_seminars_FrontEnd_DefaultController extends tx_oelib_templatehelper {
 			$builder->limitToMaximumPrice($this->piVars['price_to']);
 		}
 
+		if (is_array($this->piVars['target_groups'])) {
+			$builder->limitToTargetGroups(
+				tx_seminars_FrontEnd_SelectorWidget::removeDummyOptionFromFormData(
+					$this->piVars['target_groups']
+				)
+			);
+		}
+
 		$this->filterByDate($builder);
 	}
 
