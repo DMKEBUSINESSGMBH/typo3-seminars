@@ -6,6 +6,7 @@ Bug fixes:
 - [#5402] Add link to bug tracker
 - [#5400] Allow more than 22 pages in the flexforms
 - [#5321] Update .htaccess to be Apache 2.4 compatible
+- [#5405] Migrate formular engine from ameos_formidable to mkforms
 
 Cleanup:
 
