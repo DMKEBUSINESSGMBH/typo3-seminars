@@ -1,26 +1,16 @@
 <?php
-/***************************************************************
-* Copyright notice
-*
-* (c) 2008-2013 Niels Pardon (mail@niels-pardon.de)
-* All rights reserved
-*
-* This script is part of the TYPO3 project. The TYPO3 project is
-* free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* The GNU General Public License can be found at
-* http://www.gnu.org/copyleft/gpl.html.
-*
-* This script is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* This copyright notice MUST APPEAR in all copies of the script!
-***************************************************************/
+/*
+ * This file is part of the TYPO3 CMS project.
+ *
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
+ *
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
+ *
+ * The TYPO3 project - inspiring people to share!
+ */
 
 /**
  * This class represents a list of registrations for the front end.
@@ -45,7 +35,7 @@ class tx_seminars_FrontEnd_RegistrationsList extends tx_seminars_FrontEnd_Abstra
 	 *        TypoScript configuration for the plugin, may be empty
 	 * @param string $whatToDisplay
 	 *        a string selecting the flavor of the list view, either "list_registrations" or "list_vip_registrations"
-	 * @param integer $seminarUid
+	 * @param int $seminarUid
 	 *        UID of the seminar of which we want to list the registrations, invalid UIDs will be handled later
 	 * @param tslib_cObj $cObj
 	 *        the parent cObj, needed for the flexforms
@@ -80,14 +70,12 @@ class tx_seminars_FrontEnd_RegistrationsList extends tx_seminars_FrontEnd_Abstra
 	/**
 	 * Creates a seminar in $this->seminar.
 	 *
-	 * @param integer $seminarUid an event UID, invalid UIDs will be handled later
+	 * @param int $seminarUid an event UID, invalid UIDs will be handled later
 	 *
 	 * @return void
 	 */
 	private function createSeminar($seminarUid) {
-		$this->seminar = t3lib_div::makeInstance(
-			'tx_seminars_seminar', $seminarUid
-		);
+		$this->seminar = t3lib_div::makeInstance('tx_seminars_seminar', $seminarUid);
 	}
 
 	/**
@@ -219,9 +207,8 @@ class tx_seminars_FrontEnd_RegistrationsList extends tx_seminars_FrontEnd_Abstra
 	 * @return tx_seminars_BagBuilder_Registration the bag builder
 	 */
 	private function createRegistrationBagBuilder() {
-		$builder = t3lib_div::makeInstance(
-			'tx_seminars_BagBuilder_Registration'
-		);
+		/** @var tx_seminars_BagBuilder_Registration $builder */
+		$builder = t3lib_div::makeInstance('tx_seminars_BagBuilder_Registration');
 		$builder->limitToEvent($this->seminar->getUid());
 		$builder->limitToExistingUsers();
 		$builder->setOrderBy('crdate');
@@ -235,6 +222,7 @@ class tx_seminars_FrontEnd_RegistrationsList extends tx_seminars_FrontEnd_Abstra
 	 * @return string the table header HTML, will not be empty
 	 */
 	private function createTableHeader() {
+		/** @var string[] $labelKeys */
 		$labelKeys = array();
 		foreach ($this->getFrontEndUserFields() as $field) {
 			$labelKeys[] = 'label_' . $field;
@@ -272,7 +260,9 @@ class tx_seminars_FrontEnd_RegistrationsList extends tx_seminars_FrontEnd_Abstra
 	private function createTableBody(tx_seminars_Bag_Registration $registrations) {
 		$tableBody = '';
 
+		/** @var tx_seminars_registration $registration */
 		foreach ($registrations as $registration) {
+			/** @var string[] $cellContents */
 			$cellContents = array();
 			foreach ($this->getFrontEndUserFields() as $field) {
 				$cellContents[] = $registration->getUserData($field);
@@ -303,7 +293,7 @@ class tx_seminars_FrontEnd_RegistrationsList extends tx_seminars_FrontEnd_Abstra
 	 * Gets the keys of the front-end user fields that should be displayed in
 	 * the list.
 	 *
-	 * @return array keys of the front-end user fields to display, might be empty
+	 * @return string[] keys of the front-end user fields to display, might be empty
 	 */
 	private function getFrontEndUserFields() {
 		return t3lib_div::trimExplode(
@@ -319,7 +309,7 @@ class tx_seminars_FrontEnd_RegistrationsList extends tx_seminars_FrontEnd_Abstra
 	 * Gets the keys of the registration fields that should be displayed in
 	 * the list.
 	 *
-	 * @return array keys of the registration fields to display, might be empty
+	 * @return string[] keys of the registration fields to display, might be empty
 	 */
 	private function getRegistrationFields() {
 		return t3lib_div::trimExplode(

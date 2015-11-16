@@ -1,26 +1,16 @@
 <?php
-/***************************************************************
-* Copyright notice
-*
-* (c) 2008-2014 Bernd Schönbach <bernd@oliverklee.de>
-* All rights reserved
-*
-* This script is part of the TYPO3 project. The TYPO3 project is
-* free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* The GNU General Public License can be found at
-* http://www.gnu.org/copyleft/gpl.html.
-*
-* This script is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* This copyright notice MUST APPEAR in all copies of the script!
-***************************************************************/
+/*
+ * This file is part of the TYPO3 CMS project.
+ *
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
+ *
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
+ *
+ * The TYPO3 project - inspiring people to share!
+ */
 
 /**
  * Test case.
@@ -37,7 +27,7 @@ class tx_seminars_FrontEnd_RequirementsListTest extends tx_phpunit_testcase {
 	protected $fixture = NULL;
 
 	/**
-	 * @var integer the UID of a seminar to which the plugin relates
+	 * @var int the UID of a seminar to which the plugin relates
 	 */
 	protected $seminarUid = 0;
 
@@ -47,7 +37,7 @@ class tx_seminars_FrontEnd_RequirementsListTest extends tx_phpunit_testcase {
 	protected $testingFramework = NULL;
 
 	/**
-	 * @var integer
+	 * @var int
 	 */
 	protected $systemFolderPid = 0;
 
@@ -75,7 +65,6 @@ class tx_seminars_FrontEnd_RequirementsListTest extends tx_phpunit_testcase {
 		$this->testingFramework->cleanUp();
 
 		tx_seminars_registrationmanager::purgeInstance();
-		unset($this->fixture, $this->testingFramework);
 	}
 
 
@@ -116,7 +105,7 @@ class tx_seminars_FrontEnd_RequirementsListTest extends tx_phpunit_testcase {
 		);
 		$this->fixture->setEvent(new tx_seminars_seminar($this->seminarUid));
 
-		$this->assertContains(
+		self::assertContains(
 			'required &amp; foo',
 			$this->fixture->render()
 		);
@@ -147,7 +136,7 @@ class tx_seminars_FrontEnd_RequirementsListTest extends tx_phpunit_testcase {
 		);
 		$this->fixture->setEvent(new tx_seminars_seminar($this->seminarUid));
 
-		$this->assertRegExp(
+		self::assertRegExp(
 			'/<a href=.*' . $requiredEvent . '.*>required_foo<\/a>/',
 			$this->fixture->render()
 		);
@@ -185,7 +174,7 @@ class tx_seminars_FrontEnd_RequirementsListTest extends tx_phpunit_testcase {
 		);
 		$this->fixture->setEvent(new tx_seminars_seminar($this->seminarUid));
 
-		$this->assertRegExp(
+		self::assertRegExp(
 			'/required_foo.*required_bar/s',
 			$this->fixture->render()
 		);
@@ -260,7 +249,7 @@ class tx_seminars_FrontEnd_RequirementsListTest extends tx_phpunit_testcase {
 		$this->fixture->setEvent(new tx_seminars_seminar($this->seminarUid));
 		$this->fixture->limitToMissingRegistrations();
 
-		$this->assertNotContains(
+		self::assertNotContains(
 			'required_bar',
 			$this->fixture->render()
 		);

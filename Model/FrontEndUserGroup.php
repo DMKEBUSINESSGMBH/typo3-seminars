@@ -1,26 +1,16 @@
 <?php
-/***************************************************************
-* Copyright notice
-*
-* (c) 2009-2013 Bernd Schönbach <bernd@oliverklee.de>
-* All rights reserved
-*
-* This script is part of the TYPO3 project. The TYPO3 project is
-* free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* The GNU General Public License can be found at
-* http://www.gnu.org/copyleft/gpl.html.
-*
-* This script is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* This copyright notice MUST APPEAR in all copies of the script!
-***************************************************************/
+/*
+ * This file is part of the TYPO3 CMS project.
+ *
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
+ *
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
+ *
+ * The TYPO3 project - inspiring people to share!
+ */
 
 /**
  * This class represents a front-end user group.
@@ -34,17 +24,17 @@
  */
 class tx_seminars_Model_FrontEndUserGroup extends tx_oelib_Model_FrontEndUserGroup implements tx_seminars_Interface_Titled {
 	/**
-	 * @var integer the publish setting to immediately publish all events edited
+	 * @var int the publish setting to immediately publish all events edited
 	 */
 	const PUBLISH_IMMEDIATELY = 0;
 
 	/**
-	 * @var integer the publish setting for hiding only new events created
+	 * @var int the publish setting for hiding only new events created
 	 */
 	const PUBLISH_HIDE_NEW = 1;
 
 	/**
-	 * @var integer the publish setting for hiding newly created and edited
+	 * @var int the publish setting for hiding newly created and edited
 	 *              events
 	 */
 	const PUBLISH_HIDE_EDITED = 2;
@@ -54,7 +44,7 @@ class tx_seminars_Model_FrontEndUserGroup extends tx_oelib_Model_FrontEndUserGro
 	 *
 	 * If no publish settings have been set, PUBLISH_IMMEDIATELY is returned.
 	 *
-	 * @return integer the class constants PUBLISH_IMMEDIATELY, PUBLISH_HIDE_NEW
+	 * @return int the class constants PUBLISH_IMMEDIATELY, PUBLISH_HIDE_NEW
 	 *                 or PUBLISH_HIDE_EDITED
 	 */
 	public function getPublishSetting() {
@@ -65,7 +55,7 @@ class tx_seminars_Model_FrontEndUserGroup extends tx_oelib_Model_FrontEndUserGro
 	 * Returns the PID where to store the auxiliary records created by this
 	 * front-end user group.
 	 *
-	 * @return integer the PID where to store the auxiliary records created by
+	 * @return int the PID where to store the auxiliary records created by
 	 *                 this front-end user group, will be 0 if no PID is set
 	 */
 	public function getAuxiliaryRecordsPid() {
@@ -75,7 +65,7 @@ class tx_seminars_Model_FrontEndUserGroup extends tx_oelib_Model_FrontEndUserGro
 	/**
 	 * Returns whether this user group has a PID for auxiliary records set.
 	 *
-	 * @return boolean TRUE if this user group has PID for auxiliary records set,
+	 * @return bool TRUE if this user group has PID for auxiliary records set,
 	 *                 FALSE otherwise
 	 */
 	public function hasAuxiliaryRecordsPid() {
@@ -85,7 +75,7 @@ class tx_seminars_Model_FrontEndUserGroup extends tx_oelib_Model_FrontEndUserGro
 	/**
 	 * Checks whether this user group has a reviewer set.
 	 *
-	 * @return boolean TRUE if a reviewer is set, FALSE otherwise
+	 * @return bool TRUE if a reviewer is set, FALSE otherwise
 	 */
 	public function hasReviewer() {
 		return $this->getReviewer() !== NULL;
@@ -104,7 +94,7 @@ class tx_seminars_Model_FrontEndUserGroup extends tx_oelib_Model_FrontEndUserGro
 	/**
 	 * Checks whether this user group has a storage PID for event records set.
 	 *
-	 * @return boolean TRUE if this user group has a event storage PID, FALSE
+	 * @return bool TRUE if this user group has a event storage PID, FALSE
 	 *                  otherwise
 	 */
 	public function hasEventRecordPid() {
@@ -114,7 +104,7 @@ class tx_seminars_Model_FrontEndUserGroup extends tx_oelib_Model_FrontEndUserGro
 	/**
 	 * Gets this user group's storage PID for event records.
 	 *
-	 * @return integer the PID for the storage of event records, will be zero
+	 * @return int the PID for the storage of event records, will be zero
 	 *                 if no PID has been set
 	 */
 	public function getEventRecordPid() {
@@ -135,7 +125,7 @@ class tx_seminars_Model_FrontEndUserGroup extends tx_oelib_Model_FrontEndUserGro
 	/**
 	 * Checks whether this user group has default categories assigned.
 	 *
-	 * @return boolean TRUE if this group has at least one default category,
+	 * @return bool TRUE if this group has at least one default category,
 	 *                 FALSE otherwise
 	 */
 	public function hasDefaultCategories() {
@@ -155,7 +145,7 @@ class tx_seminars_Model_FrontEndUserGroup extends tx_oelib_Model_FrontEndUserGro
 	/**
 	 * Checks whether this user group has a default organizer set.
 	 *
-	 * @return boolean TRUE if this group has a default organizer, FALSE
+	 * @return bool TRUE if this group has a default organizer, FALSE
 	 *                 otherwise
 	 */
 	public function hasDefaultOrganizer() {

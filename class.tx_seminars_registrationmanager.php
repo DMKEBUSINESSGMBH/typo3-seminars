@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * This file is part of the TYPO3 CMS project.
  *
  * It is free software; you can redistribute it and/or modify it under
@@ -40,7 +40,7 @@ class tx_seminars_registrationmanager extends tx_oelib_templatehelper {
 	public $extKey = 'seminars';
 
 	/**
-	 * @var tx_seminars_registrationmanager the Singleton instance
+	 * @var tx_seminars_registrationmanager
 	 */
 	private static $instance = NULL;
 
@@ -50,7 +50,7 @@ class tx_seminars_registrationmanager extends tx_oelib_templatehelper {
 	private $registration = NULL;
 
 	/**
-	 * @var boolean whether we have already initialized the templates
+	 * @var bool whether we have already initialized the templates
 	 *              (which is done lazily)
 	 */
 	private $isTemplateInitialized = FALSE;
@@ -65,22 +65,22 @@ class tx_seminars_registrationmanager extends tx_oelib_templatehelper {
 	/**
 	 * whether the hooks in $this->hooks have been retrieved
 	 *
-	 * @var boolean
+	 * @var bool
 	 */
 	private $hooksHaveBeenRetrieved = FALSE;
 
 	/**
-	 * @var integer use text format for e-mails to attendees
+	 * @var int use text format for e-mails to attendees
 	 */
 	const SEND_TEXT_MAIL = 0;
 
 	/**
-	 * @var integer use HTML format for e-mails to attendees
+	 * @var int use HTML format for e-mails to attendees
 	 */
 	const SEND_HTML_MAIL = 1;
 
 	/**
-	 * @var integer use user-specific format for e-mails to attendees
+	 * @var int use user-specific format for e-mails to attendees
 	 */
 	const SEND_USER_MAIL = 2;
 
@@ -146,7 +146,7 @@ class tx_seminars_registrationmanager extends tx_oelib_templatehelper {
 	 * @param tx_seminars_seminar $event
 	 *        am event for which we'll check if it is possible to register
 	 *
-	 * @return boolean TRUE if it is okay to register, FALSE otherwise
+	 * @return bool TRUE if it is okay to register, FALSE otherwise
 	 */
 	public function canRegisterIfLoggedIn(tx_seminars_seminar $event) {
 		if (!$event->canSomebodyRegister()) {
@@ -223,7 +223,7 @@ class tx_seminars_registrationmanager extends tx_oelib_templatehelper {
 	 *
 	 * @param tx_seminars_seminar $seminar a seminar for which we'll check if it is possible to register
 	 *
-	 * @return boolean TRUE if the user could register for the given event, FALSE otherwise
+	 * @return bool TRUE if the user could register for the given event, FALSE otherwise
 	 */
 	private function couldThisUserRegister(tx_seminars_seminar $seminar) {
 		// A user can register either if the event allows multiple registrations
@@ -343,9 +343,9 @@ class tx_seminars_registrationmanager extends tx_oelib_templatehelper {
 	 *
 	 * This function can be called even if no seminar object exists.
 	 *
-	 * @param string $seminarUid a given seminar UID (needs not necessarily be an integer)
+	 * @param string $seminarUid a given seminar UID (needs not necessarily be an int)
 	 *
-	 * @return boolean TRUE the UID is valid, FALSE otherwise
+	 * @return bool TRUE the UID is valid, FALSE otherwise
 	 */
 	public function existsSeminar($seminarUid) {
 		return tx_seminars_OldModel_Abstract::recordExists($seminarUid, 'tx_seminars_seminars');
@@ -354,22 +354,25 @@ class tx_seminars_registrationmanager extends tx_oelib_templatehelper {
 	/**
 	 * Checks whether a seminar UID is valid, ie., a non-deleted and non-hidden seminar with the given number exists.
 	 *
-	 * This function can be called even if no seminar object exists.
+	 * This method can be called even if no seminar object exists.
 	 *
-	 * @param string $seminarUid a given seminar UID (needs not necessarily be an integer)
+	 * For invalid or inexistent UIDs, this method also send a 404 HTTP header.
 	 *
-	 * @return string empty string if the UID is valid, else a localized error message
+	 * @param string $seminarUid a given seminar UID (needs not necessarily be an int)
+	 *
+	 * @return string an empty string if the UID is valid, otherwise a localized error message
 	 */
 	public function existsSeminarMessage($seminarUid) {
-		/** This is empty as long as no error has occured. */
-		$message = '';
-
-		if (!tx_seminars_OldModel_Abstract::recordExists($seminarUid, 'tx_seminars_seminars')) {
-			$message = $this->translate('message_wrongSeminarNumber');
+		if ($seminarUid <= 0) {
 			tx_oelib_headerProxyFactory::getInstance()->getHeaderProxy()->addHeader('Status: 404 Not Found');
+			return $this->translate('message_missingSeminarNumber');
+		}
+		if (!tx_seminars_OldModel_Abstract::recordExists($seminarUid, 'tx_seminars_seminars')) {
+			tx_oelib_headerProxyFactory::getInstance()->getHeaderProxy()->addHeader('Status: 404 Not Found');
+			return $this->translate('message_wrongSeminarNumber');
 		}
 
-		return $message;
+		return '';
 	}
 
 	/**
@@ -379,10 +382,10 @@ class tx_seminars_registrationmanager extends tx_oelib_templatehelper {
 	 *
 	 * @param tx_seminars_seminar $seminar a seminar for which we'll check if it is possible to register
 	 *
-	 * @return boolean TRUE if user is already registered, FALSE otherwise.
+	 * @return bool TRUE if user is already registered, FALSE otherwise.
 	 */
 	public function isUserRegistered(tx_seminars_seminar $seminar) {
-		return $seminar->isUserRegistered($this->getFeUserUid());
+		return $seminar->isUserRegistered($this->getLoggedInFrontEndUserUid());
 	}
 
 	/**
@@ -395,7 +398,7 @@ class tx_seminars_registrationmanager extends tx_oelib_templatehelper {
 	 * @return string empty string if everything is OK, else a localized error message
 	 */
 	public function isUserRegisteredMessage(tx_seminars_seminar $seminar) {
-		return $seminar->isUserRegisteredMessage($this->getFeUserUid());
+		return $seminar->isUserRegisteredMessage($this->getLoggedInFrontEndUserUid());
 	}
 
 	/**
@@ -405,10 +408,10 @@ class tx_seminars_registrationmanager extends tx_oelib_templatehelper {
 	 *
 	 * @param tx_seminars_seminar $seminar a seminar for which we'll check whether the user already is blocked by an other seminars
 	 *
-	 * @return boolean TRUE if user is blocked by another registration, FALSE otherwise
+	 * @return bool TRUE if user is blocked by another registration, FALSE otherwise
 	 */
 	private function isUserBlocked(tx_seminars_seminar $seminar) {
-		return $seminar->isUserBlocked($this->getFeUserUid());
+		return $seminar->isUserBlocked($this->getLoggedInFrontEndUserUid());
 	}
 
 	/**
@@ -421,7 +424,7 @@ class tx_seminars_registrationmanager extends tx_oelib_templatehelper {
 	 * @param tx_seminars_seminar $seminar the seminar object (that's the seminar we would like to register for)
 	 * @param array $registrationData associative array with the registration data the user has just entered
 	 *
-	 * @return boolean TRUE if the data is okay, FALSE otherwise
+	 * @return bool TRUE if the data is okay, FALSE otherwise
 	 */
 	public function canCreateRegistration(tx_seminars_seminar $seminar, array $registrationData) {
 		return $this->canRegisterSeats($seminar, $registrationData['seats']);
@@ -432,9 +435,9 @@ class tx_seminars_registrationmanager extends tx_oelib_templatehelper {
 	 * created, ie. an actual number is given and there are at least that many vacancies.
 	 *
 	 * @param tx_seminars_seminar $seminar the seminar object (that's the seminar we would like to register for)
-	 * @param integer|string $numberOfSeats the number of seats to check (should be an integer, but we can't be sure of this)
+	 * @param int|string $numberOfSeats the number of seats to check (should be an integer, but we can't be sure of this)
 	 *
-	 * @return boolean TRUE if there are at least that many vacancies, FALSE otherwise
+	 * @return bool TRUE if there are at least that many vacancies, FALSE otherwise
 	 */
 	public function canRegisterSeats(tx_seminars_seminar $seminar, $numberOfSeats) {
 		$numberOfSeats = trim($numberOfSeats);
@@ -445,7 +448,7 @@ class tx_seminars_registrationmanager extends tx_oelib_templatehelper {
 			$numberOfSeats = '1';
 		}
 
-		$numberOfSeatsInt = intval($numberOfSeats);
+		$numberOfSeatsInt = (int)$numberOfSeats;
 
 		// Check whether we have a valid number
 		if ($numberOfSeats == strval($numberOfSeatsInt)) {
@@ -476,7 +479,7 @@ class tx_seminars_registrationmanager extends tx_oelib_templatehelper {
 	 */
 	public function createRegistration(tx_seminars_seminar $seminar, array $formData, tslib_pibase $plugin) {
 		$this->registration = t3lib_div::makeInstance('tx_seminars_registration', $plugin->cObj);
-		$this->registration->setRegistrationData($seminar, $this->getFeUserUid(), $formData);
+		$this->registration->setRegistrationData($seminar, $this->getLoggedInFrontEndUserUid(), $formData);
 		$this->registration->commitToDb();
 		$seminar->calculateStatistics();
 
@@ -487,7 +490,10 @@ class tx_seminars_registrationmanager extends tx_oelib_templatehelper {
 			}
 		}
 
-		return tx_oelib_MapperRegistry::get('tx_seminars_Mapper_Registration')->find($this->registration->getUid());
+		/** @var tx_seminars_Mapper_Registration $mapper */
+		$mapper = tx_oelib_MapperRegistry::get('tx_seminars_Mapper_Registration');
+
+		return $mapper->find($this->registration->getUid());
 	}
 
 	/**
@@ -531,14 +537,14 @@ class tx_seminars_registrationmanager extends tx_oelib_templatehelper {
 	protected function setRegistrationData(tx_seminars_Model_Registration $registration, array $formData) {
 		$event = $registration->getEvent();
 
-		$seats = isset($formData['seats']) ? intval($formData['seats']) : 1;
+		$seats = isset($formData['seats']) ? (int)$formData['seats'] : 1;
 		if ($seats < 1) {
 			$seats = 1;
 		}
 		$registration->setSeats($seats);
 
 		$registeredThemselves = isset($formData['registered_themselves'])
-			? ((boolean) $formData['registered_themselves']) : FALSE;
+			? (bool)$formData['registered_themselves'] : FALSE;
 		$registration->setRegisteredThemselves($registeredThemselves);
 
 		$availablePrices = $event->getAvailablePrices();
@@ -555,7 +561,7 @@ class tx_seminars_registrationmanager extends tx_oelib_templatehelper {
 		$attendeesNames = isset($formData['attendees_names']) ? strip_tags($formData['attendees_names']) : '';
 		$registration->setAttendeesNames($attendeesNames);
 
-		$kids = isset($formData['kids']) ? max(0, intval($formData['kids'])) : 0;
+		$kids = isset($formData['kids']) ? max(0, (int)$formData['kids']) : 0;
 		$registration->setKids($kids);
 
 		$paymentMethod = NULL;
@@ -566,10 +572,12 @@ class tx_seminars_registrationmanager extends tx_oelib_templatehelper {
 					$paymentMethod = $availablePaymentMethods->first();
 				} else {
 					$paymentMethodUid = isset($formData['method_of_payment'])
-						? max(0, intval($formData['method_of_payment'])) : 0;
+						? max(0, (int)$formData['method_of_payment']) : 0;
 					if (($paymentMethodUid > 0) && $availablePaymentMethods->hasUid($paymentMethodUid)) {
-						$paymentMethod = tx_oelib_MapperRegistry::get('tx_seminars_Mapper_PaymentMethod')
-							->find($paymentMethodUid);
+						/** @var tx_seminars_Mapper_PaymentMethod $mapper */
+						$mapper = tx_oelib_MapperRegistry::get('tx_seminars_Mapper_PaymentMethod');
+						/** @var tx_seminars_Model_PaymentMethod $paymentMethod */
+						$paymentMethod = $mapper->find($paymentMethodUid);
 					}
 				}
 			}
@@ -595,7 +603,7 @@ class tx_seminars_registrationmanager extends tx_oelib_templatehelper {
 			&& (($formData['gender'] === $validGenderMale) || ($formData['gender'] === $validGenderFemale)
 			)
 		) {
-			$gender = intval($formData['gender']);
+			$gender = (int)$formData['gender'];
 		} else {
 			$gender = tx_oelib_Model_FrontEndUser::GENDER_UNKNOWN;
 		}
@@ -628,7 +636,7 @@ class tx_seminars_registrationmanager extends tx_oelib_templatehelper {
 	 * Removes the given registration (if it exists and if it belongs to the
 	 * currently logged-in FE user).
 	 *
-	 * @param integer $uid the UID of the registration that should be removed
+	 * @param int $uid the UID of the registration that should be removed
 	 * @param tslib_pibase $plugin a live plugin object
 	 *
 	 * @return void
@@ -644,7 +652,7 @@ class tx_seminars_registrationmanager extends tx_oelib_templatehelper {
 				'*', 'tx_seminars_attendances', 'uid = ' . $uid . tx_oelib_db::enableFields('tx_seminars_attendances')
 			)
 		);
-		if ($this->registration->getUser() !== $this->getFeUserUid()) {
+		if ($this->registration->getUser() !== $this->getLoggedInFrontEndUserUid()) {
 			return;
 		}
 
@@ -684,13 +692,14 @@ class tx_seminars_registrationmanager extends tx_oelib_templatehelper {
 
 		$vacancies = $seminar->getVacancies();
 
-		/** @var $registrationBagBuilder tx_seminars_BagBuilder_Registration */
+		/** @var tx_seminars_BagBuilder_Registration $registrationBagBuilder */
 		$registrationBagBuilder = t3lib_div::makeInstance('tx_seminars_BagBuilder_Registration');
 		$registrationBagBuilder->limitToEvent($seminar->getUid());
 		$registrationBagBuilder->limitToOnQueue();
 		$registrationBagBuilder->limitToSeatsAtMost($vacancies);
 
 		$bag = $registrationBagBuilder->build();
+		/** @var tx_seminars_registration $registration */
 		foreach ($bag as $registration) {
 			if ($vacancies <= 0) {
 				break;
@@ -726,7 +735,7 @@ class tx_seminars_registrationmanager extends tx_oelib_templatehelper {
 	 *
 	 * @param tx_seminars_seminar $event the event to check
 	 *
-	 * @return boolean TRUE if the user fulfills all requirements, FALSE otherwise
+	 * @return bool TRUE if the user fulfills all requirements, FALSE otherwise
 	 */
 	public function userFulfillsRequirements(tx_seminars_seminar $event) {
 		if (!$event->hasRequirements()) {
@@ -746,10 +755,10 @@ class tx_seminars_registrationmanager extends tx_oelib_templatehelper {
 	 * @return tx_seminars_Bag_Event the event topics which still need the user's registration, may be empty
 	 */
 	public function getMissingRequiredTopics(tx_seminars_seminar $event) {
-		/** @var $builder tx_seminars_BagBuilder_Event */
+		/** @var tx_seminars_BagBuilder_Event $builder */
 		$builder = t3lib_div::makeInstance('tx_seminars_BagBuilder_Event');
 		$builder->limitToRequiredEventTopics($event->getTopicUid());
-		$builder->limitToTopicsWithoutRegistrationByUser($this->getFeUserUid());
+		$builder->limitToTopicsWithoutRegistrationByUser($this->getLoggedInFrontEndUserUid());
 
 		return $builder->build();
 	}
@@ -812,8 +821,10 @@ class tx_seminars_registrationmanager extends tx_oelib_templatehelper {
 
 		$eMailNotification->setMessage($this->buildEmailContent($oldRegistration, $plugin, $helloSubjectPrefix));
 
+		/** @var tx_seminars_Mapper_Registration $mapper */
+		$mapper = tx_oelib_MapperRegistry::get('tx_seminars_Mapper_Registration');
 		/** @var $registration tx_seminars_Model_Registration */
-		$registration = tx_oelib_MapperRegistry::get('tx_seminars_Mapper_Registration')->find($oldRegistration->getUid());
+		$registration = $mapper->find($oldRegistration->getUid());
 		foreach ($this->getHooks() as $hook) {
 			if (method_exists($hook, 'modifyThankYouEmail')) {
 				$hook->modifyThankYouEmail($eMailNotification, $registration);
@@ -857,7 +868,7 @@ class tx_seminars_registrationmanager extends tx_oelib_templatehelper {
 		$eMailNotification = t3lib_div::makeInstance('tx_oelib_Mail');
 		$eMailNotification->setSender($event->getFirstOrganizer());
 
-		/** @var $organizer tx_seminars_OldModel_Organizer */
+		/** @var tx_seminars_OldModel_Organizer $organizer */
 		foreach ($organizers as $organizer) {
 			$eMailNotification->addRecipient($organizer);
 		}
@@ -994,6 +1005,7 @@ class tx_seminars_registrationmanager extends tx_oelib_templatehelper {
 			$event->getTitleAndDate('-')
 		));
 
+		/** @var tx_seminars_OldModel_Organizer $organizer */
 		foreach ($event->getOrganizerBag() as $organizer) {
 			$eMail->addRecipient($organizer);
 		}
@@ -1087,7 +1099,7 @@ class tx_seminars_registrationmanager extends tx_oelib_templatehelper {
 	 *        - confirmationOnRegistrationForQueue
 	 *        - confirmationOnQueueUpdate
 	 *        In the following, the parameter is prefixed with "email_" and postfixed with "Hello" or "Subject".
-	 * @param boolean $useHtml whether to create HTML instead of plain text
+	 * @param bool $useHtml whether to create HTML instead of plain text
 	 *
 	 * @return string the e-mail body for the attendee e-mail, will not be empty
 	 */
@@ -1217,9 +1229,10 @@ class tx_seminars_registrationmanager extends tx_oelib_templatehelper {
 			$this->hideSubparts('interests', $wrapperPrefix);
 		}
 
-
+		/** @var tx_seminars_Mapper_Event $mapper */
+		$mapper = tx_oelib_MapperRegistry::get('tx_seminars_Mapper_Event');
 		/** @var $newEvent tx_seminars_Model_Event */
-		$newEvent = tx_oelib_MapperRegistry::get('tx_seminars_Mapper_Event')->find($event->getUid());
+		$newEvent = $mapper->find($event->getUid());
 		$singleViewUrl = $this->linkBuilder->createAbsoluteUrlForEvent($newEvent);
 		$this->setMarker('url', ($useHtml ? htmlspecialchars($singleViewUrl) : $singleViewUrl));
 
@@ -1242,7 +1255,7 @@ class tx_seminars_registrationmanager extends tx_oelib_templatehelper {
 	 *
 	 * @param tx_seminars_seminar $event the event to check the registration for
 	 *
-	 * @return boolean TRUE if the event allows registration by date, FALSE otherwise
+	 * @return bool TRUE if the event allows registration by date, FALSE otherwise
 	 */
 	public function allowsRegistrationByDate(tx_seminars_seminar $event) {
 		if ($event->hasDate()) {
@@ -1259,7 +1272,7 @@ class tx_seminars_registrationmanager extends tx_oelib_templatehelper {
 	 *
 	 * @param tx_seminars_seminar $event the event to check the registration for
 	 *
-	 * @return boolean TRUE if the event has enough seats for registration, FALSE otherwise
+	 * @return bool TRUE if the event has enough seats for registration, FALSE otherwise
 	 */
 	public function allowsRegistrationBySeats(tx_seminars_seminar $event) {
 		return $event->hasRegistrationQueue() || $event->hasUnlimitedVacancies() || $event->hasVacancies();
@@ -1270,7 +1283,7 @@ class tx_seminars_registrationmanager extends tx_oelib_templatehelper {
 	 *
 	 * @param tx_seminars_seminar $event the event to check the registration for
 	 *
-	 * @return boolean TRUE if registration for this event already has started, FALSE otherwise
+	 * @return bool TRUE if registration for this event already has started, FALSE otherwise
 	 */
 	public function registrationHasStarted(tx_seminars_seminar $event) {
 		if (!$event->hasRegistrationBegin()) {
@@ -1284,7 +1297,7 @@ class tx_seminars_registrationmanager extends tx_oelib_templatehelper {
 	 * Fills the attendees_names marker or hides it if necessary.
 	 *
 	 * @param tx_seminars_registration $registration the current registration
-	 * @param boolean $useHtml whether to create HTML instead of plain text
+	 * @param bool $useHtml whether to create HTML instead of plain text
 	 *
 	 * @return void
 	 */
@@ -1301,7 +1314,7 @@ class tx_seminars_registrationmanager extends tx_oelib_templatehelper {
 	 * Sets the places marker for the attendee notification.
 	 *
 	 * @param tx_seminars_seminar $event event of this registration
-	 * @param boolean $useHtml whether to create HTML instead of plain text
+	 * @param bool $useHtml whether to create HTML instead of plain text
 	 *
 	 * @return void
 	 */
@@ -1314,6 +1327,7 @@ class tx_seminars_registrationmanager extends tx_oelib_templatehelper {
 		$newline = ($useHtml) ? '<br />' : LF;
 
 		$formattedPlaces = array();
+		/** @var tx_seminars_Model_Place $place */
 		foreach ($event->getPlaces() as $place) {
 			$formattedPlaces[] = $this->formatPlace($place, $newline);
 		}
@@ -1357,10 +1371,12 @@ class tx_seminars_registrationmanager extends tx_oelib_templatehelper {
 	private function setEMailIntroduction($helloSubjectPrefix, tx_seminars_registration $registration) {
 		/** @var $salutation tx_seminars_EmailSalutation */
 		$salutation = t3lib_div::makeInstance('tx_seminars_EmailSalutation');
-		$this->setMarker('salutation', $salutation->getSalutation($registration->getFrontEndUser()));
+		$salutationText = $salutation->getSalutation($registration->getFrontEndUser());
+		$this->setMarker('salutation', $salutationText);
 
 		$event = $registration->getSeminarObject();
-		$introduction = $salutation->createIntroduction($this->translate('email_' . $helloSubjectPrefix . 'Hello'), $event);
+		$introductionTemplate = $this->translate('email_' . $helloSubjectPrefix . 'Hello');
+		$introduction = $salutation->createIntroduction($introductionTemplate, $event);
 
 		if ($registration->hasTotalPrice()) {
 			$introduction .= ' ' . sprintf($this->translate('email_price'), $registration->getTotalPrice());
@@ -1381,7 +1397,7 @@ class tx_seminars_registrationmanager extends tx_oelib_templatehelper {
 	 *          - confirmationOnRegistrationForQueue
 	 *          - confirmationOnQueueUpdate
 	 * @param tx_seminars_registration $registration the registration the introduction should be created for
-	 * @param boolean $useHtml whether to send HTML instead of plain text e-mail
+	 * @param bool $useHtml whether to send HTML instead of plain text e-mail
 	 *
 	 * @return void
 	 */
@@ -1449,6 +1465,16 @@ class tx_seminars_registrationmanager extends tx_oelib_templatehelper {
 	 */
 	public function injectLinkBuilder(tx_seminars_Service_SingleViewLinkBuilder $linkBuilder) {
 		$this->linkBuilder = $linkBuilder;
+	}
+
+	/**
+	 * Returns the UID of the logged-in front-end user (or 0 if no user is logged in).
+	 *
+	 * @return int
+	 */
+	protected function getLoggedInFrontEndUserUid() {
+		$loginManager = Tx_Oelib_FrontEndLoginManager::getInstance();
+		return $loginManager->isLoggedIn() ? $loginManager->getLoggedInUser('tx_seminars_Mapper_FrontEndUser')->getUid() : 0;
 	}
 }
 

@@ -1,26 +1,16 @@
 <?php
-/***************************************************************
- * Copyright notice
+/*
+ * This file is part of the TYPO3 CMS project.
  *
- * (c) 2014 Oliver Klee (typo3-coding@oliverklee.de)
- * All rights reserved
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
  *
- * This script is part of the TYPO3 project. The TYPO3 project is
- * free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
  *
- * The GNU General Public License can be found at
- * http://www.gnu.org/copyleft/gpl.html.
- *
- * This script is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * This copyright notice MUST APPEAR in all copies of the script!
- ***************************************************************/
+ * The TYPO3 project - inspiring people to share!
+ */
 
 /**
  * This class creates a CSV export of events.
@@ -44,7 +34,7 @@ class Tx_Seminars_Csv_EventListView extends Tx_Seminars_Csv_AbstractListView {
 	/**
 	 * Sets the page UID of the records to retrieve.
 	 *
-	 * @param integer $pageUid the page UID of the records, must be > 0
+	 * @param int $pageUid the page UID of the records, must be > 0
 	 *
 	 * @return void
 	 *
@@ -110,7 +100,7 @@ class Tx_Seminars_Csv_EventListView extends Tx_Seminars_Csv_AbstractListView {
 		$builder->setSourcePages($this->getPageUid(), self::RECURSION_DEPTH);
 
 		$csvLines = array();
-		/** @var $seminar tx_seminars_seminar */
+		/** @var tx_seminars_seminar $seminar */
 		foreach ($builder->build() as $seminar) {
 			$csvLines[] = implode(self::COLUMN_SEPARATOR, $this->createCsvColumnsForEvent($seminar));
 		}

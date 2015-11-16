@@ -1,26 +1,16 @@
 <?php
-/***************************************************************
-* Copyright notice
-*
-* (c) 2009-2013 Bernd Schönbach <bernd@oliverklee.de>
-* All rights reserved
-*
-* This script is part of the TYPO3 project. The TYPO3 project is
-* free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* The GNU General Public License can be found at
-* http://www.gnu.org/copyleft/gpl.html.
-*
-* This script is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* This copyright notice MUST APPEAR in all copies of the script!
-***************************************************************/
+/*
+ * This file is part of the TYPO3 CMS project.
+ *
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
+ *
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
+ *
+ * The TYPO3 project - inspiring people to share!
+ */
 
 /**
  * This class represents a front-end user.
@@ -41,7 +31,7 @@ class tx_seminars_Model_FrontEndUser extends tx_oelib_Model_FrontEndUser {
 	 * If the user has more than one group, the strictest setting of the groups
 	 * will be returned.
 	 *
-	 * @return integer one of the class constants
+	 * @return int one of the class constants
 	 *                 tx_seminars_Model_FrontEndUserGroup::PUBLISH_IMMEDIATELY,
 	 *                 tx_seminars_Model_FrontEndUserGroup::PUBLISH_HIDE_NEW or
 	 *                 tx_seminars_Model_FrontEndUserGroup::PUBLISH_HIDE_EDITED
@@ -54,12 +44,11 @@ class tx_seminars_Model_FrontEndUser extends tx_oelib_Model_FrontEndUser {
 
 		$result = tx_seminars_Model_FrontEndUserGroup::PUBLISH_IMMEDIATELY;
 
+		/** @var tx_seminars_Model_FrontEndUserGroup $userGroup */
 		foreach ($userGroups as $userGroup) {
 			$groupPermissions = $userGroup->getPublishSetting();
 
-			$result = ($groupPermissions > $result)
-				? $groupPermissions
-				: $result;
+			$result = ($groupPermissions > $result) ? $groupPermissions : $result;
 		}
 
 		return $result;
@@ -71,7 +60,7 @@ class tx_seminars_Model_FrontEndUser extends tx_oelib_Model_FrontEndUser {
 	 *
 	 * The PID is retrieved from the first user group which has a PID set.
 	 *
-	 * @return integer the PID where to store auxiliary records created by this
+	 * @return int the PID where to store auxiliary records created by this
 	 *                 front-end user, will be 0 if no PID is set
 	 */
 	public function getAuxiliaryRecordsPid() {
@@ -81,6 +70,7 @@ class tx_seminars_Model_FrontEndUser extends tx_oelib_Model_FrontEndUser {
 		
 		$auxiliaryRecordsPid = 0;
 
+		/** @var tx_seminars_Model_FrontEndUserGroup $userGroup */
 		foreach ($this->getUserGroups() as $userGroup) {
 			if ($userGroup->hasAuxiliaryRecordsPid()) {
 				$auxiliaryRecordsPid = $userGroup->getAuxiliaryRecordsPid();
@@ -96,13 +86,14 @@ class tx_seminars_Model_FrontEndUser extends tx_oelib_Model_FrontEndUser {
 	 *
 	 * Will return the first reviewer found.
 	 *
-	 * @return tx_oelib_Model_BackEndUser the reviewer set in the user's group,
+	 * @return tx_seminars_Model_BackEndUser the reviewer set in the user's group,
 	 *                                    will be NULL if no reviewer has been
 	 *                                    set or the user has no groups
 	 */
 	public function getReviewerFromGroup() {
 		$result = NULL;
 
+		/** @var tx_seminars_Model_FrontEndUserGroup $userGroup */
 		foreach ($this->getUserGroups() as $userGroup) {
 			if ($userGroup->hasReviewer()) {
 				$result = $userGroup->getReviewer();
@@ -118,7 +109,7 @@ class tx_seminars_Model_FrontEndUser extends tx_oelib_Model_FrontEndUser {
 	 *
 	 * This will return the first PID found for events in this user's groups.
 	 *
-	 * @return integer the PID for the event records to store, will be 0 if no
+	 * @return int the PID for the event records to store, will be 0 if no
 	 *                 event record PID has been set in any of this user's
 	 *                 groups
 	 */
@@ -129,6 +120,7 @@ class tx_seminars_Model_FrontEndUser extends tx_oelib_Model_FrontEndUser {
 
 		$eventRecordPid = 0;
 
+		/** @var tx_seminars_Model_FrontEndUserGroup $userGroup */
 		foreach ($this->getUserGroups() as $userGroup) {
 			if ($userGroup->hasEventRecordPid()) {
 				$eventRecordPid = $userGroup->getEventRecordPid();
@@ -142,13 +134,15 @@ class tx_seminars_Model_FrontEndUser extends tx_oelib_Model_FrontEndUser {
 	/**
 	 * Returns all default categories assigned to this user's groups.
 	 *
-	 * @return tx_oelib_List the categories assigned to this user's groups, will
+	 * @return Tx_Oelib_List the categories assigned to this user's groups, will
 	 *                       be empty if no default categories have been assigned
 	 *                       to any of the user's groups
 	 */
 	public function getDefaultCategoriesFromGroup() {
-		$categories = t3lib_div::makeInstance('tx_oelib_List');
+		/** @var Tx_Oelib_List $categories */
+		$categories = t3lib_div::makeInstance('Tx_Oelib_List');
 
+		/** @var tx_seminars_Model_FrontEndUserGroup $group */
 		foreach ($this->getUserGroups() as $group) {
 			if ($group->hasDefaultCategories()) {
 				$categories->append($group->getDefaultCategories());
@@ -161,7 +155,7 @@ class tx_seminars_Model_FrontEndUser extends tx_oelib_Model_FrontEndUser {
 	/**
 	 * Checks whether this user's groups have any default categories.
 	 *
-	 * @return boolean TRUE if at least one of the user's groups has a default
+	 * @return bool TRUE if at least one of the user's groups has a default
 	 *                 category, FALSE otherwise
 	 */
 	public function hasDefaultCategories() {
@@ -176,8 +170,10 @@ class tx_seminars_Model_FrontEndUser extends tx_oelib_Model_FrontEndUser {
 	 *                       to any of the user's groups
 	 */
 	public function getDefaultOrganizers() {
-		$organizers = t3lib_div::makeInstance('tx_oelib_List');
+		/** @var Tx_Oelib_List $organizers */
+		$organizers = t3lib_div::makeInstance('Tx_Oelib_List');
 
+		/** @var tx_seminars_Model_FrontEndUserGroup $group */
 		foreach ($this->getUserGroups() as $group) {
 			if ($group->hasDefaultOrganizer()) {
 				$organizers->add($group->getDefaultOrganizer());
@@ -190,7 +186,7 @@ class tx_seminars_Model_FrontEndUser extends tx_oelib_Model_FrontEndUser {
 	/**
 	 * Checks whether this user's groups have any default organizers.
 	 *
-	 * @return boolean TRUE if at least one of the user's groups has a default
+	 * @return bool TRUE if at least one of the user's groups has a default
 	 *                 organizer, FALSE otherwise
 	 */
 	public function hasDefaultOrganizers() {
@@ -217,9 +213,7 @@ class tx_seminars_Model_FrontEndUser extends tx_oelib_Model_FrontEndUser {
 	 *
 	 * @return void
 	 */
-	public function setRegistration(
-		tx_seminars_Model_Registration $registration = NULL
-	) {
+	public function setRegistration(tx_seminars_Model_Registration $registration = NULL) {
 		$this->set('tx_seminars_registration', $registration);
 	}
 }

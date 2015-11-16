@@ -1,26 +1,16 @@
 <?php
-/***************************************************************
- * Copyright notice
+/*
+ * This file is part of the TYPO3 CMS project.
  *
- * (c) 2014 Oliver Klee (typo3-coding@oliverklee.de)
- * All rights reserved
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
  *
- * This script is part of the TYPO3 project. The TYPO3 project is
- * free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
  *
- * The GNU General Public License can be found at
- * http://www.gnu.org/copyleft/gpl.html.
- *
- * This script is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * This copyright notice MUST APPEAR in all copies of the script!
- ***************************************************************/
+ * The TYPO3 project - inspiring people to share!
+ */
 
 /**
  * Test case.
@@ -66,14 +56,13 @@ class Tx_Seminars_Tests_Csv_BackEndRegistrationAccessCheckTest extends Tx_Phpuni
 
 		$this->testingFramework->cleanUp();
 		$GLOBALS['BE_USER'] = $this->backEndUserBackup;
-		unset($this->subject, $this->testingFramework, $this->backEndUser, $this->backEndUserBackup);
 	}
 
 	/**
 	 * @test
 	 */
 	public function subjectImplementsAccessCheck() {
-		$this->assertInstanceOf(
+		self::assertInstanceOf(
 			'Tx_Seminars_Interface_CsvAccessCheck',
 			$this->subject
 		);
@@ -85,7 +74,7 @@ class Tx_Seminars_Tests_Csv_BackEndRegistrationAccessCheckTest extends Tx_Phpuni
 	public function hasAccessForNoBackEndUserReturnsFalse() {
 		unset($GLOBALS['BE_USER']);
 
-		$this->assertFalse(
+		self::assertFalse(
 			$this->subject->hasAccess()
 		);
 	}
@@ -94,11 +83,11 @@ class Tx_Seminars_Tests_Csv_BackEndRegistrationAccessCheckTest extends Tx_Phpuni
 	 * @test
 	 */
 	public function hasAccessForNoAccessToEventsTableAndNoAccessToRegistrationsTableReturnsFalse() {
-		$this->backEndUser->expects($this->at(0))->method('check')
+		$this->backEndUser->expects(self::at(0))->method('check')
 			->with('tables_select', 'tx_seminars_seminars')
-			->will($this->returnValue(FALSE));
+			->will(self::returnValue(FALSE));
 
-		$this->assertFalse(
+		self::assertFalse(
 			$this->subject->hasAccess()
 		);
 	}
@@ -107,11 +96,11 @@ class Tx_Seminars_Tests_Csv_BackEndRegistrationAccessCheckTest extends Tx_Phpuni
 	 * @test
 	 */
 	public function hasAccessForNoAccessToEventsTableAndAccessToRegistrationsTableReturnsFalse() {
-		$this->backEndUser->expects($this->at(0))->method('check')
+		$this->backEndUser->expects(self::at(0))->method('check')
 			->with('tables_select', 'tx_seminars_seminars')
-			->will($this->returnValue(FALSE));
+			->will(self::returnValue(FALSE));
 
-		$this->assertFalse(
+		self::assertFalse(
 			$this->subject->hasAccess()
 		);
 	}
@@ -120,14 +109,14 @@ class Tx_Seminars_Tests_Csv_BackEndRegistrationAccessCheckTest extends Tx_Phpuni
 	 * @test
 	 */
 	public function hasAccessForAccessToEventsTableAndNoAccessToRegistrationsTableReturnsFalse() {
-		$this->backEndUser->expects($this->at(0))->method('check')
+		$this->backEndUser->expects(self::at(0))->method('check')
 			->with('tables_select', 'tx_seminars_seminars')
-			->will($this->returnValue(TRUE));
-		$this->backEndUser->expects($this->at(1))->method('check')
+			->will(self::returnValue(TRUE));
+		$this->backEndUser->expects(self::at(1))->method('check')
 			->with('tables_select', 'tx_seminars_attendances')
-			->will($this->returnValue(FALSE));
+			->will(self::returnValue(FALSE));
 
-		$this->assertFalse(
+		self::assertFalse(
 			$this->subject->hasAccess()
 		);
 	}
@@ -136,14 +125,14 @@ class Tx_Seminars_Tests_Csv_BackEndRegistrationAccessCheckTest extends Tx_Phpuni
 	 * @test
 	 */
 	public function hasAccessForAccessToEventsTableAndAccessToRegistrationsTableReturnsTrue() {
-		$this->backEndUser->expects($this->at(0))->method('check')
+		$this->backEndUser->expects(self::at(0))->method('check')
 			->with('tables_select', 'tx_seminars_seminars')
-			->will($this->returnValue(TRUE));
-		$this->backEndUser->expects($this->at(1))->method('check')
+			->will(self::returnValue(TRUE));
+		$this->backEndUser->expects(self::at(1))->method('check')
 			->with('tables_select', 'tx_seminars_attendances')
-			->will($this->returnValue(TRUE));
+			->will(self::returnValue(TRUE));
 
-		$this->assertTrue(
+		self::assertTrue(
 			$this->subject->hasAccess()
 		);
 	}
@@ -152,18 +141,18 @@ class Tx_Seminars_Tests_Csv_BackEndRegistrationAccessCheckTest extends Tx_Phpuni
 	 * @test
 	 */
 	public function hasAccessForAccessToEventsTableAndAccessToRegistrationsTableAndAccessToSetPageReturnsTrue() {
-		$this->backEndUser->expects($this->any())->method('check')
-			->with('tables_select', $this->anything())
-			->will($this->returnValue(TRUE));
+		$this->backEndUser->expects(self::any())->method('check')
+			->with('tables_select', self::anything())
+			->will(self::returnValue(TRUE));
 
 		$pageUid = 12341;
 		$this->subject->setPageUid($pageUid);
 		$pageRecord = t3lib_BEfunc::getRecord('pages', $pageUid);
-		$this->backEndUser->expects($this->any())->method('doesUserHaveAccess')
+		$this->backEndUser->expects(self::any())->method('doesUserHaveAccess')
 			->with($pageRecord, 1)
-			->will($this->returnValue(TRUE));
+			->will(self::returnValue(TRUE));
 
-		$this->assertTrue(
+		self::assertTrue(
 			$this->subject->hasAccess()
 		);
 	}
@@ -172,18 +161,18 @@ class Tx_Seminars_Tests_Csv_BackEndRegistrationAccessCheckTest extends Tx_Phpuni
 	 * @test
 	 */
 	public function hasAccessForAccessToEventsTableAndAccessToRegistrationsTableAndNoAccessToSetPageReturnsFalse() {
-		$this->backEndUser->expects($this->any())->method('check')
-			->with('tables_select', $this->anything())
-			->will($this->returnValue(TRUE));
+		$this->backEndUser->expects(self::any())->method('check')
+			->with('tables_select', self::anything())
+			->will(self::returnValue(TRUE));
 
 		$pageUid = 12341;
 		$this->subject->setPageUid($pageUid);
 		$pageRecord = t3lib_BEfunc::getRecord('pages', $pageUid);
-		$this->backEndUser->expects($this->any())->method('doesUserHaveAccess')
+		$this->backEndUser->expects(self::any())->method('doesUserHaveAccess')
 			->with($pageRecord, 1)
-			->will($this->returnValue(FALSE));
+			->will(self::returnValue(FALSE));
 
-		$this->assertFalse(
+		self::assertFalse(
 			$this->subject->hasAccess()
 		);
 	}

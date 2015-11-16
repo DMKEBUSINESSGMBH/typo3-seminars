@@ -1,26 +1,16 @@
 <?php
-/***************************************************************
-* Copyright notice
-*
-* (c) 2008-2013 Bernd Schönbach <bernd@oliverklee.de>
-* All rights reserved
-*
-* This script is part of the TYPO3 project. The TYPO3 project is
-* free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* The GNU General Public License can be found at
-* http://www.gnu.org/copyleft/gpl.html.
-*
-* This script is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* This copyright notice MUST APPEAR in all copies of the script!
-***************************************************************/
+/*
+ * This file is part of the TYPO3 CMS project.
+ *
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
+ *
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
+ *
+ * The TYPO3 project - inspiring people to share!
+ */
 
 /**
  * This class is a view which creates the requirements lists for the front end.
@@ -38,7 +28,7 @@ class tx_seminars_FrontEnd_RequirementsList extends tx_seminars_FrontEnd_Abstrac
 	private $event = NULL;
 
 	/**
-	 * @var boolean whether to limit the requirements to the events the user
+	 * @var bool whether to limit the requirements to the events the user
 	 *              still needs to register
 	 */
 	private $limitRequirementsToMissing = FALSE;
@@ -98,22 +88,23 @@ class tx_seminars_FrontEnd_RequirementsList extends tx_seminars_FrontEnd_Abstrac
 		}
 
 		if ($this->linkBuilder == NULL) {
-			$this->injectLinkBuilder(t3lib_div::makeInstance(
-				'tx_seminars_Service_SingleViewLinkBuilder'
-			));
+			/** @var tx_seminars_Service_SingleViewLinkBuilder $linkBuilder */
+			$linkBuilder = t3lib_div::makeInstance('tx_seminars_Service_SingleViewLinkBuilder');
+			$this->injectLinkBuilder($linkBuilder);
 		}
 		$this->linkBuilder->setPlugin($this);
 
 		$output = '';
 
+		/** @var tx_seminars_Mapper_Event $eventMapper */
 		$eventMapper = tx_oelib_MapperRegistry::get('tx_seminars_Mapper_Event');
 		$requirements = $this->getRequirements();
+		/** @var tx_seminars_seminar $requirement */
 		foreach ($requirements as $requirement) {
+			/** @var tx_seminars_Model_Event $event */
 			$event = $eventMapper->find($requirement->getUid());
 
-			$singleViewUrl = $this->linkBuilder->createRelativeUrlForEvent(
-				$event
-			);
+			$singleViewUrl = $this->linkBuilder->createRelativeUrlForEvent($event);
 			$this->setMarker(
 				'requirement_url', htmlspecialchars($singleViewUrl)
 			);

@@ -1,26 +1,16 @@
 <?php
-/***************************************************************
-* Copyright notice
-*
-* (c) 2008-2013 Niels Pardon (mail@niels-pardon.de)
-* All rights reserved
-*
-* This script is part of the TYPO3 project. The TYPO3 project is
-* free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* The GNU General Public License can be found at
-* http://www.gnu.org/copyleft/gpl.html.
-*
-* This script is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* This copyright notice MUST APPEAR in all copies of the script!
-***************************************************************/
+/*
+ * This file is part of the TYPO3 CMS project.
+ *
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
+ *
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
+ *
+ * The TYPO3 project - inspiring people to share!
+ */
 
 require_once(t3lib_extMgm::extPath('static_info_tables') . 'pi1/class.tx_staticinfotables_pi1.php');
 
@@ -42,8 +32,7 @@ class tx_seminars_FrontEnd_SelectorWidget extends tx_seminars_FrontEnd_AbstractV
 	protected $staticInfo = NULL;
 
 	/**
-	 * @var array the keys of the search fields which should be displayed in the
-	 *            search form
+	 * @var string[] the keys of the search fields which should be displayed in the search form
 	 */
 	private $displayedSearchFields = array();
 
@@ -92,6 +81,7 @@ class tx_seminars_FrontEnd_SelectorWidget extends tx_seminars_FrontEnd_AbstractV
 		$this->fillOrHideSearchSubpart('country');
 		$this->fillOrHideSearchSubpart('city');
 		$this->fillOrHideSearchSubpart('organizer');
+		$this->fillOrHideSearchSubpart('categories');
 		$this->fillOrHideFullTextSearch();
 		$this->fillOrHideDateSearch();
 		$this->fillOrHideAgeSearch();
@@ -114,20 +104,13 @@ class tx_seminars_FrontEnd_SelectorWidget extends tx_seminars_FrontEnd_AbstractV
 		);
 
 		$this->instantiateStaticInfo();
+		/** @var tx_seminars_BagBuilder_Event $builder */
 		$builder = t3lib_div::makeInstance('tx_seminars_BagBuilder_Event');
 		$builder->limitToEventTypes(
-			t3lib_div::trimExplode(
-				',',
-				$this->getConfValueString(
-					'limitListViewToEventTypes', 's_listView'
-				),
-				TRUE
-			)
+			t3lib_div::trimExplode(',', $this->getConfValueString('limitListViewToEventTypes', 's_listView'), TRUE)
 		);
-
-		$builder->limitToOrganizers(
-			$this->getConfValueString('limitListViewToOrganizers', 's_listView')
-		);
+		$builder->limitToOrganizers($this->getConfValueString('limitListViewToOrganizers', 's_listView'));
+		$builder->limitToCategories($this->getConfValueString('limitListViewToCategories', 's_listView'));
 
 		$this->seminarBag = $builder->build();
 	}
@@ -150,7 +133,7 @@ class tx_seminars_FrontEnd_SelectorWidget extends tx_seminars_FrontEnd_AbstractV
 	 * dummy option will always be the first one in the array and thus shown
 	 * first in the drop-down.
 	 *
-	 * @param array &$options options, may be empty
+	 * @param string[] &$options options, may be empty
 	 *
 	 * @return void
 	 */
@@ -191,7 +174,7 @@ class tx_seminars_FrontEnd_SelectorWidget extends tx_seminars_FrontEnd_AbstractV
 	 * @param string $name
 	 *        the name of the option box to generate, must be one of the following:
 	 *        'event_type', 'language', 'country', 'city', 'places'
-	 * @param array $options
+	 * @param string[] $options
 	 *        the options for the option box with the option value as key and the option label as value, may be empty
 	 *
 	 * @return string the HTML content for the select, will not be empty
@@ -253,8 +236,9 @@ class tx_seminars_FrontEnd_SelectorWidget extends tx_seminars_FrontEnd_AbstractV
 				$this->seminarBag->getUids() . ')'
 		);
 
-		$this->places = tx_oelib_MapperRegistry::
-			get('tx_seminars_Mapper_Place')->getListOfModels($dataOfPlaces);
+		/** @var tx_seminars_Mapper_Place $mapper */
+		$mapper = tx_oelib_MapperRegistry::get('tx_seminars_Mapper_Place');
+		$this->places = $mapper->getListOfModels($dataOfPlaces);
 	}
 
 	/**
@@ -276,7 +260,7 @@ class tx_seminars_FrontEnd_SelectorWidget extends tx_seminars_FrontEnd_AbstractV
 	 *
 	 * @param string $fieldToCheck the search field name to check, must not be empty
 	 *
-	 * @return boolean TRUE if the given field should be displayed as per
+	 * @return bool TRUE if the given field should be displayed as per
 	 *                 configuration, FALSE otherwise
 	 */
 	protected function hasSearchField($fieldToCheck) {
@@ -286,7 +270,7 @@ class tx_seminars_FrontEnd_SelectorWidget extends tx_seminars_FrontEnd_AbstractV
 	/**
 	 * Creates a drop-down, including an empty option at the top.
 	 *
-	 * @param array $options
+	 * @param string[] $options
 	 *        the options for the drop-down, the keys will be used as values and the array values as labels for the options,
 	 *        may be empty
 	 * @param string $name
@@ -339,14 +323,10 @@ class tx_seminars_FrontEnd_SelectorWidget extends tx_seminars_FrontEnd_AbstractV
 	 */
 	private function fillOrHideSearchSubpart($searchField) {
 		if (!$this->hasSearchField($searchField)) {
-			$this->hideSubparts(
-				self::SUBPART_PREFIX . strtoupper($searchField)
-			);
-
+			$this->hideSubparts(self::SUBPART_PREFIX . strtoupper($searchField));
 			return;
 		}
 
-		$optionData = array();
 		switch ($searchField) {
 			case 'event_type':
 				$optionData = $this->getEventTypeData();
@@ -366,13 +346,15 @@ class tx_seminars_FrontEnd_SelectorWidget extends tx_seminars_FrontEnd_AbstractV
 			case 'organizer':
 				$optionData = $this->getOrganizerData();
 				break;
+			case 'categories':
+				$optionData = $this->getCategoryData();
+				break;
 			default:
 				throw new InvalidArgumentException(
 					'The given search field . "' . $searchField . '" was not an allowed value. ' .
 						'Allowed values are: "event_type", "language", "country", "city", "place" or "organizer".',
 					1333293298
 				);
-				break;
 		}
 
 		asort($optionData, SORT_STRING);
@@ -416,13 +398,13 @@ class tx_seminars_FrontEnd_SelectorWidget extends tx_seminars_FrontEnd_AbstractV
 		$dateArrays = $this->createDateArray();
 
 		foreach (array('from', 'to') as $fromOrTo) {
-			$dropdowns = '';
-			foreach ($dateArrays as $dropdownPart => $dateArray) {
-				$dropdowns .= $this->createDropDown(
-					$dateArray, $fromOrTo . '_' . $dropdownPart
+			$dropDowns = '';
+			foreach ($dateArrays as $dropDownPart => $dateArray) {
+				$dropDowns .= $this->createDropDown(
+					$dateArray, $fromOrTo . '_' . $dropDownPart
 				);
 			}
-			$this->setMarker('options_date_' . $fromOrTo, $dropdowns);
+			$this->setMarker('options_date_' . $fromOrTo, $dropDowns);
 		}
 	}
 
@@ -439,7 +421,7 @@ class tx_seminars_FrontEnd_SelectorWidget extends tx_seminars_FrontEnd_AbstractV
 
 			return;
 		}
-		$age = intval($this->piVars['age']);
+		$age = (int)$this->piVars['age'];
 
 		$this->setMarker(
 			'age_value', (($age > 0) ? $age : '')
@@ -460,8 +442,8 @@ class tx_seminars_FrontEnd_SelectorWidget extends tx_seminars_FrontEnd_AbstractV
 			return;
 		}
 
-		$priceFrom = intval($this->piVars['price_from']);
-		$priceTo = intval($this->piVars['price_to']);
+		$priceFrom = (int)$this->piVars['price_from'];
+		$priceTo = (int)$this->piVars['price_to'];
 
 		$this->setMarker(
 			'price_from_value', (($priceFrom > 0) ? $priceFrom : '')
@@ -479,7 +461,7 @@ class tx_seminars_FrontEnd_SelectorWidget extends tx_seminars_FrontEnd_AbstractV
 	/**
 	 * Gets the data for the eventy type search field options.
 	 *
-	 * @return array the data for the event type search field options, the key
+	 * @return string[] the data for the event type search field options, the key
 	 *               will be the UID of the event type and the value will be the
 	 *               title of the event type, will be empty if no data could be
 	 *               found
@@ -487,6 +469,7 @@ class tx_seminars_FrontEnd_SelectorWidget extends tx_seminars_FrontEnd_AbstractV
 	protected function getEventTypeData() {
 		$result = array();
 
+		/** @var tx_seminars_seminar $event */
 		foreach ($this->seminarBag as $event) {
 			$eventTypeUid = $event->getEventTypeUid();
 			if ($eventTypeUid != 0) {
@@ -503,7 +486,7 @@ class tx_seminars_FrontEnd_SelectorWidget extends tx_seminars_FrontEnd_AbstractV
 	/**
 	 * Gets the data for the language search field options.
 	 *
-	 * @return array the data for the language search field options, the key
+	 * @return string[] the data for the language search field options, the key
 	 *               will be the ISO code of the language and the value will be
 	 *               the localized title of the language, will be empty if no
 	 *               data could be found
@@ -511,6 +494,7 @@ class tx_seminars_FrontEnd_SelectorWidget extends tx_seminars_FrontEnd_AbstractV
 	protected function getLanguageData() {
 		$result = array();
 
+		/** @var tx_seminars_seminar $event */
 		foreach ($this->seminarBag as $event) {
 			if ($event->hasLanguage()) {
 				// Reads the language from the event record.
@@ -535,7 +519,7 @@ class tx_seminars_FrontEnd_SelectorWidget extends tx_seminars_FrontEnd_AbstractV
 	/**
 	 * Gets the data for the place search field options.
 	 *
-	 * @return array the data for the country search field options; the key
+	 * @return string[] the data for the country search field options; the key
 	 *               will be the UID of the place and the value will be the
 	 *               title of the place, will be empty if no data could be found
 	 */
@@ -547,6 +531,7 @@ class tx_seminars_FrontEnd_SelectorWidget extends tx_seminars_FrontEnd_AbstractV
 		$result = array();
 		$this->collectPlaces();
 
+		/** @var tx_seminars_Model_Place $place */
 		foreach ($this->places as $place) {
 			$result[$place->getUid()] = $place->getTitle();
 		}
@@ -557,7 +542,7 @@ class tx_seminars_FrontEnd_SelectorWidget extends tx_seminars_FrontEnd_AbstractV
 	/**
 	 * Gets the data for the city search field options.
 	 *
-	 * @return array the data for the city search field options; the key and the
+	 * @return string[] the data for the city search field options; the key and the
 	 *               value will be the name of the city, will be empty if no
 	 *               data could be found
 	 */
@@ -569,6 +554,7 @@ class tx_seminars_FrontEnd_SelectorWidget extends tx_seminars_FrontEnd_AbstractV
 		$result = array();
 		$this->collectPlaces();
 
+		/** @var tx_seminars_Model_Place $place */
 		foreach ($this->places as $place) {
 			$result[$place->getCity()] = $place->getCity();
 		}
@@ -579,7 +565,7 @@ class tx_seminars_FrontEnd_SelectorWidget extends tx_seminars_FrontEnd_AbstractV
 	/**
 	 * Gets the data for the country search field options.
 	 *
-	 * @return array the data for the country search field options; the key will
+	 * @return string[] the data for the country search field options; the key will
 	 *               be the ISO-Alpha-2 code of the country the value will be
 	 *               the name of the country, will be empty if no data could be
 	 *               found
@@ -589,18 +575,17 @@ class tx_seminars_FrontEnd_SelectorWidget extends tx_seminars_FrontEnd_AbstractV
 			return array();
 		}
 
+		/** @var string[] $result */
 		$result = array();
 		$this->collectPlaces();
 
+		/** @var tx_seminars_Model_Place $place */
 		foreach ($this->places as $place) {
 			if ($place->hasCountry()) {
 				$countryIsoCode = $place->getCountry()->getIsoAlpha2Code();
 
 				if (!isset($result[$countryIsoCode])) {
-					$result[$countryIsoCode]
-						= $this->staticInfo->getStaticInfoName(
-							'COUNTRIES', $countryIsoCode
-						);
+					$result[$countryIsoCode] = $this->staticInfo->getStaticInfoName('COUNTRIES', $countryIsoCode);
 				}
 			}
 		}
@@ -611,7 +596,7 @@ class tx_seminars_FrontEnd_SelectorWidget extends tx_seminars_FrontEnd_AbstractV
 	/**
 	 * Compiles the possible values for date selector.
 	 *
-	 * @return array multi-dimensional array; the first level contains day,
+	 * @return array[] the first level contains day,
 	 *         month and year as key, the second level has the day, month or
 	 *         year value as value and key, will not be empty
 	 */
@@ -630,7 +615,7 @@ class tx_seminars_FrontEnd_SelectorWidget extends tx_seminars_FrontEnd_AbstractV
 			$result['month'][$month] = $month;
 		}
 
-		$currentYear = intval(date('Y'));
+		$currentYear = (int)date('Y');
 		$targetYear = $currentYear + $this->getConfValueInteger(
 			'numberOfYearsInDateFilter', 's_listView'
 		);
@@ -645,7 +630,7 @@ class tx_seminars_FrontEnd_SelectorWidget extends tx_seminars_FrontEnd_AbstractV
 	/**
 	 * Gets the data for the organizer search field options.
 	 *
-	 * @return array the data for the organizer search field options; the key
+	 * @return string[] the data for the organizer search field options; the key
 	 *               will be the UID of the organizer and the value will be the
 	 *               name of the organizer, will be empty if no data could be
 	 *               found
@@ -653,13 +638,41 @@ class tx_seminars_FrontEnd_SelectorWidget extends tx_seminars_FrontEnd_AbstractV
 	private function getOrganizerData() {
 		$result = array();
 
+		/** @var tx_seminars_seminar $event */
 		foreach ($this->seminarBag as $event) {
 			if ($event->hasOrganizers()) {
 				$organizers = $event->getOrganizerBag();
+				/** @var tx_seminars_OldModel_Organizer $organizer */
 				foreach ($organizers as $organizer) {
 					$organizerUid = $organizer->getUid();
 					if (!isset($result[$organizerUid])) {
 						$result[$organizerUid] = $organizer->getName();
+					}
+				}
+			}
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Gets the data for the category search field options.
+	 *
+	 * @return string[] the data for the category search field options; the key
+	 *               will be the UID of the category and the value will be the
+	 *               name of the category, will be empty if no data could be
+	 *               found
+	 */
+	private function getCategoryData() {
+		$result = array();
+
+		/** @var tx_seminars_seminar $event */
+		foreach ($this->seminarBag as $event) {
+			if ($event->hasCategories()) {
+				$categories = $event->getCategories();
+				foreach ($categories as $uid => $category) {
+					if (!isset($result[$uid])) {
+						$result[$uid] = $category['title'];
 					}
 				}
 			}

@@ -1,26 +1,16 @@
 <?php
-/***************************************************************
-* Copyright notice
-*
-* (c) 2009-2013 Niels Pardon (mail@niels-pardon.de)
-* All rights reserved
-*
-* This script is part of the TYPO3 project. The TYPO3 project is
-* free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* The GNU General Public License can be found at
-* http://www.gnu.org/copyleft/gpl.html.
-*
-* This script is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* This copyright notice MUST APPEAR in all copies of the script!
-***************************************************************/
+/*
+ * This file is part of the TYPO3 CMS project.
+ *
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
+ *
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
+ *
+ * The TYPO3 project - inspiring people to share!
+ */
 
 /**
  * Test case.
@@ -37,14 +27,9 @@ class tx_seminars_Model_PlaceTest extends tx_phpunit_testcase {
 	 */
 	private $fixture;
 
-	public function setUp() {
+	protected function setUp() {
 		$this->fixture = new tx_seminars_Model_Place();
 	}
-
-	public function tearDown() {
-		unset($this->fixture);
-	}
-
 
 	///////////////////////////////
 	// Tests regarding the title.
@@ -68,7 +53,7 @@ class tx_seminars_Model_PlaceTest extends tx_phpunit_testcase {
 	public function setTitleSetsTitle() {
 		$this->fixture->setTitle('Nice place');
 
-		$this->assertEquals(
+		self::assertEquals(
 			'Nice place',
 			$this->fixture->getTitle()
 		);
@@ -80,7 +65,7 @@ class tx_seminars_Model_PlaceTest extends tx_phpunit_testcase {
 	public function getTitleWithNonEmptyTitleReturnsTitle() {
 		$this->fixture->setData(array('title' => 'Nice place'));
 
-		$this->assertEquals(
+		self::assertEquals(
 			'Nice place',
 			$this->fixture->getTitle()
 		);
@@ -97,7 +82,7 @@ class tx_seminars_Model_PlaceTest extends tx_phpunit_testcase {
 	public function getAddressWithoutAddressReturnsAnEmptyString() {
 		$this->fixture->setData(array());
 
-		$this->assertEquals(
+		self::assertEquals(
 			'',
 			$this->fixture->getAddress()
 		);
@@ -109,7 +94,7 @@ class tx_seminars_Model_PlaceTest extends tx_phpunit_testcase {
 	public function getAddressWithNonEmptyAddressReturnsAddress() {
 		$this->fixture->setData(array('address' => 'Backstreet 42'));
 
-		$this->assertEquals(
+		self::assertEquals(
 			'Backstreet 42',
 			$this->fixture->getAddress()
 		);
@@ -121,7 +106,7 @@ class tx_seminars_Model_PlaceTest extends tx_phpunit_testcase {
 	public function setAddressSetsAddress() {
 		$this->fixture->setAddress('Backstreet 42');
 
-		$this->assertEquals(
+		self::assertEquals(
 			'Backstreet 42',
 			$this->fixture->getAddress()
 		);
@@ -133,7 +118,7 @@ class tx_seminars_Model_PlaceTest extends tx_phpunit_testcase {
 	public function hasAddressWithoutAddressReturnsFalse() {
 		$this->fixture->setData(array());
 
-		$this->assertFalse(
+		self::assertFalse(
 			$this->fixture->hasAddress()
 		);
 	}
@@ -144,7 +129,7 @@ class tx_seminars_Model_PlaceTest extends tx_phpunit_testcase {
 	public function hasAddressWithNonEmptyAddressReturnsTrue() {
 		$this->fixture->setAddress('Backstreet 42');
 
-		$this->assertTrue(
+		self::assertTrue(
 			$this->fixture->hasAddress()
 		);
 	}
@@ -160,7 +145,7 @@ class tx_seminars_Model_PlaceTest extends tx_phpunit_testcase {
 	public function getZipWithNonEmptyZipReturnsZip() {
 		$this->fixture->setData(array('zip' => '13373'));
 
-		$this->assertEquals(
+		self::assertEquals(
 			'13373',
 			$this->fixture->getZip()
 		);
@@ -172,7 +157,7 @@ class tx_seminars_Model_PlaceTest extends tx_phpunit_testcase {
 	public function setZipSetsZip() {
 		$this->fixture->setZip('13373');
 
-		$this->assertEquals(
+		self::assertEquals(
 			'13373',
 			$this->fixture->getZip()
 		);
@@ -184,7 +169,7 @@ class tx_seminars_Model_PlaceTest extends tx_phpunit_testcase {
 	public function hasZipWithNonEmptyZipReturnsTrue() {
 		$this->fixture->setData(array('zip' => '13373'));
 
-		$this->assertTrue(
+		self::assertTrue(
 			$this->fixture->hasZip()
 		);
 	}
@@ -195,7 +180,7 @@ class tx_seminars_Model_PlaceTest extends tx_phpunit_testcase {
 	public function hasZipWithEmptyZipReturnsFalse() {
 		$this->fixture->setData(array('zip' => ''));
 
-		$this->assertFalse(
+		self::assertFalse(
 			$this->fixture->hasZip()
 		);
 	}
@@ -223,7 +208,7 @@ class tx_seminars_Model_PlaceTest extends tx_phpunit_testcase {
 	public function setCitySetsCity() {
 		$this->fixture->setCity('Hicksville');
 
-		$this->assertEquals(
+		self::assertEquals(
 			'Hicksville',
 			$this->fixture->getCity()
 		);
@@ -235,7 +220,7 @@ class tx_seminars_Model_PlaceTest extends tx_phpunit_testcase {
 	public function getCityWithNonEmptyCityReturnsCity() {
 		$this->fixture->setData(array('city' => 'Hicksville'));
 
-		$this->assertEquals(
+		self::assertEquals(
 			'Hicksville',
 			$this->fixture->getCity()
 		);
@@ -252,7 +237,7 @@ class tx_seminars_Model_PlaceTest extends tx_phpunit_testcase {
 	public function getCountryWithoutCountryReturnsNull() {
 		$this->fixture->setData(array());
 
-		$this->assertNull(
+		self::assertNull(
 			$this->fixture->getCountry()
 		);
 	}
@@ -263,7 +248,7 @@ class tx_seminars_Model_PlaceTest extends tx_phpunit_testcase {
 	public function getCountryWithInvalidCountryCodeReturnsNull() {
 		$this->fixture->setData(array('country' => '0'));
 
-		$this->assertNull(
+		self::assertNull(
 			$this->fixture->getCountry()
 		);
 	}
@@ -272,10 +257,13 @@ class tx_seminars_Model_PlaceTest extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function getCountryWithCountryReturnsCountryInstance() {
-		$country = tx_oelib_MapperRegistry::get('tx_oelib_Mapper_Country')->find(54);
+		/** @var tx_oelib_Mapper_Country $mapper */
+		$mapper = tx_oelib_MapperRegistry::get('tx_oelib_Mapper_Country');
+		/** @var tx_oelib_Model_Country $country */
+		$country = $mapper->find(54);
 		$this->fixture->setData(array('country' => $country->getIsoAlpha2Code()));
 
-		$this->assertTrue(
+		self::assertTrue(
 			$this->fixture->getCountry() instanceof tx_oelib_Model_Country
 		);
 	}
@@ -284,10 +272,13 @@ class tx_seminars_Model_PlaceTest extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function getCountryWithCountryReturnsCountryAsModel() {
-		$country = tx_oelib_MapperRegistry::get('tx_oelib_Mapper_Country')->find(54);
+		/** @var tx_oelib_Mapper_Country $mapper */
+		$mapper = tx_oelib_MapperRegistry::get('tx_oelib_Mapper_Country');
+		/** @var tx_oelib_Model_Country $country */
+		$country = $mapper->find(54);
 		$this->fixture->setData(array('country' => $country->getIsoAlpha2Code()));
 
-		$this->assertSame(
+		self::assertSame(
 			$country,
 			$this->fixture->getCountry()
 		);
@@ -297,10 +288,13 @@ class tx_seminars_Model_PlaceTest extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function setCountrySetsCountry() {
-		$country = tx_oelib_MapperRegistry::get('tx_oelib_Mapper_Country')->find(54);
+		/** @var tx_oelib_Mapper_Country $mapper */
+		$mapper = tx_oelib_MapperRegistry::get('tx_oelib_Mapper_Country');
+		/** @var tx_oelib_Model_Country $country */
+		$country = $mapper->find(54);
 		$this->fixture->setCountry($country);
 
-		$this->assertSame(
+		self::assertSame(
 			$country,
 			$this->fixture->getCountry()
 		);
@@ -312,7 +306,7 @@ class tx_seminars_Model_PlaceTest extends tx_phpunit_testcase {
 	public function countryCanBeSetToNull() {
 		$this->fixture->setCountry(NULL);
 
-		$this->assertNull(
+		self::assertNull(
 			$this->fixture->getCountry()
 		);
 	}
@@ -323,7 +317,7 @@ class tx_seminars_Model_PlaceTest extends tx_phpunit_testcase {
 	public function hasCountryWithoutCountryReturnsFalse() {
 		$this->fixture->setData(array());
 
-		$this->assertFalse(
+		self::assertFalse(
 			$this->fixture->hasCountry()
 		);
 	}
@@ -334,7 +328,7 @@ class tx_seminars_Model_PlaceTest extends tx_phpunit_testcase {
 	public function hasCountryWithInvalidCountryReturnsFalse() {
 		$this->fixture->setData(array('country' => '0'));
 
-		$this->assertFalse(
+		self::assertFalse(
 			$this->fixture->hasCountry()
 		);
 	}
@@ -343,10 +337,13 @@ class tx_seminars_Model_PlaceTest extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function hasCountryWithCountryReturnsTrue() {
-		$country = tx_oelib_MapperRegistry::get('tx_oelib_Mapper_Country')->find(54);
+		/** @var tx_oelib_Mapper_Country $mapper */
+		$mapper = tx_oelib_MapperRegistry::get('tx_oelib_Mapper_Country');
+		/** @var tx_oelib_Model_Country $country */
+		$country = $mapper->find(54);
 		$this->fixture->setCountry($country);
 
-		$this->assertTrue(
+		self::assertTrue(
 			$this->fixture->hasCountry()
 		);
 	}
@@ -362,7 +359,7 @@ class tx_seminars_Model_PlaceTest extends tx_phpunit_testcase {
 	public function getHomepageWithoutHomepageReturnsAnEmptyString() {
 		$this->fixture->setData(array());
 
-		$this->assertEquals(
+		self::assertEquals(
 			'',
 			$this->fixture->getHomepage()
 		);
@@ -374,7 +371,7 @@ class tx_seminars_Model_PlaceTest extends tx_phpunit_testcase {
 	public function getHomepageWithNonEmptyHomepageReturnsHomepage() {
 		$this->fixture->setData(array('homepage' => 'http://example.com'));
 
-		$this->assertEquals(
+		self::assertEquals(
 			'http://example.com',
 			$this->fixture->getHomepage()
 		);
@@ -386,7 +383,7 @@ class tx_seminars_Model_PlaceTest extends tx_phpunit_testcase {
 	public function setHomepageSetsHomepage() {
 		$this->fixture->setHomepage('http://example.com');
 
-		$this->assertEquals(
+		self::assertEquals(
 			'http://example.com',
 			$this->fixture->getHomepage()
 		);
@@ -398,7 +395,7 @@ class tx_seminars_Model_PlaceTest extends tx_phpunit_testcase {
 	public function hasHomepageWithoutHomepageReturnsFalse() {
 		$this->fixture->setData(array());
 
-		$this->assertFalse(
+		self::assertFalse(
 			$this->fixture->hasHomepage()
 		);
 	}
@@ -409,7 +406,7 @@ class tx_seminars_Model_PlaceTest extends tx_phpunit_testcase {
 	public function hasHomepageWithNonEmptyHomepageReturnsTrue() {
 		$this->fixture->setHomepage('http://example.com');
 
-		$this->assertTrue(
+		self::assertTrue(
 			$this->fixture->hasHomepage()
 		);
 	}
@@ -425,7 +422,7 @@ class tx_seminars_Model_PlaceTest extends tx_phpunit_testcase {
 	public function getDirectionsWithoutDirectionsReturnsAnEmptyString() {
 		$this->fixture->setData(array());
 
-		$this->assertEquals(
+		self::assertEquals(
 			'',
 			$this->fixture->getDirections()
 		);
@@ -437,7 +434,7 @@ class tx_seminars_Model_PlaceTest extends tx_phpunit_testcase {
 	public function getDirectionsWithNonEmptyDirectionsReturnsDirections() {
 		$this->fixture->setData(array('directions' => 'left, right, straight'));
 
-		$this->assertEquals(
+		self::assertEquals(
 			'left, right, straight',
 			$this->fixture->getDirections()
 		);
@@ -449,7 +446,7 @@ class tx_seminars_Model_PlaceTest extends tx_phpunit_testcase {
 	public function setDirectionsSetsDirections() {
 		$this->fixture->setDirections('left, right, straight');
 
-		$this->assertEquals(
+		self::assertEquals(
 			'left, right, straight',
 			$this->fixture->getDirections()
 		);
@@ -461,7 +458,7 @@ class tx_seminars_Model_PlaceTest extends tx_phpunit_testcase {
 	public function hasDirectionsWithoutDirectionsReturnsFalse() {
 		$this->fixture->setData(array());
 
-		$this->assertFalse(
+		self::assertFalse(
 			$this->fixture->hasDirections()
 		);
 	}
@@ -472,7 +469,7 @@ class tx_seminars_Model_PlaceTest extends tx_phpunit_testcase {
 	public function hasDirectionsWithNonEmptyDirectionsReturnsTrue() {
 		$this->fixture->setDirections('left, right, straight');
 
-		$this->assertTrue(
+		self::assertTrue(
 			$this->fixture->hasDirections()
 		);
 	}
@@ -488,7 +485,7 @@ class tx_seminars_Model_PlaceTest extends tx_phpunit_testcase {
 	public function getNotesWithoutNotesReturnsAnEmptyString() {
 		$this->fixture->setData(array());
 
-		$this->assertEquals(
+		self::assertEquals(
 			'',
 			$this->fixture->getNotes()
 		);
@@ -500,7 +497,7 @@ class tx_seminars_Model_PlaceTest extends tx_phpunit_testcase {
 	public function getNotesWithNonEmptyNotesReturnsNotes() {
 		$this->fixture->setData(array('notes' => 'Nothing of interest.'));
 
-		$this->assertEquals(
+		self::assertEquals(
 			'Nothing of interest.',
 			$this->fixture->getNotes()
 		);
@@ -512,7 +509,7 @@ class tx_seminars_Model_PlaceTest extends tx_phpunit_testcase {
 	public function setNotesSetsNotes() {
 		$this->fixture->setNotes('Nothing of interest.');
 
-		$this->assertEquals(
+		self::assertEquals(
 			'Nothing of interest.',
 			$this->fixture->getNotes()
 		);

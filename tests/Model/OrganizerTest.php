@@ -1,26 +1,16 @@
 <?php
-/***************************************************************
-* Copyright notice
-*
-* (c) 2009-2013 Niels Pardon (mail@niels-pardon.de)
-* All rights reserved
-*
-* This script is part of the TYPO3 project. The TYPO3 project is
-* free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* The GNU General Public License can be found at
-* http://www.gnu.org/copyleft/gpl.html.
-*
-* This script is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* This copyright notice MUST APPEAR in all copies of the script!
-***************************************************************/
+/*
+ * This file is part of the TYPO3 CMS project.
+ *
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
+ *
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
+ *
+ * The TYPO3 project - inspiring people to share!
+ */
 
 /**
  * Test case.
@@ -36,14 +26,9 @@ class tx_seminars_Model_OrganizerTest extends tx_phpunit_testcase {
 	 */
 	private $fixture;
 
-	public function setUp() {
+	protected function setUp() {
 		$this->fixture = new tx_seminars_Model_Organizer();
 	}
-
-	public function tearDown() {
-		unset($this->fixture);
-	}
-
 
 	///////////////////////////////
 	// Tests regarding the name.
@@ -67,7 +52,7 @@ class tx_seminars_Model_OrganizerTest extends tx_phpunit_testcase {
 	public function setNameSetsName() {
 		$this->fixture->setName('Fabulous organizer');
 
-		$this->assertEquals(
+		self::assertEquals(
 			'Fabulous organizer',
 			$this->fixture->getName()
 		);
@@ -79,7 +64,7 @@ class tx_seminars_Model_OrganizerTest extends tx_phpunit_testcase {
 	public function getNameWithNonEmptyNameReturnsName() {
 		$this->fixture->setData(array('title' => 'Fabulous organizer'));
 
-		$this->assertEquals(
+		self::assertEquals(
 			'Fabulous organizer',
 			$this->fixture->getName()
 		);
@@ -91,7 +76,7 @@ class tx_seminars_Model_OrganizerTest extends tx_phpunit_testcase {
 	public function getTitleWithNonEmptyNameReturnsName() {
 		$this->fixture->setData(array('title' => 'Fabulous organizer'));
 
-		$this->assertEquals(
+		self::assertEquals(
 			'Fabulous organizer',
 			$this->fixture->getTitle()
 		);
@@ -108,7 +93,7 @@ class tx_seminars_Model_OrganizerTest extends tx_phpunit_testcase {
 	public function getHomepageInitiallyReturnsAnEmptyString() {
 		$this->fixture->setData(array());
 
-		$this->assertEquals(
+		self::assertEquals(
 			'',
 			$this->fixture->getHomepage()
 		);
@@ -120,7 +105,7 @@ class tx_seminars_Model_OrganizerTest extends tx_phpunit_testcase {
 	public function getHomepageWithNonEmptyHomepageReturnsHomepage() {
 		$this->fixture->setData(array('homepage' => 'http://example.com'));
 
-		$this->assertEquals(
+		self::assertEquals(
 			'http://example.com',
 			$this->fixture->getHomepage()
 		);
@@ -132,7 +117,7 @@ class tx_seminars_Model_OrganizerTest extends tx_phpunit_testcase {
 	public function setHomepageSetsHomepage() {
 		$this->fixture->setHomepage('http://example.com');
 
-		$this->assertEquals(
+		self::assertEquals(
 			'http://example.com',
 			$this->fixture->getHomepage()
 		);
@@ -144,7 +129,7 @@ class tx_seminars_Model_OrganizerTest extends tx_phpunit_testcase {
 	public function hasHomepageInitiallyReturnsFalse() {
 		$this->fixture->setData(array());
 
-		$this->assertFalse(
+		self::assertFalse(
 			$this->fixture->hasHomepage()
 		);
 	}
@@ -155,7 +140,7 @@ class tx_seminars_Model_OrganizerTest extends tx_phpunit_testcase {
 	public function hasHomepageWithNonEmptyHomepageReturnsTrue() {
 		$this->fixture->setHomepage('http://example.com');
 
-		$this->assertTrue(
+		self::assertTrue(
 			$this->fixture->hasHomepage()
 		);
 	}
@@ -183,7 +168,7 @@ class tx_seminars_Model_OrganizerTest extends tx_phpunit_testcase {
 	public function setEMailAddressSetsEMailAddress() {
 		$this->fixture->setEMailAddress('mail@example.com');
 
-		$this->assertEquals(
+		self::assertEquals(
 			'mail@example.com',
 			$this->fixture->getEMailAddress()
 		);
@@ -195,7 +180,7 @@ class tx_seminars_Model_OrganizerTest extends tx_phpunit_testcase {
 	public function getEMailAddressWithNonEmptyEMailAddressReturnsEMailAddress() {
 		$this->fixture->setData(array('email' => 'mail@example.com'));
 
-		$this->assertEquals(
+		self::assertEquals(
 			'mail@example.com',
 			$this->fixture->getEMailAddress()
 		);
@@ -212,7 +197,7 @@ class tx_seminars_Model_OrganizerTest extends tx_phpunit_testcase {
 	public function getEMailFooterInitiallyReturnsAnEmptyString() {
 		$this->fixture->setData(array());
 
-		$this->assertEquals(
+		self::assertEquals(
 			'',
 			$this->fixture->getEMailFooter()
 		);
@@ -224,7 +209,7 @@ class tx_seminars_Model_OrganizerTest extends tx_phpunit_testcase {
 	public function getEMailFooterWithNonEmptyEMailFooterReturnsEMailFooter() {
 		$this->fixture->setData(array('email_footer' => 'Example Inc.'));
 
-		$this->assertEquals(
+		self::assertEquals(
 			'Example Inc.',
 			$this->fixture->getEMailFooter()
 		);
@@ -236,7 +221,7 @@ class tx_seminars_Model_OrganizerTest extends tx_phpunit_testcase {
 	public function setEMailFooterSetsEMailFooter() {
 		$this->fixture->setEMailFooter('Example Inc.');
 
-		$this->assertEquals(
+		self::assertEquals(
 			'Example Inc.',
 			$this->fixture->getEMailFooter()
 		);
@@ -248,7 +233,7 @@ class tx_seminars_Model_OrganizerTest extends tx_phpunit_testcase {
 	public function hasEMailFooterInitiallyReturnsFalse() {
 		$this->fixture->setData(array());
 
-		$this->assertFalse(
+		self::assertFalse(
 			$this->fixture->hasEMailFooter()
 		);
 	}
@@ -259,7 +244,7 @@ class tx_seminars_Model_OrganizerTest extends tx_phpunit_testcase {
 	public function hasEMailFooterWithNonEmptyEMailFooterReturnsTrue() {
 		$this->fixture->setEMailFooter('Example Inc.');
 
-		$this->assertTrue(
+		self::assertTrue(
 			$this->fixture->hasEMailFooter()
 		);
 	}
@@ -275,7 +260,7 @@ class tx_seminars_Model_OrganizerTest extends tx_phpunit_testcase {
 	public function getAttendancesPIDInitiallyReturnsZero() {
 		$this->fixture->setData(array());
 
-		$this->assertEquals(
+		self::assertEquals(
 			0,
 			$this->fixture->getAttendancesPID()
 		);
@@ -287,7 +272,7 @@ class tx_seminars_Model_OrganizerTest extends tx_phpunit_testcase {
 	public function getAttendancesPIDWithAttendancesPIDReturnsAttendancesPID() {
 		$this->fixture->setData(array('attendances_pid' => 42));
 
-		$this->assertEquals(
+		self::assertEquals(
 			42,
 			$this->fixture->getAttendancesPID()
 		);
@@ -299,7 +284,7 @@ class tx_seminars_Model_OrganizerTest extends tx_phpunit_testcase {
 	public function setAttendancesPIDWithPositiveAttendancesPIDSetsAttendancesPID() {
 		$this->fixture->setAttendancesPID(42);
 
-		$this->assertEquals(
+		self::assertEquals(
 			42,
 			$this->fixture->getAttendancesPID()
 		);
@@ -311,7 +296,7 @@ class tx_seminars_Model_OrganizerTest extends tx_phpunit_testcase {
 	public function setAttendancesPIDWithZeroAttendancesPIDSetsAttendancesPID() {
 		$this->fixture->setAttendancesPID(0);
 
-		$this->assertEquals(
+		self::assertEquals(
 			0,
 			$this->fixture->getAttendancesPID()
 		);
@@ -332,7 +317,7 @@ class tx_seminars_Model_OrganizerTest extends tx_phpunit_testcase {
 	public function hasAttendancesPIDInitiallyReturnsFalse() {
 		$this->fixture->setData(array());
 
-		$this->assertFalse(
+		self::assertFalse(
 			$this->fixture->hasAttendancesPID()
 		);
 	}
@@ -343,7 +328,7 @@ class tx_seminars_Model_OrganizerTest extends tx_phpunit_testcase {
 	public function hasAttendancesPIDWithAttendancesPIDReturnsTrue() {
 		$this->fixture->setAttendancesPID(42);
 
-		$this->assertTrue(
+		self::assertTrue(
 			$this->fixture->hasAttendancesPID()
 		);
 	}
@@ -359,7 +344,7 @@ class tx_seminars_Model_OrganizerTest extends tx_phpunit_testcase {
 	public function hasDescriptionForOrganizerWithoutDescriptionReturnsFalse() {
 		$this->fixture->setData(array('description' => ''));
 
-		$this->assertFalse(
+		self::assertFalse(
 			$this->fixture->hasDescription()
 		);
 	}
@@ -370,7 +355,7 @@ class tx_seminars_Model_OrganizerTest extends tx_phpunit_testcase {
 	public function hasDescriptionForOrganizerWithDescriptionReturnsTrue() {
 		$this->fixture->setData(array('description' => 'foo'));
 
-		$this->assertTrue(
+		self::assertTrue(
 			$this->fixture->hasDescription()
 		);
 	}
@@ -381,7 +366,7 @@ class tx_seminars_Model_OrganizerTest extends tx_phpunit_testcase {
 	public function getDescriptionForOrganizerWithoutDescriptionReturnsEmptyString() {
 		$this->fixture->setData(array('description' => ''));
 
-		$this->assertEquals(
+		self::assertEquals(
 			'',
 			$this->fixture->getDescription()
 		);
@@ -393,7 +378,7 @@ class tx_seminars_Model_OrganizerTest extends tx_phpunit_testcase {
 	public function getDescriptionForOrganizerWithDescriptionReturnsDescription() {
 		$this->fixture->setData(array('description' => 'foo'));
 
-		$this->assertEquals(
+		self::assertEquals(
 			'foo',
 			$this->fixture->getDescription()
 		);

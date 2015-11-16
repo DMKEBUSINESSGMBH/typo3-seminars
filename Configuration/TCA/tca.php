@@ -1,7 +1,5 @@
 <?php
-if (!defined('TYPO3_MODE')) {
-	die('Access denied.');
-}
+defined('TYPO3_MODE') or die('Access denied.');
 
 if (!function_exists('txSeminarsReplaceTables')) {
 	/**
@@ -9,10 +7,10 @@ if (!function_exists('txSeminarsReplaceTables')) {
 	 * table name. It's mainly used to simplify the maintaining of the wizard
 	 * code (equals in more than 90%) and to get some flexibility.
 	 *
-	 * @param array $array wizards array with the table markers
+	 * @param array[] $array wizards array with the table markers
 	 * @param string $table name of the real database table (e.g. "tx_seminars_seminars")
 	 *
-	 * @return array wizards array with replaced table markers
+	 * @return array[] wizards array with replaced table markers
 	 */
 	function txSeminarsReplaceTables(array $array, $table) {
 		$array['add']['params']['table'] =
@@ -51,7 +49,7 @@ if (!function_exists('user_createLanguageSelector')) {
 	/**
 	 * Creates the values for a language selector in the TCA, using the alpha 2 codes as array keys.
 	 *
-	 * @param array $parameters
+	 * @param array[] $parameters
 	 *
 	 * @return void
 	 */
@@ -75,7 +73,7 @@ if (!function_exists('user_createCountrySelector')) {
 	/**
 	 * Creates the values for a country selector in the TCA, using the alpha 2 codes as array keys.
 	 *
-	 * @param array $parameters
+	 * @param array[] $parameters
 	 *
 	 * @return void
 	 */
@@ -97,9 +95,9 @@ if (!function_exists('user_createCountrySelector')) {
 
 // unserializes the configuration array
 $globalConfiguration = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['seminars']);
-$usePageBrowser = (boolean) $globalConfiguration['usePageBrowser'];
-$useGeneralRecordStoragePage = (boolean) $globalConfiguration['useStoragePid'];
-$selectTopicsFromAllPages = (boolean) $globalConfiguration['selectTopicsFromAllPages'];
+$usePageBrowser = (bool)$globalConfiguration['usePageBrowser'];
+$useGeneralRecordStoragePage = (bool)$globalConfiguration['useStoragePid'];
+$selectTopicsFromAllPages = (bool)$globalConfiguration['selectTopicsFromAllPages'];
 $selectType = $usePageBrowser ? 'group' : 'select';
 $selectWhereForTopics = ($selectTopicsFromAllPages) ? '' : ' AND tx_seminars_seminars.pid=###STORAGE_PID###';
 
@@ -143,8 +141,8 @@ if ($selectType == 'select') {
 	);
 }
 
-$TCA['tx_seminars_test'] = array(
-	'ctrl' => $TCA['tx_seminars_test']['ctrl'],
+$GLOBALS['TCA']['tx_seminars_test'] = array(
+	'ctrl' => $GLOBALS['TCA']['tx_seminars_test']['ctrl'],
 	'interface' => array(
 		'showRecordFieldList' => 'hidden,starttime,endtime,title'
 	),
@@ -203,8 +201,8 @@ $TCA['tx_seminars_test'] = array(
 );
 
 
-$TCA['tx_seminars_seminars'] = array(
-	'ctrl' => $TCA['tx_seminars_seminars']['ctrl'],
+$GLOBALS['TCA']['tx_seminars_seminars'] = array(
+	'ctrl' => $GLOBALS['TCA']['tx_seminars_seminars']['ctrl'],
 	'interface' => array(
 		'showRecordFieldList' => 'title,subtitle,categories,teaser,description,accreditation_number,credit_points,begin_date,end_date,timeslots,begin_date_registration,deadline_registration,deadline_unregistration,expiry,details_page,place,room,speakers,price_regular,price_special,payment_methods,organizers,organizing_partners,event_takes_place_reminder_sent,cancelation_deadline_reminder_sent,needs_registration,allows_multiple_registrations,attendees_min,attendees_max,queue_size,offline_attendees,target_groups,skip_collision_check,registrations,cancelled,notes,attached_files,hidden,starttime,endtime,owner_feuser,vips'
 	),
@@ -280,7 +278,7 @@ $TCA['tx_seminars_seminars'] = array(
 				'internal_type' => 'db',
 				'allowed' => 'tx_seminars_seminars',
 				'foreign_table' => 'tx_seminars_seminars',
-				'foreign_table_where' => 'AND tx_seminars_seminars.uid != ###THIS_UID### AND object_type = 1 ORDER BY title',
+				'foreign_table_where' => 'AND tx_seminars_seminars.uid <> ###THIS_UID### AND object_type = 1 ORDER BY title',
 				'size' => 10,
 				'minitems' => 0,
 				'maxitems' => 999,
@@ -294,7 +292,7 @@ $TCA['tx_seminars_seminars'] = array(
 				'type' => $selectType,
 				'internal_type' => 'db',
 				'foreign_table' => 'tx_seminars_seminars',
-				'foreign_table_where' => 'AND tx_seminars_seminars.uid != ###THIS_UID### AND object_type = 1 ORDER BY title',
+				'foreign_table_where' => 'AND tx_seminars_seminars.uid <> ###THIS_UID### AND object_type = 1 ORDER BY title',
 				'size' => 10,
 				'minitems' => 0,
 				'maxitems' => 999,
@@ -629,13 +627,13 @@ $TCA['tx_seminars_seminars'] = array(
 				'type' => 'input',
 				'size' => '10',
 				'max' => '10',
-				'eval' => 'tx_oelib_Double3Validator',
-				'checkbox' => '0.000',
+				'eval' => 'double2',
+				'checkbox' => '0.00',
 				'range' => array(
-					'upper' => '999999.999',
-					'lower' => '0.000',
+					'upper' => '999999.99',
+					'lower' => '0.00',
 				),
-				'default' => '0.000',
+				'default' => '0.00',
 			),
 		),
 		'price_regular_early' => array(
@@ -646,13 +644,13 @@ $TCA['tx_seminars_seminars'] = array(
 				'type' => 'input',
 				'size' => '10',
 				'max' => '10',
-				'eval' => 'tx_oelib_Double3Validator',
-				'checkbox' => '0.000',
+				'eval' => 'double2',
+				'checkbox' => '0.00',
 				'range' => array(
-					'upper' => '999999.999',
-					'lower' => '0.000',
+					'upper' => '999999.99',
+					'lower' => '0.00',
 				),
-				'default' => '0.000',
+				'default' => '0.00',
 			),
 		),
 		'price_regular_board' => array(
@@ -662,13 +660,13 @@ $TCA['tx_seminars_seminars'] = array(
 				'type' => 'input',
 				'size' => '10',
 				'max' => '10',
-				'eval' => 'tx_oelib_Double3Validator',
-				'checkbox' => '0.000',
+				'eval' => 'double2',
+				'checkbox' => '0.00',
 				'range' => array(
-					'upper' => '999999.999',
-					'lower' => '0.000',
+					'upper' => '999999.99',
+					'lower' => '0.00',
 				),
-				'default' => '0.000',
+				'default' => '0.00',
 			),
 		),
 		'price_special' => array(
@@ -678,13 +676,13 @@ $TCA['tx_seminars_seminars'] = array(
 				'type' => 'input',
 				'size' => '10',
 				'max' => '10',
-				'eval' => 'tx_oelib_Double3Validator',
-				'checkbox' => '0.000',
+				'eval' => 'double2',
+				'checkbox' => '0.00',
 				'range' => array(
-					'upper' => '999999.999',
-					'lower' => '0.000',
+					'upper' => '999999.99',
+					'lower' => '0.00',
 				),
-				'default' => '0.000',
+				'default' => '0.00',
 			),
 		),
 		'price_special_early' => array(
@@ -695,13 +693,13 @@ $TCA['tx_seminars_seminars'] = array(
 				'type' => 'input',
 				'size' => '10',
 				'max' => '10',
-				'eval' => 'tx_oelib_Double3Validator',
-				'checkbox' => '0.000',
+				'eval' => 'double2',
+				'checkbox' => '0.00',
 				'range' => array(
-					'upper' => '999999.999',
-					'lower' => '0.000',
+					'upper' => '999999.99',
+					'lower' => '0.00',
 				),
-				'default' => '0.000',
+				'default' => '0.00',
 			),
 		),
 		'price_special_board' => array(
@@ -711,13 +709,13 @@ $TCA['tx_seminars_seminars'] = array(
 				'type' => 'input',
 				'size' => '10',
 				'max' => '10',
-				'eval' => 'tx_oelib_Double3Validator',
-				'checkbox' => '0.000',
+				'eval' => 'double2',
+				'checkbox' => '0.00',
 				'range' => array(
-					'upper' => '999999.999',
-					'lower' => '0.000',
+					'upper' => '999999.99',
+					'lower' => '0.00',
 				),
-				'default' => '0.000',
+				'default' => '0.00',
 			),
 		),
 		'additional_information' => array(
@@ -1055,7 +1053,7 @@ $TCA['tx_seminars_seminars'] = array(
 		),
 		'publication_hash' => array(
 			'exclude' => 1,
-			'label' => '',
+			'label' => 'LLL:EXT:seminars/locallang_db.xml:tx_seminars_seminars.publication_hash',
 			'config' => array(
 				'type' => 'input',
 				'size' => '20',
@@ -1100,8 +1098,8 @@ $TCA['tx_seminars_seminars'] = array(
 );
 
 
-$TCA['tx_seminars_speakers'] = array(
-	'ctrl' => $TCA['tx_seminars_speakers']['ctrl'],
+$GLOBALS['TCA']['tx_seminars_speakers'] = array(
+	'ctrl' => $GLOBALS['TCA']['tx_seminars_speakers']['ctrl'],
 	'interface' => array(
 		'showRecordFieldList' => 'hidden,title,organization,homepage,description,skills,notes,address,phone_work,phone_home,phone_mobile,fax,email,cancelation_period,owner'
 	),
@@ -1295,8 +1293,8 @@ $TCA['tx_seminars_speakers'] = array(
 
 
 
-$TCA['tx_seminars_attendances'] = array(
-	'ctrl' => $TCA['tx_seminars_attendances']['ctrl'],
+$GLOBALS['TCA']['tx_seminars_attendances'] = array(
+	'ctrl' => $GLOBALS['TCA']['tx_seminars_attendances']['ctrl'],
 	'interface' => array(
 		'showRecordFieldList' => 'hidden,uid,title,user,seminar,registration_queue,price,seats,registered_themselves,total_price,currency,including_tax,attendees_names,additional_persons,datepaid,method_of_payment,account_number,bank_code,bank_name,account_owner,company,gender,name,address,zip,city,country,phone,email,been_there,interests,expectations,background_knowledge,accommodation,food,known_from,notes',
 	),
@@ -1402,13 +1400,13 @@ $TCA['tx_seminars_attendances'] = array(
 				'type' => 'input',
 				'size' => '10',
 				'max' => '10',
-				'eval' => 'tx_oelib_Double3Validator',
-				'checkbox' => '0.000',
+				'eval' => 'double2',
+				'checkbox' => '0.00',
 				'range' => array(
-					'upper' => '999999.999',
-					'lower' => '0.000',
+					'upper' => '999999.99',
+					'lower' => '0.00',
 				),
-				'default' => '0.000',
+				'default' => '0.00',
 			),
 		),
 		'attendees_names' => array(
@@ -1767,8 +1765,8 @@ $TCA['tx_seminars_attendances'] = array(
 
 
 
-$TCA['tx_seminars_sites'] = array(
-	'ctrl' => $TCA['tx_seminars_sites']['ctrl'],
+$GLOBALS['TCA']['tx_seminars_sites'] = array(
+	'ctrl' => $GLOBALS['TCA']['tx_seminars_sites']['ctrl'],
 	'interface' => array(
 		'showRecordFieldList' => 'title,address,zip,city,homepage,directions,notes,owner',
 	),
@@ -1885,8 +1883,8 @@ $TCA['tx_seminars_sites'] = array(
 
 
 
-$TCA['tx_seminars_organizers'] = array(
-	'ctrl' => $TCA['tx_seminars_organizers']['ctrl'],
+$GLOBALS['TCA']['tx_seminars_organizers'] = array(
+	'ctrl' => $GLOBALS['TCA']['tx_seminars_organizers']['ctrl'],
 	'interface' => array(
 		'showRecordFieldList' => 'title,description,homepage,email,email_footer'
 	),
@@ -1970,8 +1968,8 @@ $TCA['tx_seminars_organizers'] = array(
 	),
 );
 
-$TCA['tx_seminars_payment_methods'] = array(
-	'ctrl' => $TCA['tx_seminars_payment_methods']['ctrl'],
+$GLOBALS['TCA']['tx_seminars_payment_methods'] = array(
+	'ctrl' => $GLOBALS['TCA']['tx_seminars_payment_methods']['ctrl'],
 	'interface' => array(
 		'showRecordFieldList' => 'title, description',
 	),
@@ -2003,8 +2001,8 @@ $TCA['tx_seminars_payment_methods'] = array(
 	)
 );
 
-$TCA['tx_seminars_event_types'] = array(
-	'ctrl' => $TCA['tx_seminars_event_types']['ctrl'],
+$GLOBALS['TCA']['tx_seminars_event_types'] = array(
+	'ctrl' => $GLOBALS['TCA']['tx_seminars_event_types']['ctrl'],
 	'interface' => array(
 		'showRecordFieldList' => 'title, single_view_page',
 	),
@@ -2039,8 +2037,8 @@ $TCA['tx_seminars_event_types'] = array(
 	)
 );
 
-$TCA['tx_seminars_checkboxes'] = array(
-	'ctrl' => $TCA['tx_seminars_checkboxes']['ctrl'],
+$GLOBALS['TCA']['tx_seminars_checkboxes'] = array(
+	'ctrl' => $GLOBALS['TCA']['tx_seminars_checkboxes']['ctrl'],
 	'interface' => array(
 		'showRecordFieldList' => 'title,owner',
 	),
@@ -2075,8 +2073,8 @@ $TCA['tx_seminars_checkboxes'] = array(
 	)
 );
 
-$TCA['tx_seminars_lodgings'] = array(
-	'ctrl' => $TCA['tx_seminars_lodgings']['ctrl'],
+$GLOBALS['TCA']['tx_seminars_lodgings'] = array(
+	'ctrl' => $GLOBALS['TCA']['tx_seminars_lodgings']['ctrl'],
 	'interface' => array(
 		'showRecordFieldList' => 'title',
 	),
@@ -2099,8 +2097,8 @@ $TCA['tx_seminars_lodgings'] = array(
 	),
 );
 
-$TCA['tx_seminars_foods'] = array(
-	'ctrl' => $TCA['tx_seminars_foods']['ctrl'],
+$GLOBALS['TCA']['tx_seminars_foods'] = array(
+	'ctrl' => $GLOBALS['TCA']['tx_seminars_foods']['ctrl'],
 	'interface' => array(
 		'showRecordFieldList' => 'title',
 	),
@@ -2123,8 +2121,8 @@ $TCA['tx_seminars_foods'] = array(
 	)
 );
 
-$TCA['tx_seminars_timeslots'] = array(
-	'ctrl' => $TCA['tx_seminars_timeslots']['ctrl'],
+$GLOBALS['TCA']['tx_seminars_timeslots'] = array(
+	'ctrl' => $GLOBALS['TCA']['tx_seminars_timeslots']['ctrl'],
 	'interface' => array(
 		'showRecordFieldList' => 'begin_date, end_date, entry_date, speakers, place, room'
 	),
@@ -2232,8 +2230,8 @@ $TCA['tx_seminars_timeslots'] = array(
 	),
 );
 
-$TCA['tx_seminars_target_groups'] = array(
-	'ctrl' => $TCA['tx_seminars_target_groups']['ctrl'],
+$GLOBALS['TCA']['tx_seminars_target_groups'] = array(
+	'ctrl' => $GLOBALS['TCA']['tx_seminars_target_groups']['ctrl'],
 	'interface' => array(
 		'showRecordFieldList' => 'title,minimum_age,maximum_age,owner',
 	),
@@ -2296,8 +2294,8 @@ $TCA['tx_seminars_target_groups'] = array(
 	),
 );
 
-$TCA['tx_seminars_categories'] = array(
-	'ctrl' => $TCA['tx_seminars_categories']['ctrl'],
+$GLOBALS['TCA']['tx_seminars_categories'] = array(
+	'ctrl' => $GLOBALS['TCA']['tx_seminars_categories']['ctrl'],
 	'interface' => array(
 		'showRecordFieldList' => 'title, icon, single_view_page',
 	),
@@ -2347,8 +2345,8 @@ $TCA['tx_seminars_categories'] = array(
 	),
 );
 
-$TCA['tx_seminars_skills'] = array(
-	'ctrl' => $TCA['tx_seminars_skills']['ctrl'],
+$GLOBALS['TCA']['tx_seminars_skills'] = array(
+	'ctrl' => $GLOBALS['TCA']['tx_seminars_skills']['ctrl'],
 	'interface' => array(
 		'showRecordFieldList' => 'title',
 	),

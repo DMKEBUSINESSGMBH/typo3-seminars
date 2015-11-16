@@ -1,26 +1,16 @@
 <?php
-/***************************************************************
-* Copyright notice
-*
-* (c) 2007-2013 Niels Pardon (mail@niels-pardon.de)
-* All rights reserved
-*
-* This script is part of the TYPO3 project. The TYPO3 project is
-* free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* The GNU General Public License can be found at
-* http://www.gnu.org/copyleft/gpl.html.
-*
-* This script is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* This copyright notice MUST APPEAR in all copies of the script!
-***************************************************************/
+/*
+ * This file is part of the TYPO3 CMS project.
+ *
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
+ *
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
+ *
+ * The TYPO3 project - inspiring people to share!
+ */
 
 /**
  * This class creates an organizer list in the back end.
@@ -75,6 +65,7 @@ class tx_seminars_BackEnd_OrganizersList extends tx_seminars_BackEnd_AbstractLis
 			'label_full_name', $GLOBALS['LANG']->getLL('organizerlist.title')
 		);
 
+		/** @var tx_seminars_BagBuilder_Organizer $builder */
 		$builder = t3lib_div::makeInstance('tx_seminars_BagBuilder_Organizer');
 
 		$builder->setSourcePages($pageData['uid'], self::RECURSION_DEPTH);
@@ -83,6 +74,7 @@ class tx_seminars_BackEnd_OrganizersList extends tx_seminars_BackEnd_AbstractLis
 
 		$tableRows = '';
 
+		/** @var tx_seminars_OldModel_Organizer $organizerBag */
 		foreach ($organizerBag as $this->organizer) {
 			$this->template->setMarker(
 				'icon', $this->organizer->getRecordIcon()
@@ -123,7 +115,7 @@ class tx_seminars_BackEnd_OrganizersList extends tx_seminars_BackEnd_AbstractLis
 	 * This will be determined by the auxiliary folder storage setting of the
 	 * currently logged-in BE-user.
 	 *
-	 * @return integer the PID for new organizer records, will be >= 0
+	 * @return int the PID for new organizer records, will be >= 0
 	 */
 	protected function getNewRecordPid() {
 		return $this->getLoggedInUser()->getAuxiliaryRecordsFolder();

@@ -1,26 +1,16 @@
 <?php
-/***************************************************************
-* Copyright notice
-*
-* (c) 2008-2013 Niels Pardon (mail@niels-pardon.de)
-* All rights reserved
-*
-* This script is part of the TYPO3 project. The TYPO3 project is
-* free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* The GNU General Public License can be found at
-* http://www.gnu.org/copyleft/gpl.html.
-*
-* This script is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* This copyright notice MUST APPEAR in all copies of the script!
-***************************************************************/
+/*
+ * This file is part of the TYPO3 CMS project.
+ *
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
+ *
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
+ *
+ * The TYPO3 project - inspiring people to share!
+ */
 
 /**
  * Test case.
@@ -43,16 +33,16 @@ class tx_seminars_FrontEnd_CategoryListTest extends tx_phpunit_testcase {
 	private $testingFramework;
 
 	/**
-	 * @var integer the UID of a seminar to which the fixture relates
+	 * @var int the UID of a seminar to which the fixture relates
 	 */
 	private $seminarUid;
 
 	/**
-	 * @var integer PID of a dummy system folder
+	 * @var int PID of a dummy system folder
 	 */
 	private $systemFolderPid = 0;
 
-	public function setUp() {
+	protected function setUp() {
 		tx_oelib_configurationProxy::getInstance('seminars')->setAsBoolean('enableConfigCheck', FALSE);
 
 		$this->testingFramework = new tx_oelib_testingFramework('tx_seminars');
@@ -79,10 +69,8 @@ class tx_seminars_FrontEnd_CategoryListTest extends tx_phpunit_testcase {
 		);
 	}
 
-	public function tearDown() {
+	protected function tearDown() {
 		$this->testingFramework->cleanUp();
-
-		unset($this->fixture, $this->testingFramework);
 	}
 
 
@@ -96,11 +84,11 @@ class tx_seminars_FrontEnd_CategoryListTest extends tx_phpunit_testcase {
 
 		$output = $this->fixture->render();
 
-		$this->assertNotContains(
+		self::assertNotContains(
 			'<table',
 			$output
 		);
-		$this->assertContains(
+		self::assertContains(
 			$this->fixture->translate('label_no_categories'),
 			$output
 		);
@@ -128,7 +116,7 @@ class tx_seminars_FrontEnd_CategoryListTest extends tx_phpunit_testcase {
 		);
 
 		$result = $this->fixture->render();
-		$this->assertContains(
+		self::assertContains(
 			'one &amp; category',
 			$result
 		);
@@ -160,11 +148,11 @@ class tx_seminars_FrontEnd_CategoryListTest extends tx_phpunit_testcase {
 		);
 
 		$output = $this->fixture->render();
-		$this->assertContains(
+		self::assertContains(
 			'first category',
 			$output
 		);
-		$this->assertContains(
+		self::assertContains(
 			'second category',
 			$output
 		);
@@ -196,7 +184,7 @@ class tx_seminars_FrontEnd_CategoryListTest extends tx_phpunit_testcase {
 		);
 
 		$output = $this->fixture->render();
-		$this->assertTrue(
+		self::assertTrue(
 			strpos($output, 'category A') < strpos($output, 'category B')
 		);
 	}
@@ -222,7 +210,7 @@ class tx_seminars_FrontEnd_CategoryListTest extends tx_phpunit_testcase {
 			'tx_seminars_seminars_categories_mm', $eventUid, $categoryUid
 		);
 
-		$this->assertContains(
+		self::assertContains(
 			'one category',
 			$this->fixture->render()
 		);
@@ -247,7 +235,7 @@ class tx_seminars_FrontEnd_CategoryListTest extends tx_phpunit_testcase {
 			'tx_seminars_seminars_categories_mm', $eventUid, $categoryUid
 		);
 
-		$this->assertNotContains(
+		self::assertNotContains(
 			'one category',
 			$this->fixture->render()
 		);
@@ -274,7 +262,7 @@ class tx_seminars_FrontEnd_CategoryListTest extends tx_phpunit_testcase {
 			'tx_seminars_seminars_categories_mm', $eventUid, $categoryUid
 		);
 
-		$this->assertContains(
+		self::assertContains(
 			'one category',
 			$this->fixture->render()
 		);
@@ -299,7 +287,7 @@ class tx_seminars_FrontEnd_CategoryListTest extends tx_phpunit_testcase {
 			'tx_seminars_seminars_categories_mm', $eventUid, $categoryUid
 		);
 
-		$this->assertNotContains(
+		self::assertNotContains(
 			'one category',
 			$this->fixture->render()
 		);
@@ -324,7 +312,7 @@ class tx_seminars_FrontEnd_CategoryListTest extends tx_phpunit_testcase {
 			'tx_seminars_seminars_categories_mm', $eventUid, $categoryUid
 		);
 
-		$this->assertContains(
+		self::assertContains(
 			'one category',
 			$this->fixture->render()
 		);
@@ -353,7 +341,7 @@ class tx_seminars_FrontEnd_CategoryListTest extends tx_phpunit_testcase {
 			'tx_seminars_seminars_categories_mm', $eventUid, $categoryUid
 		);
 
-		$this->assertContains(
+		self::assertContains(
 			'one category',
 			$this->fixture->render()
 		);
@@ -382,7 +370,7 @@ class tx_seminars_FrontEnd_CategoryListTest extends tx_phpunit_testcase {
 			'tx_seminars_seminars_categories_mm', $eventUid, $categoryUid
 		);
 
-		$this->assertNotContains(
+		self::assertNotContains(
 			'one category',
 			$this->fixture->render()
 		);
@@ -410,7 +398,7 @@ class tx_seminars_FrontEnd_CategoryListTest extends tx_phpunit_testcase {
 			'tx_seminars_seminars_categories_mm', $eventUid, $categoryUid
 		);
 
-		$this->assertContains(
+		self::assertContains(
 			'tx_seminars_pi1[category]='.$categoryUid,
 			$this->fixture->render()
 		);
@@ -422,7 +410,7 @@ class tx_seminars_FrontEnd_CategoryListTest extends tx_phpunit_testcase {
 	 */
 
 	public function testCreateCategoryListWithNoGivenCategoriesReturnsEmptyString() {
-		$this->assertEquals(
+		self::assertEquals(
 			'',
 			$this->fixture->createCategoryList(array())
 		);
@@ -438,7 +426,7 @@ class tx_seminars_FrontEnd_CategoryListTest extends tx_phpunit_testcase {
 				)
 		);
 
-		$this->assertEquals(
+		self::assertEquals(
 			'test',
 			$this->fixture->createCategoryList($singleCategory)
 		);
@@ -455,7 +443,7 @@ class tx_seminars_FrontEnd_CategoryListTest extends tx_phpunit_testcase {
 		);
 		$this->testingFramework->createDummyFile('foo.gif');
 
-		$this->assertNotContains(
+		self::assertNotContains(
 			'foo.gif',
 			$this->fixture->createCategoryList($singleCategory)
 		);
@@ -474,7 +462,7 @@ class tx_seminars_FrontEnd_CategoryListTest extends tx_phpunit_testcase {
 				)
 		);
 
-		$this->assertEquals(
+		self::assertEquals(
 			'test &amp; more',
 			$this->fixture->createCategoryList($singleCategory)
 		);
@@ -493,11 +481,11 @@ class tx_seminars_FrontEnd_CategoryListTest extends tx_phpunit_testcase {
 				)
 			);
 
-		$this->assertContains(
+		self::assertContains(
 			'test &amp; more',
 			$this->fixture->createCategoryList($singleCategory)
 		);
-		$this->assertNotContains(
+		self::assertNotContains(
 			'test & more',
 			$this->fixture->createCategoryList($singleCategory)
 		);
@@ -516,7 +504,7 @@ class tx_seminars_FrontEnd_CategoryListTest extends tx_phpunit_testcase {
 				)
 			);
 
-		$this->assertSame(
+		self::assertSame(
 			'test &amp; more',
 			$this->fixture->createCategoryList($singleCategory)
 		);
@@ -536,7 +524,7 @@ class tx_seminars_FrontEnd_CategoryListTest extends tx_phpunit_testcase {
 		);
 		$this->testingFramework->createDummyFile('foo.gif');
 
-		$this->assertRegExp(
+		self::assertRegExp(
 			'/<img[^>]+title="te &amp; st"/',
 			$this->fixture->createCategoryList($singleCategory)
 		);
@@ -555,7 +543,7 @@ class tx_seminars_FrontEnd_CategoryListTest extends tx_phpunit_testcase {
 		$this->testingFramework->createDummyFile('foo.gif');
 
 
-		$this->assertNotRegExp(
+		self::assertNotRegExp(
 			'/<img[^>]*>.*test/',
 			$this->fixture->createCategoryList($singleCategory)
 		);
@@ -581,7 +569,7 @@ class tx_seminars_FrontEnd_CategoryListTest extends tx_phpunit_testcase {
 		$this->testingFramework->createDummyFile('foo.gif');
 		$this->testingFramework->createDummyFile('foo2.gif');
 
-		$this->assertRegExp(
+		self::assertRegExp(
 			'/<img[^>]+title="test"[^>]*>.*<img[^>]+title="new_test"[^>]*>/',
 			$this->fixture->createCategoryList($multipleCategories)
 		);
@@ -601,7 +589,7 @@ class tx_seminars_FrontEnd_CategoryListTest extends tx_phpunit_testcase {
 				)
 		);
 
-		$this->assertRegExp(
+		self::assertRegExp(
 			'/foo.*bar/',
 			$this->fixture->createCategoryList($multipleCategories)
 		);
@@ -623,7 +611,7 @@ class tx_seminars_FrontEnd_CategoryListTest extends tx_phpunit_testcase {
 				)
 		);
 
-		$this->assertNotContains(
+		self::assertNotContains(
 			',',
 			$this->fixture->createCategoryList($multipleCategories)
 		);
@@ -643,7 +631,7 @@ class tx_seminars_FrontEnd_CategoryListTest extends tx_phpunit_testcase {
 				)
 		);
 
-		$this->assertRegExp(
+		self::assertRegExp(
 			'/foo.*,.*bar/',
 			$this->fixture->createCategoryList($multipleCategories)
 		);
@@ -663,7 +651,7 @@ class tx_seminars_FrontEnd_CategoryListTest extends tx_phpunit_testcase {
 				)
 		);
 
-		$this->assertRegExp(
+		self::assertRegExp(
 			'/foo.*,.*bar/',
 			$this->fixture->createCategoryList($multipleCategories)
 		);
@@ -685,7 +673,7 @@ class tx_seminars_FrontEnd_CategoryListTest extends tx_phpunit_testcase {
 				)
 		);
 
-		$this->assertRegExp(
+		self::assertRegExp(
 			'/foo.*,.*bar/',
 			$this->fixture->createCategoryList($multipleCategories)
 		);

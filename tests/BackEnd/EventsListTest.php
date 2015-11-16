@@ -1,26 +1,16 @@
 <?php
-/***************************************************************
-* Copyright notice
-*
-* (c) 2007-2013 Oliver Klee (typo3-coding@oliverklee.de)
-* All rights reserved
-*
-* This script is part of the TYPO3 project. The TYPO3 project is
-* free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* The GNU General Public License can be found at
-* http://www.gnu.org/copyleft/gpl.html.
-*
-* This script is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* This copyright notice MUST APPEAR in all copies of the script!
-***************************************************************/
+/*
+ * This file is part of the TYPO3 CMS project.
+ *
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
+ *
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
+ *
+ * The TYPO3 project - inspiring people to share!
+ */
 
 /**
  * Test case.
@@ -43,7 +33,7 @@ class tx_seminars_BackEnd_EventsListTest extends Tx_Phpunit_TestCase {
 	protected $testingFramework = NULL;
 
 	/**
-	 * @var integer PID of a dummy system folder
+	 * @var int PID of a dummy system folder
 	 */
 	protected $dummySysFolderPid = 0;
 
@@ -79,9 +69,10 @@ class tx_seminars_BackEnd_EventsListTest extends Tx_Phpunit_TestCase {
 			'doktype' => tx_seminars_BackEnd_AbstractList::SYSFOLDER_TYPE,
 		));
 
-		$this->backEndModule->doc = t3lib_div::makeInstance('bigDoc');
-		$this->backEndModule->doc->backPath = $GLOBALS['BACK_PATH'];
-		$this->backEndModule->doc->docType = 'xhtml_strict';
+		$document = new bigDoc();
+		$this->backEndModule->doc = $document;
+		$document->backPath = $GLOBALS['BACK_PATH'];
+		$document->docType = 'xhtml_strict';
 
 		$this->fixture = new tx_seminars_BackEnd_EventsList($this->backEndModule);
 
@@ -102,8 +93,6 @@ class tx_seminars_BackEnd_EventsListTest extends Tx_Phpunit_TestCase {
 		$GLOBALS['LANG']->lang = $this->originalLanguage;
 
 		$this->testingFramework->cleanUp();
-
-		unset($this->backEndModule, $this->fixture, $this->testingFramework);
 	}
 
 
@@ -112,7 +101,7 @@ class tx_seminars_BackEnd_EventsListTest extends Tx_Phpunit_TestCase {
 	/////////////////////////////////////////
 
 	public function testShowContainsNoBodyHeaderWithEmptySystemFolder() {
-		$this->assertNotContains(
+		self::assertNotContains(
 			'<td class="datecol">',
 			$this->fixture->show()
 		);
@@ -124,7 +113,7 @@ class tx_seminars_BackEnd_EventsListTest extends Tx_Phpunit_TestCase {
 			array('pid' => $this->dummySysFolderPid)
 		);
 
-		$this->assertContains(
+		self::assertContains(
 			'<td class="datecol">',
 			$this->fixture->show()
 		);
@@ -137,7 +126,7 @@ class tx_seminars_BackEnd_EventsListTest extends Tx_Phpunit_TestCase {
 			array('pid' => $this->dummySysFolderPid + 1)
 		);
 
-		$this->assertNotContains(
+		self::assertNotContains(
 			'<td class="datecol">',
 			$this->fixture->show()
 		);
@@ -152,7 +141,7 @@ class tx_seminars_BackEnd_EventsListTest extends Tx_Phpunit_TestCase {
 			)
 		);
 
-		$this->assertContains(
+		self::assertContains(
 			'event_1',
 			$this->fixture->show()
 		);
@@ -174,11 +163,11 @@ class tx_seminars_BackEnd_EventsListTest extends Tx_Phpunit_TestCase {
 			)
 		);
 
-		$this->assertContains(
+		self::assertContains(
 			'event_1',
 			$this->fixture->show()
 		);
-		$this->assertContains(
+		self::assertContains(
 			'event_2',
 			$this->fixture->show()
 		);
@@ -194,7 +183,7 @@ class tx_seminars_BackEnd_EventsListTest extends Tx_Phpunit_TestCase {
 			)
 		);
 
-		$this->assertContains(
+		self::assertContains(
 			'event_1',
 			$this->fixture->show()
 		);
@@ -210,7 +199,7 @@ class tx_seminars_BackEnd_EventsListTest extends Tx_Phpunit_TestCase {
 			)
 		);
 
-		$this->assertContains(
+		self::assertContains(
 			'event_1',
 			$this->fixture->show()
 		);
@@ -226,7 +215,7 @@ class tx_seminars_BackEnd_EventsListTest extends Tx_Phpunit_TestCase {
 			)
 		);
 
-		$this->assertContains(
+		self::assertContains(
 			'accreditation number 123',
 			$this->fixture->show()
 		);
@@ -242,7 +231,7 @@ class tx_seminars_BackEnd_EventsListTest extends Tx_Phpunit_TestCase {
 			)
 		);
 
-		$this->assertContains(
+		self::assertContains(
 			'&amp;&quot;&lt;&gt;',
 			$this->fixture->show()
 		);
@@ -257,7 +246,7 @@ class tx_seminars_BackEnd_EventsListTest extends Tx_Phpunit_TestCase {
 			)
 		);
 
-		$this->assertContains(
+		self::assertContains(
 			'<img src="/typo3conf/ext/seminars/Resources/Public/Icons/Canceled.png" title="canceled" alt="canceled"/>',
 			$this->fixture->show()
 		);
@@ -272,7 +261,7 @@ class tx_seminars_BackEnd_EventsListTest extends Tx_Phpunit_TestCase {
 			)
 		);
 
-		$this->assertContains(
+		self::assertContains(
 			'<img src="/typo3conf/ext/seminars/Resources/Public/Icons/Confirmed.png" title="confirmed" alt="confirmed"/>',
 			$this->fixture->show()
 		);
@@ -287,12 +276,12 @@ class tx_seminars_BackEnd_EventsListTest extends Tx_Phpunit_TestCase {
 			)
 		);
 
-		$this->assertNotContains(
+		self::assertNotContains(
 			'<img src="/typo3conf/ext/seminars/Resources/Public/Icons/Canceled.png" title="canceled" alt="canceled"/>',
 			$this->fixture->show()
 		);
 
-		$this->assertNotContains(
+		self::assertNotContains(
 			'<img src="/typo3conf/ext/seminars/Resources/Public/Icons/Confirmed.png" title="confirmed" alt="confirmed"/>',
 			$this->fixture->show()
 		);
@@ -317,7 +306,7 @@ class tx_seminars_BackEnd_EventsListTest extends Tx_Phpunit_TestCase {
 			)
 		);
 
-		$this->assertContains(
+		self::assertContains(
 			'<button><p>E-mail</p></button>',
 			$this->fixture->show()
 		);
@@ -335,7 +324,7 @@ class tx_seminars_BackEnd_EventsListTest extends Tx_Phpunit_TestCase {
 			)
 		);
 
-		$this->assertNotContains(
+		self::assertNotContains(
 			'<button><p>E-mail</p></button>',
 			$this->fixture->show()
 		);
@@ -351,7 +340,7 @@ class tx_seminars_BackEnd_EventsListTest extends Tx_Phpunit_TestCase {
 			)
 		);
 
-		$this->assertNotContains(
+		self::assertNotContains(
 			'<button><p>Confirm</p></button>',
 			$this->fixture->show()
 		);
@@ -366,7 +355,7 @@ class tx_seminars_BackEnd_EventsListTest extends Tx_Phpunit_TestCase {
 			)
 		);
 
-		$this->assertNotContains(
+		self::assertNotContains(
 			'<button><p>Confirm</p></button>',
 			$this->fixture->show()
 		);
@@ -382,7 +371,7 @@ class tx_seminars_BackEnd_EventsListTest extends Tx_Phpunit_TestCase {
 			)
 		);
 
-		$this->assertContains(
+		self::assertContains(
 			'<button><p>Confirm</p></button>',
 			$this->fixture->show()
 		);
@@ -398,7 +387,7 @@ class tx_seminars_BackEnd_EventsListTest extends Tx_Phpunit_TestCase {
 			)
 		);
 
-		$this->assertContains(
+		self::assertContains(
 			'<button><p>Confirm</p></button>',
 			$this->fixture->show()
 		);
@@ -413,7 +402,7 @@ class tx_seminars_BackEnd_EventsListTest extends Tx_Phpunit_TestCase {
 			)
 		);
 
-		$this->assertNotContains(
+		self::assertNotContains(
 			'<button><p>Confirm</p></button>',
 			$this->fixture->show()
 		);
@@ -428,7 +417,7 @@ class tx_seminars_BackEnd_EventsListTest extends Tx_Phpunit_TestCase {
 			)
 		);
 
-		$this->assertContains(
+		self::assertContains(
 			'<button><p>Confirm</p></button>' .
 			'<input type="hidden" name="eventUid" value="' . $uid . '" />',
 			$this->fixture->show()
@@ -447,7 +436,7 @@ class tx_seminars_BackEnd_EventsListTest extends Tx_Phpunit_TestCase {
 			)
 		);
 
-		$this->assertNotContains(
+		self::assertNotContains(
 			'<button><p>Confirm</p></button>',
 			$this->fixture->show()
 		);
@@ -463,7 +452,7 @@ class tx_seminars_BackEnd_EventsListTest extends Tx_Phpunit_TestCase {
 			)
 		);
 
-		$this->assertNotContains(
+		self::assertNotContains(
 			'<button><p>Cancel</p></button>',
 			$this->fixture->show()
 		);
@@ -478,7 +467,7 @@ class tx_seminars_BackEnd_EventsListTest extends Tx_Phpunit_TestCase {
 			)
 		);
 
-		$this->assertNotContains(
+		self::assertNotContains(
 			'<button><p>Cancel</p></button>',
 			$this->fixture->show()
 		);
@@ -493,7 +482,7 @@ class tx_seminars_BackEnd_EventsListTest extends Tx_Phpunit_TestCase {
 			)
 		);
 
-		$this->assertContains(
+		self::assertContains(
 			'<button><p>Cancel</p></button>',
 			$this->fixture->show()
 		);
@@ -509,7 +498,7 @@ class tx_seminars_BackEnd_EventsListTest extends Tx_Phpunit_TestCase {
 			)
 		);
 
-		$this->assertContains(
+		self::assertContains(
 			'<button><p>Cancel</p></button>',
 			$this->fixture->show()
 		);
@@ -525,7 +514,7 @@ class tx_seminars_BackEnd_EventsListTest extends Tx_Phpunit_TestCase {
 			)
 		);
 
-		$this->assertNotContains(
+		self::assertNotContains(
 			'<button><p>Cancel</p></button>',
 			$this->fixture->show()
 		);
@@ -540,7 +529,7 @@ class tx_seminars_BackEnd_EventsListTest extends Tx_Phpunit_TestCase {
 			)
 		);
 
-		$this->assertContains(
+		self::assertContains(
 			'<button><p>Cancel</p></button>' .
 			'<input type="hidden" name="eventUid" value="' . $uid . '" />',
 			$this->fixture->show()
@@ -559,7 +548,7 @@ class tx_seminars_BackEnd_EventsListTest extends Tx_Phpunit_TestCase {
 			)
 		);
 
-		$this->assertNotContains(
+		self::assertNotContains(
 			'<button><p>Cancel</p></button>',
 			$this->fixture->show()
 		);
@@ -585,7 +574,7 @@ class tx_seminars_BackEnd_EventsListTest extends Tx_Phpunit_TestCase {
 			)
 		);
 
-		$this->assertContains(
+		self::assertContains(
 			'=' . $eventUid,
 			$this->fixture->show()
 		);
@@ -612,7 +601,7 @@ class tx_seminars_BackEnd_EventsListTest extends Tx_Phpunit_TestCase {
 			)
 		);
 
-		$this->assertNotContains(
+		self::assertNotContains(
 			'<a href="mod.php?M=web_txseminarsM2&amp;csv=1&amp;id=' .
 				$this->dummySysFolderPid .
 				'&amp;tx_seminars_pi2[table]=tx_seminars_attendances' .
@@ -636,7 +625,7 @@ class tx_seminars_BackEnd_EventsListTest extends Tx_Phpunit_TestCase {
 			)
 		);
 
-		$this->assertContains(
+		self::assertContains(
 			'Event in subfolder',
 			$this->fixture->show()
 		);
@@ -653,7 +642,7 @@ class tx_seminars_BackEnd_EventsListTest extends Tx_Phpunit_TestCase {
 			array('pid' => $this->dummySysFolderPid, 'seminar' => $eventUid)
 		);
 
-		$this->assertContains(
+		self::assertContains(
 			$GLOBALS['LANG']->getLL('label_show_event_registrations'),
 			$this->fixture->show()
 		);
@@ -665,7 +654,7 @@ class tx_seminars_BackEnd_EventsListTest extends Tx_Phpunit_TestCase {
 			array('pid' => $this->dummySysFolderPid, 'needs_registration' => 1)
 		);
 
-		$this->assertNotContains(
+		self::assertNotContains(
 			$GLOBALS['LANG']->getLL('label_show_event_registrations'),
 			$this->fixture->show()
 		);
@@ -682,7 +671,7 @@ class tx_seminars_BackEnd_EventsListTest extends Tx_Phpunit_TestCase {
 			array('pid' => $this->dummySysFolderPid, 'seminar' => $eventUid)
 		);
 
-		$this->assertContains(
+		self::assertContains(
 			'&amp;subModule=2',
 			$this->fixture->show()
 		);
@@ -699,7 +688,7 @@ class tx_seminars_BackEnd_EventsListTest extends Tx_Phpunit_TestCase {
 			array('pid' => $this->dummySysFolderPid, 'seminar' => $eventUid)
 		);
 
-		$this->assertContains(
+		self::assertContains(
 			'&amp;eventUid=' . $eventUid,
 			$this->fixture->show()
 		);
@@ -720,7 +709,7 @@ class tx_seminars_BackEnd_EventsListTest extends Tx_Phpunit_TestCase {
 			array('pid' => $this->dummySysFolderPid, 'seminar' => $eventUid)
 		);
 
-		$this->assertNotContains(
+		self::assertNotContains(
 			$GLOBALS['LANG']->getLL('label_show_event_registrations'),
 			$this->fixture->show()
 		);
@@ -741,7 +730,7 @@ class tx_seminars_BackEnd_EventsListTest extends Tx_Phpunit_TestCase {
 			)
 		);
 
-		$this->assertContains(
+		self::assertContains(
 			'EventComplete.gif',
 			$this->fixture->show()
 		);
@@ -753,7 +742,7 @@ class tx_seminars_BackEnd_EventsListTest extends Tx_Phpunit_TestCase {
 	////////////////////////////////
 
 	public function testLocalizationReturnsLocalizedStringForExistingKey() {
-		$this->assertEquals(
+		self::assertEquals(
 			'Events',
 			$GLOBALS['LANG']->getLL('title')
 		);
@@ -765,7 +754,7 @@ class tx_seminars_BackEnd_EventsListTest extends Tx_Phpunit_TestCase {
 	///////////////////////////////////////////
 
 	public function testEventListCanContainNewButton() {
-		$this->assertContains(
+		self::assertContains(
 			'newRecordLink',
 			$this->fixture->show()
 		);
@@ -778,7 +767,7 @@ class tx_seminars_BackEnd_EventsListTest extends Tx_Phpunit_TestCase {
 			$backEndUser
 		);
 
-		$this->assertContains(
+		self::assertContains(
 			'edit[tx_seminars_seminars][' . $this->dummySysFolderPid . ']=new',
 			$this->fixture->show()
 		);
@@ -791,7 +780,7 @@ class tx_seminars_BackEnd_EventsListTest extends Tx_Phpunit_TestCase {
 			$backEndUser
 		);
 
-		$this->assertContains(
+		self::assertContains(
 			sprintf(
 				$GLOBALS['LANG']->getLL('label_create_record_in_current_folder'),
 				'',
@@ -806,7 +795,7 @@ class tx_seminars_BackEnd_EventsListTest extends Tx_Phpunit_TestCase {
 			getLoggedInUser('tx_seminars_Mapper_BackEndUser')
 				->getEventFolderFromGroup();
 
-		$this->assertContains(
+		self::assertContains(
 			'edit[tx_seminars_seminars][' . $newEventFolder . ']=new',
 			$this->fixture->show()
 		);
@@ -817,7 +806,7 @@ class tx_seminars_BackEnd_EventsListTest extends Tx_Phpunit_TestCase {
 			getLoggedInUser('tx_seminars_Mapper_BackEndUser')
 				->getEventFolderFromGroup();
 
-		$this->assertContains(
+		self::assertContains(
 			sprintf(
 				$GLOBALS['LANG']->getLL('label_create_record_in_foreign_folder'),
 				'',

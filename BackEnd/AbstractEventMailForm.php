@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * This file is part of the TYPO3 CMS project.
  *
  * It is free software; you can redistribute it and/or modify it under
@@ -38,17 +38,17 @@ abstract class tx_seminars_BackEnd_AbstractEventMailForm {
 	private $event = NULL;
 
 	/**
-	 * @var boolean whether the form is complete
+	 * @var bool whether the form is complete
 	 */
 	private $isComplete = TRUE;
 
 	/**
-	 * @var array the array of error messages
+	 * @var string[]
 	 */
 	private $errorMessages = array();
 
 	/**
-	 * @var array the array of POST data
+	 * @var array
 	 */
 	private $postData = array();
 
@@ -73,7 +73,7 @@ abstract class tx_seminars_BackEnd_AbstractEventMailForm {
 	/**
 	 * whether the hooks in $this->hooks have been retrieved
 	 *
-	 * @var boolean
+	 * @var bool
 	 */
 	private $hooksHaveBeenRetrieved = FALSE;
 
@@ -81,7 +81,7 @@ abstract class tx_seminars_BackEnd_AbstractEventMailForm {
 	/**
 	 * The constructor of this class. Instantiates an event object.
 	 *
-	 * @param integer $eventUid UID of an event, must be > 0
+	 * @param int $eventUid UID of an event, must be > 0
 	 *
 	 * @throws InvalidArgumentException
 	 * @throws tx_oelib_Exception_NotFound if event could not be instantiated
@@ -91,16 +91,15 @@ abstract class tx_seminars_BackEnd_AbstractEventMailForm {
 			throw new InvalidArgumentException('$eventUid must be > 0.');
 		}
 
-		$this->oldEvent = t3lib_div::makeInstance(
-			'tx_seminars_seminar', $eventUid
-		);
+		$this->oldEvent = t3lib_div::makeInstance('tx_seminars_seminar', $eventUid);
 
 		if (!$this->oldEvent->isOk()) {
 			throw new tx_oelib_Exception_NotFound('There is no event with this UID.', 1333292164);
 		}
 
-		$this->event = tx_oelib_MapperRegistry::get('tx_seminars_Mapper_Event')
-			->find($eventUid);
+		/** @var tx_seminars_Mapper_Event $mapper */
+		$mapper = tx_oelib_MapperRegistry::get('tx_seminars_Mapper_Event');
+		$this->event = $mapper->find($eventUid);
 	}
 
 	/**
@@ -149,7 +148,7 @@ abstract class tx_seminars_BackEnd_AbstractEventMailForm {
 	/**
 	 * Checks whether the form was already submitted by the user.
 	 *
-	 * @return boolean TRUE if the form was submitted by the user, FALSE otherwise
+	 * @return bool TRUE if the form was submitted by the user, FALSE otherwise
 	 */
 	protected function isSubmitted() {
 		return $this->getPostData('isSubmitted') == '1';
@@ -163,7 +162,7 @@ abstract class tx_seminars_BackEnd_AbstractEventMailForm {
 	 * - subject
 	 * - messageBody
 	 *
-	 * @return boolean TRUE if the form data is valid, FALSE otherwise
+	 * @return bool TRUE if the form data is valid, FALSE otherwise
 	 */
 	private function validateFormData() {
 		if ($this->getPostData('subject') == '') {
@@ -202,7 +201,7 @@ abstract class tx_seminars_BackEnd_AbstractEventMailForm {
 	 * Checks whether the current back-end user has the needed permissions to
 	 * access this form.
 	 *
-	 * @return boolean TRUE if the user is allowed to see/use the form, FALSE otherwise
+	 * @return bool TRUE if the user is allowed to see/use the form, FALSE otherwise
 	 */
 	public function checkAccess() {
 		return $GLOBALS['BE_USER']->check('tables_select', 'tx_seminars_seminars');
@@ -234,6 +233,7 @@ abstract class tx_seminars_BackEnd_AbstractEventMailForm {
 			$closingOptionTag = '';
 		}
 
+		/** @var tx_seminars_OldModel_Organizer $currentOrganizer */
 		foreach ($organizers as $currentOrganizer) {
 			$result .=  $openingOptionTag . $currentOrganizer->getUid() .
 				$bracketClose . htmlspecialchars(
@@ -333,6 +333,7 @@ abstract class tx_seminars_BackEnd_AbstractEventMailForm {
 		$result = '';
 
 		if ($this->hasErrorMessage($fieldName)) {
+			/** @var t3lib_FlashMessage $message */
 			$message = t3lib_div::makeInstance(
 				't3lib_FlashMessage',
 				$this->errorMessages[$fieldName],
@@ -398,7 +399,7 @@ abstract class tx_seminars_BackEnd_AbstractEventMailForm {
 	 *
 	 * @param string $key the key of the field to check for, must not be empty
 	 *
-	 * @return boolean TRUE if the stored POST data contains an entry, FALSE otherwise
+	 * @return bool TRUE if the stored POST data contains an entry, FALSE otherwise
 	 *
 	 * @throws InvalidArgumentException
 	 */
@@ -416,9 +417,12 @@ abstract class tx_seminars_BackEnd_AbstractEventMailForm {
 	 * @return void
 	 */
 	private function sendEmailToAttendees() {
-		$organizer = tx_oelib_MapperRegistry::get('tx_seminars_Mapper_Organizer')
-			->find(intval($this->getPostData('sender')));
+		/** @var tx_seminars_Mapper_Organizer $organizerMapper */
+		$organizerMapper = tx_oelib_MapperRegistry::get('tx_seminars_Mapper_Organizer');
+		/** @var tx_seminars_Model_Organizer $organizer */
+		$organizer = $organizerMapper->find((int)$this->getPostData('sender'));
 
+		/** @var tx_seminars_BagBuilder_Registration $registrationBagBuilder */
 		$registrationBagBuilder = t3lib_div::makeInstance('tx_seminars_BagBuilder_Registration');
 		$registrationBagBuilder->limitToEvent($this->getEvent()->getUid());
 		$registrations = $registrationBagBuilder->build();
@@ -428,13 +432,17 @@ abstract class tx_seminars_BackEnd_AbstractEventMailForm {
 			$mailerFactory = t3lib_div::makeInstance('Tx_Oelib_MailerFactory');
 			$mailer = $mailerFactory->getMailer();
 
+			/** @var tx_seminars_Mapper_Registration $registrationMapper */
+			$registrationMapper = tx_oelib_MapperRegistry::get('tx_seminars_Mapper_Registration');
+			/** @var tx_seminars_registration $oldRegistration */
 			foreach ($registrations as $oldRegistration) {
-				$registration = tx_oelib_MapperRegistry::get('tx_seminars_Mapper_Registration')
-					->find($oldRegistration->getUid());
+				/** @var tx_seminars_Model_Registration $registration */
+				$registration = $registrationMapper->find($oldRegistration->getUid());
 				$user = $registration->getFrontEndUser();
 				if (($user === NULL) || !$user->hasEMailAddress()) {
 					continue;
 				}
+				/** @var tx_oelib_Mail $eMail */
 				$eMail = t3lib_div::makeInstance('tx_oelib_Mail');
 				$eMail->setSender($organizer);
 				$eMail->setSubject($this->getPostData('subject'));
@@ -446,7 +454,7 @@ abstract class tx_seminars_BackEnd_AbstractEventMailForm {
 				$mailer->send($eMail);
 			}
 
-			/** @var $message t3lib_FlashMessage */
+			/** @var t3lib_FlashMessage $message */
 			$message = t3lib_div::makeInstance(
 				't3lib_FlashMessage',
 				$GLOBALS['LANG']->getLL('message_emailToAttendeesSent'),
@@ -467,11 +475,11 @@ abstract class tx_seminars_BackEnd_AbstractEventMailForm {
 	 */
 	protected function addFlashMessage(t3lib_FlashMessage $flashMessage) {
 		if (class_exists('TYPO3\\CMS\\Core\\Messaging\\FlashMessageService', TRUE)) {
-			/** @var $flashMessageService \TYPO3\CMS\Core\Messaging\FlashMessageService */
+			/** @var \TYPO3\CMS\Core\Messaging\FlashMessageService $flashMessageService */
 			$flashMessageService = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
 				'TYPO3\\CMS\\Core\\Messaging\\FlashMessageService'
 			);
-			/** @var $defaultFlashMessageQueue \TYPO3\CMS\Core\Messaging\FlashMessageQueue */
+			/** @var \TYPO3\CMS\Core\Messaging\FlashMessageQueue $defaultFlashMessageQueue */
 			$defaultFlashMessageQueue = $flashMessageService->getMessageQueueByIdentifier();
 			$defaultFlashMessageQueue->enqueue($flashMessage);
 		} else {
@@ -591,9 +599,8 @@ abstract class tx_seminars_BackEnd_AbstractEventMailForm {
 	 *                for the given prefix could be found
 	 */
 	protected function localizeSalutationPlaceholder($prefix) {
-		$salutation = t3lib_div::makeInstance(
-			'tx_seminars_EmailSalutation'
-		);
+		/** @var tx_seminars_EmailSalutation $salutation */
+		$salutation = t3lib_div::makeInstance('tx_seminars_EmailSalutation');
 		$eventDetails = $salutation->createIntroduction(
 			'"%s"',
 			$this->getOldEvent()
@@ -614,14 +621,12 @@ abstract class tx_seminars_BackEnd_AbstractEventMailForm {
 	 * @param tx_seminars_Model_Organizer $organizer
 	 *        the organizer which is selected as sender
 	 *
-	 * @return string the messsage with the salutation replaced by the user's
+	 * @return string the message with the salutation replaced by the user's
 	 *                name, will be empty if no message has been set in the POST
 	 *                data
 	 */
-	private function createMessageBody(
-		tx_seminars_Model_FrontEndUser $user,
-		tx_seminars_Model_Organizer $organizer
-	) {
+	private function createMessageBody(tx_seminars_Model_FrontEndUser $user, tx_seminars_Model_Organizer $organizer) {
+		/** @var tx_seminars_EmailSalutation $salutation */
 		$salutation = t3lib_div::makeInstance('tx_seminars_EmailSalutation');
 		$messageText = str_replace(
 			'%' . $GLOBALS['LANG']->getLL('mailForm_salutation'),
@@ -665,7 +670,7 @@ abstract class tx_seminars_BackEnd_AbstractEventMailForm {
 	 * @param string $fieldName
 	 *        the field to check the error message for, must not be empty
 	 *
-	 * @return boolean TRUE if an error message has been stored for the given
+	 * @return bool TRUE if an error message has been stored for the given
 	 *                 fieldname, FALSE otherwise
 	 */
 	private function hasErrorMessage($fieldName) {

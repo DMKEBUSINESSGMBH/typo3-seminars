@@ -1,26 +1,16 @@
 <?php
-/***************************************************************
-* Copyright notice
-*
-* (c) 2007-2013 Oliver Klee (typo3-coding@oliverklee.de)
-* All rights reserved
-*
-* This script is part of the TYPO3 project. The TYPO3 project is
-* free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* The GNU General Public License can be found at
-* http://www.gnu.org/copyleft/gpl.html.
-*
-* This script is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* This copyright notice MUST APPEAR in all copies of the script!
-***************************************************************/
+/*
+ * This file is part of the TYPO3 CMS project.
+ *
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
+ *
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
+ *
+ * The TYPO3 project - inspiring people to share!
+ */
 
 /**
  * Test case.
@@ -43,12 +33,12 @@ class tx_seminars_Bag_AbstractTest extends tx_phpunit_testcase {
 	private $testingFramework;
 
 	/**
-	 * @var integer the UID of the first test record in the DB
+	 * @var int the UID of the first test record in the DB
 	 */
 	private $uidOfFirstRecord = 0;
 
 	/**
-	 * @var integer the UID of the second test record in the DB
+	 * @var int the UID of the second test record in the DB
 	 */
 	private $uidOfSecondRecord = 0;
 
@@ -69,8 +59,6 @@ class tx_seminars_Bag_AbstractTest extends tx_phpunit_testcase {
 
 	protected function tearDown() {
 		$this->testingFramework->cleanUp();
-
-		unset($this->fixture, $this->testingFramework);
 	}
 
 
@@ -81,7 +69,7 @@ class tx_seminars_Bag_AbstractTest extends tx_phpunit_testcase {
 	public function testEmptyBagHasNoUids() {
 		$bag = new tx_seminars_tests_fixtures_Bag_Testing('1 = 2');
 
-		$this->assertEquals(
+		self::assertEquals(
 			'', $bag->getUids()
 		);
 	}
@@ -89,25 +77,25 @@ class tx_seminars_Bag_AbstractTest extends tx_phpunit_testcase {
 	public function testBagCanHaveOneUid() {
 		$bag = new tx_seminars_tests_fixtures_Bag_Testing('uid = ' . $this->uidOfFirstRecord);
 
-		$this->assertEquals(
+		self::assertEquals(
 			(string) $this->uidOfFirstRecord, $bag->getUids()
 		);
 	}
 
 	public function testBagCanHaveTwoUids() {
-		$this->assertEquals(
+		self::assertEquals(
 			$this->uidOfFirstRecord.','.$this->uidOfSecondRecord,
 			$this->fixture->getUids()
 		);
 	}
 
 	public function testBagSortsByUidByDefault() {
-		$this->assertEquals(
+		self::assertEquals(
 			$this->uidOfFirstRecord,
 			$this->fixture->current()->getUid()
 		);
 
-		$this->assertEquals(
+		self::assertEquals(
 			$this->uidOfSecondRecord,
 			$this->fixture->next()->getUid()
 		);
@@ -121,7 +109,7 @@ class tx_seminars_Bag_AbstractTest extends tx_phpunit_testcase {
 	public function testCountForEmptyBagReturnsZero() {
 		$bag = new tx_seminars_tests_fixtures_Bag_Testing('1 = 2');
 
-		$this->assertEquals(
+		self::assertEquals(
 			0,
 			$bag->count()
 		);
@@ -130,14 +118,14 @@ class tx_seminars_Bag_AbstractTest extends tx_phpunit_testcase {
 	public function testCountForBagWithOneElementReturnsOne() {
 		$bag = new tx_seminars_tests_fixtures_Bag_Testing('uid=' . $this->uidOfFirstRecord);
 
-		$this->assertEquals(
+		self::assertEquals(
 			1,
 			$bag->count()
 		);
 	}
 
 	public function testCountForBagWithTwoElementsReturnsTwo() {
-		$this->assertEquals(
+		self::assertEquals(
 			2,
 			$this->fixture->count()
 		);
@@ -147,7 +135,7 @@ class tx_seminars_Bag_AbstractTest extends tx_phpunit_testcase {
 		$this->fixture->rewind();
 		$this->fixture->next();
 
-		$this->assertEquals(
+		self::assertEquals(
 			2,
 			$this->fixture->count()
 		);
@@ -156,7 +144,7 @@ class tx_seminars_Bag_AbstractTest extends tx_phpunit_testcase {
 	public function testCountForBagWithTwoMatchesElementsAndLimitOfOneReturnsOne() {
 		$bag = new tx_seminars_tests_fixtures_Bag_Testing('is_dummy_record = 1', '', '', '', 1);
 
-		$this->assertEquals(
+		self::assertEquals(
 			1,
 			$bag->count()
 		);
@@ -170,7 +158,7 @@ class tx_seminars_Bag_AbstractTest extends tx_phpunit_testcase {
 	public function testCountWithoutLimitForEmptyBagReturnsZero() {
 		$bag = new tx_seminars_tests_fixtures_Bag_Testing('1 = 2');
 
-		$this->assertEquals(
+		self::assertEquals(
 			0,
 			$bag->countWithoutLimit()
 		);
@@ -179,14 +167,14 @@ class tx_seminars_Bag_AbstractTest extends tx_phpunit_testcase {
 	public function testCountWithoutLimitForBagWithOneElementReturnsOne() {
 		$bag = new tx_seminars_tests_fixtures_Bag_Testing('uid = ' . $this->uidOfFirstRecord);
 
-		$this->assertEquals(
+		self::assertEquals(
 			1,
 			$bag->countWithoutLimit()
 		);
 	}
 
 	public function testCountWithoutLimitForBagWithTwoElementsReturnsTwo() {
-		$this->assertEquals(
+		self::assertEquals(
 			2,
 			$this->fixture->countWithoutLimit()
 		);
@@ -196,7 +184,7 @@ class tx_seminars_Bag_AbstractTest extends tx_phpunit_testcase {
 		$this->fixture->rewind();
 		$this->fixture->next();
 
-		$this->assertEquals(
+		self::assertEquals(
 			2,
 			$this->fixture->countWithoutLimit()
 		);
@@ -205,7 +193,7 @@ class tx_seminars_Bag_AbstractTest extends tx_phpunit_testcase {
 	public function testCountWithoutLimitForBagWithTwoMatchesElementsAndLimitOfOneReturnsTwo() {
 		$bag = new tx_seminars_tests_fixtures_Bag_Testing('is_dummy_record = 1', '', '', '', 1);
 
-		$this->assertEquals(
+		self::assertEquals(
 			2,
 			$bag->countWithoutLimit()
 		);
@@ -219,16 +207,17 @@ class tx_seminars_Bag_AbstractTest extends tx_phpunit_testcase {
 	public function testIsEmptyForEmptyBagReturnsTrue() {
 		$bag = new tx_seminars_tests_fixtures_Bag_Testing('1=2');
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
 
 	public function testIsEmptyForEmptyBagAfterIteratingReturnsTrue() {
 		$bag = new tx_seminars_tests_fixtures_Bag_Testing('1 = 2');
+		/** @var tx_seminars_tests_fixtures_OldModel_Testing $item */
 		foreach ($bag as $item);
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -236,22 +225,23 @@ class tx_seminars_Bag_AbstractTest extends tx_phpunit_testcase {
 	public function testIsEmptyForBagWithOneElementReturnsFalse() {
 		$bag = new tx_seminars_tests_fixtures_Bag_Testing('uid = ' . $this->uidOfFirstRecord);
 
-		$this->assertFalse(
+		self::assertFalse(
 			$bag->isEmpty()
 		);
 	}
 
 	public function testIsEmptyForBagWithOneElementAfterIteratingReturnsFalse() {
 		$bag = new tx_seminars_tests_fixtures_Bag_Testing('uid = ' . $this->uidOfFirstRecord);
+		/** @var tx_seminars_tests_fixtures_OldModel_Testing $item */
 		foreach ($bag as $item);
 
-		$this->assertFalse(
+		self::assertFalse(
 			$bag->isEmpty()
 		);
 	}
 
 	public function testIsEmptyForBagWithTwoElementsReturnsFalse() {
-		$this->assertFalse(
+		self::assertFalse(
 			$this->fixture->isEmpty()
 		);
 	}

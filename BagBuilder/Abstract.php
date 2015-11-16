@@ -1,26 +1,16 @@
 <?php
-/***************************************************************
-* Copyright notice
-*
-* (c) 2007-2013 Oliver Klee (typo3-coding@oliverklee.de)
-* All rights reserved
-*
-* This script is part of the TYPO3 project. The TYPO3 project is
-* free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* The GNU General Public License can be found at
-* http://www.gnu.org/copyleft/gpl.html.
-*
-* This script is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* This copyright notice MUST APPEAR in all copies of the script!
-***************************************************************/
+/*
+ * This file is part of the TYPO3 CMS project.
+ *
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
+ *
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
+ *
+ * The TYPO3 project - inspiring people to share!
+ */
 
 /**
  * This builder class creates customized bag objects.
@@ -43,8 +33,7 @@ abstract class tx_seminars_BagBuilder_Abstract {
 	protected $tableName = '';
 
 	/**
-	 * @var array associative array with the WHERE clause parts (will be
-	 *            concatenated with " AND " later)
+	 * @var string[] associative array with the WHERE clause parts (will be concatenated with " AND " later)
 	 */
 	protected $whereClauseParts = array();
 
@@ -54,7 +43,7 @@ abstract class tx_seminars_BagBuilder_Abstract {
 	protected $orderBy = 'uid';
 
 	/**
-	 * @var integer the field by which the DB query result should be grouped
+	 * @var int the field by which the DB query result should be grouped
 	 */
 	protected $groupBy = '';
 
@@ -65,17 +54,17 @@ abstract class tx_seminars_BagBuilder_Abstract {
 	protected $limit = '';
 
 	/**
-	 * @var array array of additional table names for the query
+	 * @var string[] additional table names for the query
 	 */
 	protected $additionalTableNames = array();
 
 	/**
-	 * @var boolean whether the timing of records should be ignored
+	 * @var bool whether the timing of records should be ignored
 	 */
 	protected $ignoreTimingOfRecords = FALSE;
 
 	/**
-	 * @var boolean whether hidden records should be shown, too
+	 * @var bool whether hidden records should be shown, too
 	 */
 	protected $showHiddenRecords = FALSE;
 
@@ -94,7 +83,8 @@ abstract class tx_seminars_BagBuilder_Abstract {
 	 * @return tx_seminars_Bag_Abstract customized, newly-created bag
 	 */
 	public function build() {
-		return t3lib_div::makeInstance(
+		/** @var tx_seminars_Bag_Abstract $bag */
+		$bag = t3lib_div::makeInstance(
 			$this->bagClassName,
 			$this->getWhereClause(),
 			implode(',', $this->additionalTableNames),
@@ -104,6 +94,7 @@ abstract class tx_seminars_BagBuilder_Abstract {
 			($this->showHiddenRecords ? 1 : -1),
 			$this->ignoreTimingOfRecords
 		);
+		return $bag;
 	}
 
 	/**
@@ -123,7 +114,7 @@ abstract class tx_seminars_BagBuilder_Abstract {
 	 * @param string $sourcePagePids
 	 *        comma-separated list of PIDs of the system folders with the records;
 	 *        must not be empty; need not be safeguarded against SQL injection
-	 * @param integer $recursionDepth
+	 * @param int $recursionDepth
 	 *        recursion depth, must be >= 0
 	 *
 	 * @return void
@@ -145,7 +136,7 @@ abstract class tx_seminars_BagBuilder_Abstract {
 	/**
 	 * Checks whether some source pages have already been set.
 	 *
-	 * @return boolean TRUE if source pages have already been set, FALSE
+	 * @return bool TRUE if source pages have already been set, FALSE
 	 *                 otherwise
 	 */
 	public function hasSourcePages() {

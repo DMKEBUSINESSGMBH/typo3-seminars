@@ -1,26 +1,16 @@
 <?php
-/***************************************************************
-* Copyright notice
-*
-* (c) 2009-2014 Niels Pardon (mail@niels-pardon.de)
-* All rights reserved
-*
-* This script is part of the TYPO3 project. The TYPO3 project is
-* free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* The GNU General Public License can be found at
-* http://www.gnu.org/copyleft/gpl.html.
-*
-* This script is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* This copyright notice MUST APPEAR in all copies of the script!
-***************************************************************/
+/*
+ * This file is part of the TYPO3 CMS project.
+ *
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
+ *
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
+ *
+ * The TYPO3 project - inspiring people to share!
+ */
 
 /**
  * This class represents a registration for an event.
@@ -61,7 +51,7 @@ class tx_seminars_Model_Registration extends tx_oelib_Model implements tx_semina
 	/**
 	 * Returns the front-end user of this registration.
 	 *
-	 * @return tx_oelib_Model_FrontEndUser the front-end user of this registration
+	 * @return tx_seminars_Model_FrontEndUser the front-end user of this registration
 	 */
 	public function getFrontEndUser() {
 		return $this->getAsModel('user');
@@ -129,7 +119,7 @@ class tx_seminars_Model_Registration extends tx_oelib_Model implements tx_semina
 	/**
 	 * Returns whether this registration is on the registration queue.
 	 *
-	 * @return boolean TRUE if this registration is on the registration queue, FALSE otherwise
+	 * @return bool TRUE if this registration is on the registration queue, FALSE otherwise
 	 */
 	public function isOnRegistrationQueue() {
 		return $this->getAsBoolean('registration_queue');
@@ -138,7 +128,7 @@ class tx_seminars_Model_Registration extends tx_oelib_Model implements tx_semina
 	/**
 	 * Sets whether this registration is on the registration queue.
 	 *
-	 * @param boolean $isOnQueue whether this registration should be on the registration queue
+	 * @param bool $isOnQueue whether this registration should be on the registration queue
 	 *
 	 * @return void
 	 */
@@ -171,7 +161,7 @@ class tx_seminars_Model_Registration extends tx_oelib_Model implements tx_semina
 	 *
 	 * In older versions 0 equals 1 seat, which is deprecated.
 	 *
-	 * @return integer the number of registered seats of this registration, will be >= 0
+	 * @return int the number of registered seats of this registration, will be >= 0
 	 */
 	public function getSeats() {
 		return $this->getAsInteger('seats');
@@ -182,7 +172,7 @@ class tx_seminars_Model_Registration extends tx_oelib_Model implements tx_semina
 	 *
 	 * In older versions 0 equals 1 seat, which is deprecated.
 	 *
-	 * @param integer $seats the number of registered seats of this registration, must be >= 0
+	 * @param int $seats the number of registered seats of this registration, must be >= 0
 	 *
 	 * @return void
 	 *
@@ -199,7 +189,7 @@ class tx_seminars_Model_Registration extends tx_oelib_Model implements tx_semina
 	/**
 	 * Returns whether the front-end user registered themselves.
 	 *
-	 * @return boolean TRUE if the front-end user registered themselves, FALSE otherwise
+	 * @return bool TRUE if the front-end user registered themselves, FALSE otherwise
 	 */
 	public function hasRegisteredThemselves() {
 		return $this->getAsBoolean('registered_themselves');
@@ -208,7 +198,7 @@ class tx_seminars_Model_Registration extends tx_oelib_Model implements tx_semina
 	/**
 	 * Sets whether the front-end user registered themselves.
 	 *
-	 * @param boolean $registeredThemselves whether the front-end user registered themselves
+	 * @param bool $registeredThemselves whether the front-end user registered themselves
 	 *
 	 * @return void
 	 */
@@ -287,7 +277,7 @@ class tx_seminars_Model_Registration extends tx_oelib_Model implements tx_semina
 	/**
 	 * Returns whether this registration is paid.
 	 *
-	 * @return boolean TRUE if this registration has a payment date, FALSE otherwise
+	 * @return bool TRUE if this registration has a payment date, FALSE otherwise
 	 */
 	public function isPaid() {
 		return ($this->getPaymentDateAsUnixTimestamp() > 0);
@@ -296,7 +286,7 @@ class tx_seminars_Model_Registration extends tx_oelib_Model implements tx_semina
 	/**
 	 * Returns the payment date of this registration as a UNIX timestamp.
 	 *
-	 * @return integer the payment date of this registration as a UNIX timestamp, will be >= 0
+	 * @return int the payment date of this registration as a UNIX timestamp, will be >= 0
 	 */
 	public function getPaymentDateAsUnixTimestamp() {
 		return $this->getAsInteger('datepaid');
@@ -305,7 +295,7 @@ class tx_seminars_Model_Registration extends tx_oelib_Model implements tx_semina
 	/**
 	 * Sets the payment date of this registration as a UNIX timestamp.
 	 *
-	 * @param integer $timestamp the payment date of this registration as a UNIX timestamp, must be >= 0
+	 * @param int $timestamp the payment date of this registration as a UNIX timestamp, must be >= 0
 	 *
 	 * @return void
 	 *
@@ -463,7 +453,7 @@ class tx_seminars_Model_Registration extends tx_oelib_Model implements tx_semina
 	/**
 	 * Returns the gender of the billing address of this registration.
 	 *
-	 * @return integer the gender of this registration, will be one of the
+	 * @return int the gender of this registration, will be one of the
 	 *                 following:
 	 *                 - tx_oelib_Model_FrontEndUser::GENDER_MALE
 	 *                 - tx_oelib_Model_FrontEndUser::GENDER_FEMALE
@@ -476,7 +466,7 @@ class tx_seminars_Model_Registration extends tx_oelib_Model implements tx_semina
 	/**
 	 * Sets the gender of the billing address of this registration.
 	 *
-	 * @param integer $gender
+	 * @param int $gender
 	 *        the gender of this registration, must be one of the following:
 	 *        - tx_oelib_Model_FrontEndUser::GENDER_MALE
 	 *        - tx_oelib_Model_FrontEndUser::GENDER_FEMALE
@@ -627,7 +617,7 @@ class tx_seminars_Model_Registration extends tx_oelib_Model implements tx_semina
 	/**
 	 * Returns whether the attendees of this registration have attended the event.
 	 *
-	 * @return boolean TRUE if the attendees of this registration have attended the event, FALSE otherwise
+	 * @return bool TRUE if the attendees of this registration have attended the event, FALSE otherwise
 	 */
 	public function hasAttended() {
 		return $this->getAsBoolean('been_there');
@@ -795,7 +785,7 @@ class tx_seminars_Model_Registration extends tx_oelib_Model implements tx_semina
 	/**
 	 * Returns the number of kids of this registration.
 	 *
-	 * @return integer the number of kids of this registration, will be >= 0
+	 * @return int the number of kids of this registration, will be >= 0
 	 */
 	public function getKids() {
 		return $this->getAsInteger('kids');
@@ -804,7 +794,7 @@ class tx_seminars_Model_Registration extends tx_oelib_Model implements tx_semina
 	/**
 	 * Sets the number of kids of this registration.
 	 *
-	 * @param integer $kids the number of kids of this registration to set, must be >= 0
+	 * @param int $kids the number of kids of this registration to set, must be >= 0
 	 *
 	 * @return void
 	 *

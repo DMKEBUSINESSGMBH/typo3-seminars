@@ -1,26 +1,16 @@
 <?php
-/***************************************************************
-* Copyright notice
-*
-* (c) 2009-2013 Bernd Schönbach <bernd@oliverklee.de>
-* All rights reserved
-*
-* This script is part of the TYPO3 project. The TYPO3 project is
-* free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* The GNU General Public License can be found at
-* http://www.gnu.org/copyleft/gpl.html.
-*
-* This script is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* This copyright notice MUST APPEAR in all copies of the script!
-***************************************************************/
+/*
+ * This file is part of the TYPO3 CMS project.
+ *
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
+ *
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
+ *
+ * The TYPO3 project - inspiring people to share!
+ */
 
 /**
  * Test case.
@@ -36,14 +26,9 @@ class tx_seminars_Model_BackEndUserGroupTest extends tx_phpunit_testcase {
 	 */
 	private $fixture;
 
-	public function setUp() {
+	protected function setUp() {
 		$this->fixture = new tx_seminars_Model_BackEndUserGroup();
 	}
-
-	public function tearDown() {
-		unset($this->fixture);
-	}
-
 
 	////////////////////////////////
 	// Tests concerning getTitle()
@@ -55,7 +40,7 @@ class tx_seminars_Model_BackEndUserGroupTest extends tx_phpunit_testcase {
 	public function getTitleForNonEmptyGroupTitleReturnsGroupTitle() {
 		$this->fixture->setData(array('title' => 'foo'));
 
-		$this->assertEquals(
+		self::assertEquals(
 			'foo',
 			$this->fixture->getTitle()
 		);
@@ -67,7 +52,7 @@ class tx_seminars_Model_BackEndUserGroupTest extends tx_phpunit_testcase {
 	public function getTitleForEmptyGroupTitleReturnsEmptyString() {
 		$this->fixture->setData(array('title' => ''));
 
-		$this->assertEquals(
+		self::assertEquals(
 			'',
 			$this->fixture->getTitle()
 		);
@@ -83,7 +68,7 @@ class tx_seminars_Model_BackEndUserGroupTest extends tx_phpunit_testcase {
 	public function getEventFolderForNoSetEventFolderReturnsZero() {
 		$this->fixture->setData(array());
 
-		$this->assertEquals(
+		self::assertEquals(
 			0,
 			$this->fixture->getEventFolder()
 		);
@@ -95,7 +80,7 @@ class tx_seminars_Model_BackEndUserGroupTest extends tx_phpunit_testcase {
 	public function getEventFolderForSetEventFolderReturnsEventFolderPid() {
 		$this->fixture->setData(array('tx_seminars_events_folder' => 42));
 
-		$this->assertEquals(
+		self::assertEquals(
 			42,
 			$this->fixture->getEventFolder()
 		);
@@ -113,7 +98,7 @@ class tx_seminars_Model_BackEndUserGroupTest extends tx_phpunit_testcase {
 	public function getRegistrationFolderForNoSetRegistrationFolderReturnsZero() {
 		$this->fixture->setData(array());
 
-		$this->assertEquals(
+		self::assertEquals(
 			0,
 			$this->fixture->getRegistrationFolder()
 		);
@@ -125,7 +110,7 @@ class tx_seminars_Model_BackEndUserGroupTest extends tx_phpunit_testcase {
 	public function getRegistrationFolderForSetRegistrationFolderReturnsRegistrationFolderPid() {
 		$this->fixture->setData(array('tx_seminars_registrations_folder' => 42));
 
-		$this->assertEquals(
+		self::assertEquals(
 			42,
 			$this->fixture->getRegistrationFolder()
 		);
@@ -143,7 +128,7 @@ class tx_seminars_Model_BackEndUserGroupTest extends tx_phpunit_testcase {
 	public function getAuxiliaryRecordsFolderForNoSetAuxiliaryRecordsFolderReturnsZero() {
 		$this->fixture->setData(array());
 
-		$this->assertEquals(
+		self::assertEquals(
 			0,
 			$this->fixture->getAuxiliaryRecordFolder()
 		);
@@ -155,7 +140,7 @@ class tx_seminars_Model_BackEndUserGroupTest extends tx_phpunit_testcase {
 	public function getAuxiliaryRecordsFolderForSetAuxiliaryRecordsFolderReturnsAuxiliaryRecordsFolderPid() {
 		$this->fixture->setData(array('tx_seminars_auxiliaries_folder' => 42));
 
-		$this->assertEquals(
+		self::assertEquals(
 			42,
 			$this->fixture->getAuxiliaryRecordFolder()
 		);

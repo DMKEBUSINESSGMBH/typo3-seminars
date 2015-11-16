@@ -1,26 +1,16 @@
 <?php
-/***************************************************************
-* Copyright notice
-*
-* (c) 2007-2013 Niels Pardon (mail@niels-pardon.de)
-* All rights reserved
-*
-* This script is part of the TYPO3 project. The TYPO3 project is
-* free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* The GNU General Public License can be found at
-* http://www.gnu.org/copyleft/gpl.html.
-*
-* This script is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* This copyright notice MUST APPEAR in all copies of the script!
-***************************************************************/
+/*
+ * This file is part of the TYPO3 CMS project.
+ *
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
+ *
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
+ *
+ * The TYPO3 project - inspiring people to share!
+ */
 
 /**
  * Class that adds the wizard icon.
@@ -35,9 +25,9 @@ class tx_seminars_FrontEnd_WizardIcon {
 	/**
 	 * Processes the wizard items array.
 	 *
-	 * @param array $wizardItems the wizard items, may be empty
+	 * @param array[] $wizardItems the wizard items, may be empty
 	 *
-	 * @return array modified array with wizard items
+	 * @return array[] modified array with wizard items
 	 */
 	public function proc(array $wizardItems) {
 		$localLanguage = $this->includeLocalLang();
@@ -55,11 +45,11 @@ class tx_seminars_FrontEnd_WizardIcon {
 	/**
 	 * Reads the [extDir]/locallang.xml and returns the $LOCAL_LANG array found in that file.
 	 *
-	 * @return array the found language labels
+	 * @return array[] the found language labels
 	 */
 	public function includeLocalLang() {
 		if (class_exists('t3lib_l10n_parser_Llxml')) {
-			/** @var $xmlParser t3lib_l10n_parser_Llxml */
+			/** @var t3lib_l10n_parser_Llxml $xmlParser */
 			$xmlParser = t3lib_div::makeInstance('t3lib_l10n_parser_Llxml');
 			$localLanguage = $xmlParser->getParsedData(
 				t3lib_extMgm::extPath('seminars') . 'locallang.xml', $GLOBALS['LANG']->lang

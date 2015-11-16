@@ -1,26 +1,16 @@
 <?php
-/***************************************************************
-* Copyright notice
-*
-* (c) 2008-2013 Bernd Schönbach <bernd@oliverklee.de>
-* All rights reserved
-*
-* This script is part of the TYPO3 project. The TYPO3 project is
-* free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* The GNU General Public License can be found at
-* http://www.gnu.org/copyleft/gpl.html.
-*
-* This script is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* This copyright notice MUST APPEAR in all copies of the script!
-***************************************************************/
+/*
+ * This file is part of the TYPO3 CMS project.
+ *
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
+ *
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
+ *
+ * The TYPO3 project - inspiring people to share!
+ */
 
 /**
  * This class displays an event headline consisting of the event title and date.
@@ -67,11 +57,12 @@ class tx_seminars_FrontEnd_EventHeadline extends tx_seminars_FrontEnd_AbstractVi
 			throw new BadMethodCallException("The method injectEventMapper() needs to be called first.", 1333614794);
 		}
 
-		$eventId = intval($this->piVars['uid']);
+		$eventId = (int)$this->piVars['uid'];
 		if ($eventId <= 0) {
 			return '';
 		}
 
+		/** @var tx_seminars_Model_Event $event */
 		$event = $this->mapper->find($eventId);
 
 		if (!$this->mapper->existsModel($eventId)) {
@@ -101,6 +92,7 @@ class tx_seminars_FrontEnd_EventHeadline extends tx_seminars_FrontEnd_AbstractVi
 			return $result;
 		}
 
+		/** @var tx_seminars_ViewHelper_DateRange $dateRangeViewHelper */
 		$dateRangeViewHelper = t3lib_div::makeInstance('tx_seminars_ViewHelper_DateRange');
 
 		return $result . ', ' . $dateRangeViewHelper->render($event);

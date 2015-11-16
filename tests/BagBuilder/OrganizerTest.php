@@ -1,26 +1,16 @@
 <?php
-/***************************************************************
-* Copyright notice
-*
-* (c) 2009-2013 Niels Pardon (mail@niels-pardon.de)
-* All rights reserved
-*
-* This script is part of the TYPO3 project. The TYPO3 project is
-* free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* The GNU General Public License can be found at
-* http://www.gnu.org/copyleft/gpl.html.
-*
-* This script is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* This copyright notice MUST APPEAR in all copies of the script!
-***************************************************************/
+/*
+ * This file is part of the TYPO3 CMS project.
+ *
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
+ *
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
+ *
+ * The TYPO3 project - inspiring people to share!
+ */
 
 /**
  * Test case.
@@ -41,16 +31,15 @@ class tx_seminars_BagBuilder_OrganizerTest extends tx_phpunit_testcase {
 	 */
 	private $testingFramework;
 
-	public function setUp() {
+	protected function setUp() {
 		$this->testingFramework = new tx_oelib_testingFramework('tx_seminars');
 
 		$this->fixture = new tx_seminars_BagBuilder_Organizer();
 		$this->fixture->setTestMode();
 	}
 
-	public function tearDown() {
+	protected function tearDown() {
 		$this->testingFramework->cleanUp();
-		unset($this->fixture, $this->testingFramework);
 	}
 
 
@@ -59,7 +48,7 @@ class tx_seminars_BagBuilder_OrganizerTest extends tx_phpunit_testcase {
 	///////////////////////////////////////////
 
 	public function testBuilderBuildsABag() {
-		$this->assertTrue(
+		self::assertTrue(
 			$this->fixture->build() instanceof tx_seminars_Bag_Abstract
 		);
 	}
@@ -104,7 +93,7 @@ class tx_seminars_BagBuilder_OrganizerTest extends tx_phpunit_testcase {
 		$this->fixture->limitToEvent($eventUid);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertEquals(
 			1,
 			$bag->countWithoutLimit()
 		);
@@ -135,7 +124,7 @@ class tx_seminars_BagBuilder_OrganizerTest extends tx_phpunit_testcase {
 		$this->fixture->limitToEvent($eventUid);
 		$bag = $this->fixture->build();
 
-		$this->assertEquals(
+		self::assertEquals(
 			2,
 			$bag->countWithoutLimit()
 		);
@@ -161,7 +150,7 @@ class tx_seminars_BagBuilder_OrganizerTest extends tx_phpunit_testcase {
 		$this->fixture->limitToEvent($eventUid2);
 		$bag = $this->fixture->build();
 
-		$this->assertTrue(
+		self::assertTrue(
 			$bag->isEmpty()
 		);
 	}
@@ -196,7 +185,7 @@ class tx_seminars_BagBuilder_OrganizerTest extends tx_phpunit_testcase {
 		$bag = $this->fixture->build();
 		$bag->rewind();
 
-		$this->assertEquals(
+		self::assertEquals(
 			$organizerUid2,
 			$bag->current()->getUid()
 		);

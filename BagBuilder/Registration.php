@@ -1,26 +1,16 @@
 <?php
-/***************************************************************
-* Copyright notice
-*
-* (c) 2008-2013 Niels Pardon (mail@niels-pardon.de)
-* All rights reserved
-*
-* This script is part of the TYPO3 project. The TYPO3 project is
-* free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* The GNU General Public License can be found at
-* http://www.gnu.org/copyleft/gpl.html.
-*
-* This script is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* This copyright notice MUST APPEAR in all copies of the script!
-***************************************************************/
+/*
+ * This file is part of the TYPO3 CMS project.
+ *
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
+ *
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
+ *
+ * The TYPO3 project - inspiring people to share!
+ */
 
 /**
  * This builder class creates customized registration bag objects.
@@ -51,7 +41,7 @@ class tx_seminars_BagBuilder_Registration extends tx_seminars_BagBuilder_Abstrac
 	 * Limits the bag to the registrations of the events provided by the
 	 * parameter $eventUids.
 	 *
-	 * @param integer $eventUid the UID of the event to which the registration selection should be limited, must be > 0
+	 * @param int $eventUid the UID of the event to which the registration selection should be limited, must be > 0
 	 *
 	 * @return void
 	 */
@@ -71,7 +61,7 @@ class tx_seminars_BagBuilder_Registration extends tx_seminars_BagBuilder_Abstrac
 	 */
 	public function limitToPaid() {
 		$this->whereClauseParts['paid'] = 'tx_seminars_attendances' .
-			'.datepaid != 0';
+			'.datepaid <> 0';
 	}
 
 	/**
@@ -127,7 +117,7 @@ class tx_seminars_BagBuilder_Registration extends tx_seminars_BagBuilder_Abstrac
 	 * Limits the bag to contain only registrations with seats equal or less
 	 * than the seats given in the parameter $seats.
 	 *
-	 * @param integer $seats the number of seats to filter for, set to 0 to remove the limitation, must be >= 0
+	 * @param int $seats the number of seats to filter for, set to 0 to remove the limitation, must be >= 0
 	 *
 	 * @return void
 	 */

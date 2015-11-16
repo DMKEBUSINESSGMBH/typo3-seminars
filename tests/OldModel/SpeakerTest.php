@@ -1,26 +1,16 @@
 <?php
-/***************************************************************
-* Copyright notice
-*
-* (c) 2007-2013 Oliver Klee (typo3-coding@oliverklee.de)
-* All rights reserved
-*
-* This script is part of the TYPO3 project. The TYPO3 project is
-* free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* The GNU General Public License can be found at
-* http://www.gnu.org/copyleft/gpl.html.
-*
-* This script is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* This copyright notice MUST APPEAR in all copies of the script!
-***************************************************************/
+/*
+ * This file is part of the TYPO3 CMS project.
+ *
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
+ *
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
+ *
+ * The TYPO3 project - inspiring people to share!
+ */
 
 /**
  * Test case.
@@ -47,7 +37,7 @@ class tx_seminars_OldModel_SpeakerTest extends tx_phpunit_testcase {
 	 */
 	private $maximalFixture;
 
-	public function setUp() {
+	protected function setUp() {
 		$this->testingFramework = new tx_oelib_testingFramework('tx_seminars');
 		$fixtureUid = $this->testingFramework->createRecord(
 			'tx_seminars_speakers',
@@ -77,10 +67,8 @@ class tx_seminars_OldModel_SpeakerTest extends tx_phpunit_testcase {
 		$this->maximalFixture = new tx_seminars_speaker($maximalFixtureUid);
 	}
 
-	public function tearDown() {
+	protected function tearDown() {
 		$this->testingFramework->cleanUp();
-
-		unset($this->fixture, $this->testingFramework);
 	}
 
 
@@ -94,7 +82,7 @@ class tx_seminars_OldModel_SpeakerTest extends tx_phpunit_testcase {
 	 *
 	 * @param array $skillData data of the skill to add, may be empty
 	 *
-	 * @return integer the UID of the created record, will always be > 0
+	 * @return int the UID of the created record, will always be > 0
 	 */
 	private function addSkillRelation(array $skillData) {
 		$uid = $this->testingFramework->createRecord(
@@ -119,39 +107,39 @@ class tx_seminars_OldModel_SpeakerTest extends tx_phpunit_testcase {
 	/////////////////////////////////////
 
 	public function testAddSkillRelationReturnsUid() {
-		$this->assertTrue(
+		self::assertTrue(
 			$this->addSkillRelation(array()) > 0
 		);
 	}
 
 	public function testAddSkillRelationCreatesNewUids() {
-		$this->assertNotEquals(
+		self::assertNotEquals(
 			$this->addSkillRelation(array()),
 			$this->addSkillRelation(array())
 		);
 	}
 
 	public function testAddSkillRelationIncreasesTheNumberOfSkills() {
-		$this->assertEquals(
+		self::assertEquals(
 			0,
 			$this->fixture->getNumberOfSkills()
 		);
 
 		$this->addSkillRelation(array());
-		$this->assertEquals(
+		self::assertEquals(
 			1,
 			$this->fixture->getNumberOfSkills()
 		);
 
 		$this->addSkillRelation(array());
-		$this->assertEquals(
+		self::assertEquals(
 			2,
 			$this->fixture->getNumberOfSkills()
 		);
 	}
 
 	public function testAddSkillRelationCreatesRelations() {
-		$this->assertEquals(
+		self::assertEquals(
 			0,
 			$this->testingFramework->countRecords(
 				'tx_seminars_speakers_skills_mm',
@@ -160,7 +148,7 @@ class tx_seminars_OldModel_SpeakerTest extends tx_phpunit_testcase {
 		);
 
 		$this->addSkillRelation(array());
-		$this->assertEquals(
+		self::assertEquals(
 			1,
 			$this->testingFramework->countRecords(
 				'tx_seminars_speakers_skills_mm',
@@ -169,7 +157,7 @@ class tx_seminars_OldModel_SpeakerTest extends tx_phpunit_testcase {
 		);
 
 		$this->addSkillRelation(array());
-		$this->assertEquals(
+		self::assertEquals(
 			2,
 			$this->testingFramework->countRecords(
 				'tx_seminars_speakers_skills_mm',
@@ -184,7 +172,7 @@ class tx_seminars_OldModel_SpeakerTest extends tx_phpunit_testcase {
 	////////////////////////////////////////
 
 	public function testCreateFromUid() {
-		$this->assertTrue(
+		self::assertTrue(
 			$this->fixture->isOk()
 		);
 	}
@@ -195,47 +183,47 @@ class tx_seminars_OldModel_SpeakerTest extends tx_phpunit_testcase {
 	/////////////////////////////////////////////
 
 	public function testGetOrganization() {
-		$this->assertEquals(
+		self::assertEquals(
 			'',
 			$this->fixture->getOrganization()
 		);
-		$this->assertEquals(
+		self::assertEquals(
 			'Foo inc.',
 			$this->maximalFixture->getOrganization()
 		);
 	}
 
 	public function testHasOrganizationWithNoOrganizationReturnsFalse() {
-		$this->assertFalse(
+		self::assertFalse(
 			$this->fixture->hasOrganization()
 		);
 	}
 
 	public function testHasOrganizationWithOrganizationReturnsTrue() {
-		$this->assertTrue(
+		self::assertTrue(
 			$this->maximalFixture->hasOrganization()
 		);
 	}
 
 	public function testGetHomepage() {
-		$this->assertEquals(
+		self::assertEquals(
 			'',
 			$this->fixture->getHomepage()
 		);
-		$this->assertEquals(
+		self::assertEquals(
 			'http://www.test.com/',
 			$this->maximalFixture->getHomepage()
 		);
 	}
 
 	public function testHasHomepageWithNoHomepageReturnsFalse() {
-		$this->assertFalse(
+		self::assertFalse(
 			$this->fixture->hasHomepage()
 		);
 	}
 
 	public function testHasHomepageWithHomepageReturnsTrue() {
-		$this->assertTrue(
+		self::assertTrue(
 			$this->maximalFixture->hasHomepage()
 		);
 	}
@@ -251,11 +239,11 @@ class tx_seminars_OldModel_SpeakerTest extends tx_phpunit_testcase {
 		$plugin = new tx_seminars_FrontEnd_DefaultController();
 		$plugin->init(array());
 
-		$this->assertEquals(
+		self::assertEquals(
 			'',
 			$this->fixture->getDescription($plugin)
 		);
-		$this->assertEquals(
+		self::assertEquals(
 			'<p>foo</p><p>bar</p>',
 			$this->maximalFixture->getDescription($plugin)
 		);
@@ -264,19 +252,19 @@ class tx_seminars_OldModel_SpeakerTest extends tx_phpunit_testcase {
 	*/
 
 	public function testHasDescriptionWithNoDescriptionReturnsFalse() {
-		$this->assertFalse(
+		self::assertFalse(
 			$this->fixture->hasDescription()
 		);
 	}
 
 	public function testHasDescriptionWithDescriptionReturnsTrue() {
-		$this->assertTrue(
+		self::assertTrue(
 			$this->maximalFixture->hasDescription()
 		);
 	}
 
 	public function testHasSkillsInitiallyIsFalse() {
-		$this->assertFalse(
+		self::assertFalse(
 			$this->fixture->hasSkills()
 		);
 	}
@@ -286,13 +274,13 @@ class tx_seminars_OldModel_SpeakerTest extends tx_phpunit_testcase {
 	 */
 	public function canHaveOneSkill() {
 		$this->addSkillRelation(array());
-		$this->assertTrue(
+		self::assertTrue(
 			$this->fixture->hasSkills()
 		);
 	}
 
 	public function testGetSkillsShortWithNoSkillReturnsAnEmptyString() {
-		$this->assertEquals(
+		self::assertEquals(
 			'',
 			$this->fixture->getSkillsShort()
 		);
@@ -302,7 +290,7 @@ class tx_seminars_OldModel_SpeakerTest extends tx_phpunit_testcase {
 		$title = 'Test title';
 		$this->addSkillRelation(array('title' => $title));
 
-		$this->assertContains(
+		self::assertContains(
 			$title,
 			$this->fixture->getSkillsShort()
 		);
@@ -314,14 +302,14 @@ class tx_seminars_OldModel_SpeakerTest extends tx_phpunit_testcase {
 		$this->addSkillRelation(array('title' => $firstTitle));
 		$this->addSkillRelation(array('title' => $secondTitle));
 
-		$this->assertEquals(
+		self::assertEquals(
 			$firstTitle.', '.$secondTitle,
 			$this->fixture->getSkillsShort()
 		);
 	}
 
 	public function testGetNumberOfSkillsWithNoSkillReturnsZero() {
-		$this->assertEquals(
+		self::assertEquals(
 			0,
 			$this->fixture->getNumberOfSkills()
 		);
@@ -329,7 +317,7 @@ class tx_seminars_OldModel_SpeakerTest extends tx_phpunit_testcase {
 
 	public function testGetNumberOfSkillsWithSingleSkillReturnsOne() {
 		$this->addSkillRelation(array());
-		$this->assertEquals(
+		self::assertEquals(
 			1,
 			$this->fixture->getNumberOfSkills()
 		);
@@ -338,84 +326,84 @@ class tx_seminars_OldModel_SpeakerTest extends tx_phpunit_testcase {
 	public function testGetNumberOfSkillsWithTwoSkillsReturnsTwo() {
 		$this->addSkillRelation(array());
 		$this->addSkillRelation(array());
-		$this->assertEquals(
+		self::assertEquals(
 			2,
 			$this->fixture->getNumberOfSkills()
 		);
 	}
 
 	public function testGetNotes() {
-		$this->assertEquals(
+		self::assertEquals(
 			'',
 			$this->fixture->getNotes()
 		);
-		$this->assertEquals(
+		self::assertEquals(
 			'test notes',
 			$this->maximalFixture->getNotes()
 		);
 	}
 
 	public function testGetAddress() {
-		$this->assertEquals(
+		self::assertEquals(
 			'',
 			$this->fixture->getAddress()
 		);
-		$this->assertEquals(
+		self::assertEquals(
 			'test address',
 			$this->maximalFixture->getAddress()
 		);
 	}
 
 	public function testGetPhoneWork() {
-		$this->assertEquals(
+		self::assertEquals(
 			'',
 			$this->fixture->getPhoneWork()
 		);
-		$this->assertEquals(
+		self::assertEquals(
 			'123',
 			$this->maximalFixture->getPhoneWork()
 		);
 	}
 
 	public function testGetPhoneHome() {
-		$this->assertEquals(
+		self::assertEquals(
 			'',
 			$this->fixture->getPhoneHome()
 		);
-		$this->assertEquals(
+		self::assertEquals(
 			'456',
 			$this->maximalFixture->getPhoneHome()
 		);
 	}
 
 	public function testGetPhoneMobile() {
-		$this->assertEquals(
+		self::assertEquals(
 			'',
 			$this->fixture->getPhoneMobile()
 		);
-		$this->assertEquals(
+		self::assertEquals(
 			'789',
 			$this->maximalFixture->getPhoneMobile()
 		);
 	}
 
 	public function testGetFax() {
-		$this->assertEquals(
+		self::assertEquals(
 			'',
 			$this->fixture->getFax()
 		);
-		$this->assertEquals(
+		self::assertEquals(
 			'000',
 			$this->maximalFixture->getFax()
 		);
 	}
 
 	public function testGetEmail() {
-		$this->assertEquals(
+		self::assertEquals(
 			'foo@test.com',
 			$this->fixture->getEmail()
 		);
-		$this->assertEquals(
+		self::assertEquals(
 			'maximal-foo@test.com',
 			$this->maximalFixture->getEmail()
 		);
@@ -427,7 +415,7 @@ class tx_seminars_OldModel_SpeakerTest extends tx_phpunit_testcase {
 	////////////////////////
 
 	public function testGetGenderForNoGenderSetReturnsUnknownGenderValue() {
-		$this->assertEquals(
+		self::assertEquals(
 			tx_seminars_speaker::GENDER_UNKNOWN,
 			$this->fixture->getGender()
 		);
@@ -436,7 +424,7 @@ class tx_seminars_OldModel_SpeakerTest extends tx_phpunit_testcase {
 	public function testGetGenderForKnownGenderReturnsGender() {
 		$this->fixture->setGender(tx_seminars_speaker::GENDER_MALE);
 
-		$this->assertEquals(
+		self::assertEquals(
 			tx_seminars_speaker::GENDER_MALE,
 			$this->fixture->getGender()
 		);
@@ -448,7 +436,7 @@ class tx_seminars_OldModel_SpeakerTest extends tx_phpunit_testcase {
 	//////////////////////////////////////////
 
 	public function testHasCancelationPeriodForSpeakerWithoutCancelationPeriodReturnsFalse() {
-		$this->assertFalse(
+		self::assertFalse(
 			$this->fixture->hasCancelationPeriod()
 		);
 	}
@@ -456,7 +444,7 @@ class tx_seminars_OldModel_SpeakerTest extends tx_phpunit_testcase {
 	public function testHasCancelationPeriodForSpeakerWithCancelationPeriodReturnsTrue() {
 		$this->fixture->setCancelationPeriod(42);
 
-		$this->assertTrue(
+		self::assertTrue(
 			$this->fixture->hasCancelationPeriod()
 		);
 	}
@@ -467,7 +455,7 @@ class tx_seminars_OldModel_SpeakerTest extends tx_phpunit_testcase {
 	////////////////////////////////////////////////
 
 	public function testGetCancelationPeriodInDaysForSpeakerWithoutCancelationPeriodReturnsZero() {
-		$this->assertEquals(
+		self::assertEquals(
 			0,
 			$this->fixture->getCancelationPeriodInDays()
 		);
@@ -476,7 +464,7 @@ class tx_seminars_OldModel_SpeakerTest extends tx_phpunit_testcase {
 	public function testGetCancelationPeriodInDaysForSpeakerWithCancelationPeriodOfOneDayReturnsOne() {
 		$this->fixture->setCancelationPeriod(1);
 
-		$this->assertEquals(
+		self::assertEquals(
 			1,
 			$this->fixture->getCancelationPeriodInDays()
 		);
@@ -485,7 +473,7 @@ class tx_seminars_OldModel_SpeakerTest extends tx_phpunit_testcase {
 	public function testGetCancelationPeriodInDaysForSpeakerWithCancelationPeriodOfTwoDaysReturnsTwo() {
 		$this->fixture->setCancelationPeriod(2);
 
-		$this->assertEquals(
+		self::assertEquals(
 			2,
 			$this->fixture->getCancelationPeriodInDays()
 		);
@@ -500,7 +488,7 @@ class tx_seminars_OldModel_SpeakerTest extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function getOwnerWithoutOwnerReturnsNull() {
-		$this->assertNull(
+		self::assertNull(
 			$this->fixture->getOwner()
 		);
 	}
@@ -514,7 +502,7 @@ class tx_seminars_OldModel_SpeakerTest extends tx_phpunit_testcase {
 		)->getNewGhost();
 		$this->fixture->setOwner($frontEndUser);
 
-		$this->assertSame(
+		self::assertSame(
 			$frontEndUser,
 			$this->fixture->getOwner()
 		);

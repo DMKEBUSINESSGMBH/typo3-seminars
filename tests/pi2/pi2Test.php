@@ -1,26 +1,16 @@
 <?php
-/***************************************************************
-* Copyright notice
-*
-* (c) 2008-2014 Oliver Klee (typo3-coding@oliverklee.de)
-* All rights reserved
-*
-* This script is part of the TYPO3 project. The TYPO3 project is
-* free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* The GNU General Public License can be found at
-* http://www.gnu.org/copyleft/gpl.html.
-*
-* This script is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* This copyright notice MUST APPEAR in all copies of the script!
-***************************************************************/
+/*
+ * This file is part of the TYPO3 CMS project.
+ *
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
+ *
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
+ *
+ * The TYPO3 project - inspiring people to share!
+ */
 
 /**
  * Test case.
@@ -52,14 +42,14 @@ class Tx_Seminars_Tests_pi2_pi2Test extends Tx_Phpunit_TestCase {
 	/**
 	 * PID of the system folder in which we store our test data
 	 *
-	 * @var integer
+	 * @var int
 	 */
 	protected $pid = 0;
 
 	/**
 	 * UID of a test event record
 	 *
-	 * @var integer
+	 * @var int
 	 */
 	protected $eventUid = 0;
 
@@ -68,7 +58,7 @@ class Tx_Seminars_Tests_pi2_pi2Test extends Tx_Phpunit_TestCase {
 	 */
 	protected $configuration = NULL;
 
-	public function setUp() {
+	protected function setUp() {
 		if (t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version) < 4007000) {
 			$this->backEndConfigurationBackup = $GLOBALS['TYPO3_CONF_VARS']['BE'];
 			$GLOBALS['TYPO3_CONF_VARS']['BE']['forceCharset'] = 'utf-8';
@@ -99,11 +89,10 @@ class Tx_Seminars_Tests_pi2_pi2Test extends Tx_Phpunit_TestCase {
 		$this->fixture->init(array());
 	}
 
-	public function tearDown() {
+	protected function tearDown() {
 		$this->testingFramework->cleanUp();
 
 		tx_seminars_registrationmanager::purgeInstance();
-		unset($this->fixture, $this->testingFramework, $this->configuration);
 
 		if (t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version) < 4007000) {
 			$GLOBALS['TYPO3_CONF_VARS']['BE'] = $this->backEndConfigurationBackup;
@@ -157,13 +146,12 @@ class Tx_Seminars_Tests_pi2_pi2Test extends Tx_Phpunit_TestCase {
 	/**
 	 * @test
 	 */
-	public function createListOfEventsForZeroRecordsHasOnlySeparatorSpecificationAndHeaderLine() {
+	public function createListOfEventsForZeroRecordsHasOnlyHeaderLine() {
 		$pid = $this->testingFramework->createSystemFolder();
 		$this->configuration->setAsString('fieldsFromEventsForCsv', 'uid,title');
 
-		$this->assertSame(
-			'sep=;' . CRLF .
-				$this->localizeAndRemoveColon('tx_seminars_seminars.uid') . ';' .
+		self::assertSame(
+			$this->localizeAndRemoveColon('tx_seminars_seminars.uid') . ';' .
 				$this->localizeAndRemoveColon('tx_seminars_seminars.title') . CRLF,
 			$this->fixture->createListOfEvents($pid)
 		);
@@ -175,7 +163,7 @@ class Tx_Seminars_Tests_pi2_pi2Test extends Tx_Phpunit_TestCase {
 	public function createListOfEventsCanContainOneEventUid() {
 		$this->configuration->setAsString('fieldsFromEventsForCsv', 'uid');
 
-		$this->assertContains(
+		self::assertContains(
 			(string) $this->eventUid,
 			$this->fixture->createListOfEvents($this->pid)
 		);
@@ -196,7 +184,7 @@ class Tx_Seminars_Tests_pi2_pi2Test extends Tx_Phpunit_TestCase {
 
 		$this->configuration->setAsString('fieldsFromEventsForCsv', 'title');
 
-		$this->assertContains(
+		self::assertContains(
 			'another event',
 			$this->fixture->createListOfEvents($this->pid)
 		);
@@ -211,7 +199,7 @@ class Tx_Seminars_Tests_pi2_pi2Test extends Tx_Phpunit_TestCase {
 		$this->fixture->piVars['table'] = 'tx_seminars_seminars';
 		$this->fixture->piVars['pid'] = $this->pid;
 
-		$this->assertContains(
+		self::assertContains(
 			(string) $this->eventUid,
 			$this->fixture->main()
 		);
@@ -232,11 +220,11 @@ class Tx_Seminars_Tests_pi2_pi2Test extends Tx_Phpunit_TestCase {
 		);
 		$eventList = $this->fixture->createListOfEvents($this->pid);
 
-		$this->assertContains(
+		self::assertContains(
 			(string) $this->eventUid,
 			$eventList
 		);
-		$this->assertContains(
+		self::assertContains(
 			(string) $secondEventUid,
 			$eventList
 		);
@@ -258,11 +246,11 @@ class Tx_Seminars_Tests_pi2_pi2Test extends Tx_Phpunit_TestCase {
 
 		$output = $this->fixture->createAndOutputListOfEvents($this->pid);
 
-		$this->assertContains(
+		self::assertContains(
 			(string) $this->eventUid,
 			$output
 		);
-		$this->assertContains(
+		self::assertContains(
 			(string) $secondEventUid,
 			$output
 		);
@@ -282,7 +270,7 @@ class Tx_Seminars_Tests_pi2_pi2Test extends Tx_Phpunit_TestCase {
 			)
 		);
 
-		$this->assertContains(
+		self::assertContains(
 			$this->localizeAndRemoveColon('tx_seminars_seminars.uid') .
 				CRLF . $this->eventUid . CRLF . $secondEventUid . CRLF,
 			$this->fixture->createAndOutputListOfEvents($this->pid)
@@ -303,7 +291,7 @@ class Tx_Seminars_Tests_pi2_pi2Test extends Tx_Phpunit_TestCase {
 			)
 		);
 
-		$this->assertRegExp(
+		self::assertRegExp(
 			'/\r\n$/',
 			$this->fixture->createAndOutputListOfEvents($this->pid)
 		);
@@ -320,7 +308,7 @@ class Tx_Seminars_Tests_pi2_pi2Test extends Tx_Phpunit_TestCase {
 
 		$this->configuration->setAsString('fieldsFromEventsForCsv', 'title');
 
-		$this->assertNotContains(
+		self::assertNotContains(
 			'"bar"',
 			$this->fixture->createAndOutputListOfEvents($this->pid)
 		);
@@ -337,7 +325,7 @@ class Tx_Seminars_Tests_pi2_pi2Test extends Tx_Phpunit_TestCase {
 
 		$this->configuration->setAsString('fieldsFromEventsForCsv', 'description');
 
-		$this->assertContains(
+		self::assertContains(
 			'foo "" bar',
 			$this->fixture->createAndOutputListOfEvents($this->pid)
 		);
@@ -355,7 +343,7 @@ class Tx_Seminars_Tests_pi2_pi2Test extends Tx_Phpunit_TestCase {
 
 		$this->configuration->setAsString('fieldsFromEventsForCsv', 'title');
 
-		$this->assertContains(
+		self::assertContains(
 			'"foo' . LF . 'bar"',
 			$this->fixture->createAndOutputListOfEvents($this->pid)
 		);
@@ -372,7 +360,7 @@ class Tx_Seminars_Tests_pi2_pi2Test extends Tx_Phpunit_TestCase {
 
 		$this->configuration->setAsString('fieldsFromEventsForCsv', 'title');
 
-		$this->assertContains(
+		self::assertContains(
 			'"foo "" bar"',
 			$this->fixture->createAndOutputListOfEvents($this->pid)
 		);
@@ -389,7 +377,7 @@ class Tx_Seminars_Tests_pi2_pi2Test extends Tx_Phpunit_TestCase {
 
 		$this->configuration->setAsString('fieldsFromEventsForCsv', 'title');
 
-		$this->assertContains(
+		self::assertContains(
 			'"foo ; bar"',
 			$this->fixture->createAndOutputListOfEvents($this->pid)
 		);
@@ -406,7 +394,7 @@ class Tx_Seminars_Tests_pi2_pi2Test extends Tx_Phpunit_TestCase {
 
 		$this->configuration->setAsString('fieldsFromEventsForCsv', 'description,title');
 
-		$this->assertContains(
+		self::assertContains(
 			'foo;bar',
 			$this->fixture->createAndOutputListOfEvents($this->pid)
 		);
@@ -423,11 +411,11 @@ class Tx_Seminars_Tests_pi2_pi2Test extends Tx_Phpunit_TestCase {
 			'tx_seminars_seminars.description'
 		);
 
-		$this->assertContains(
+		self::assertContains(
 			$description,
 			$eventList
 		);
-		$this->assertNotContains(
+		self::assertNotContains(
 			'"' . $description . '"',
 			$eventList
 		);
@@ -439,7 +427,7 @@ class Tx_Seminars_Tests_pi2_pi2Test extends Tx_Phpunit_TestCase {
 	public function createAndOutputListOfEventsSeparatesHeadlineFieldsWithSemicolons() {
 		$this->configuration->setAsString('fieldsFromEventsForCsv', 'description,title');
 
-		$this->assertContains(
+		self::assertContains(
 			$this->localizeAndRemoveColon('tx_seminars_seminars.description') .
 				';' . $this->localizeAndRemoveColon('tx_seminars_seminars.title'),
 			$this->fixture->createAndOutputListOfEvents($this->pid)
@@ -455,7 +443,7 @@ class Tx_Seminars_Tests_pi2_pi2Test extends Tx_Phpunit_TestCase {
 	 * @test
 	 */
 	public function createListOfRegistrationsIsEmptyForNonExistentEvent() {
-		$this->assertSame(
+		self::assertSame(
 			'',
 			$this->fixture->createListOfRegistrations($this->eventUid + 9999)
 		);
@@ -464,13 +452,12 @@ class Tx_Seminars_Tests_pi2_pi2Test extends Tx_Phpunit_TestCase {
 	/**
 	 * @test
 	 */
-	public function createListOfRegistrationsForZeroRecordsHasOnlySeparatorSpecificationHeaderLine() {
+	public function createListOfRegistrationsForZeroRecordsHasOnlyHeaderLine() {
 		$this->configuration->setAsString('fieldsFromFeUserForCsv', 'name');
 		$this->configuration->setAsString('fieldsFromAttendanceForCsv', 'uid');
 
-		$this->assertSame(
-			'sep=;' . CRLF .
-				$this->localizeAndRemoveColon('LGL.name') . ';' .
+		self::assertSame(
+			$this->localizeAndRemoveColon('LGL.name') . ';' .
 				$this->localizeAndRemoveColon('tx_seminars_attendances.uid') . CRLF,
 			$this->fixture->createListOfRegistrations($this->eventUid)
 		);
@@ -491,7 +478,7 @@ class Tx_Seminars_Tests_pi2_pi2Test extends Tx_Phpunit_TestCase {
 			)
 		);
 
-		$this->assertContains(
+		self::assertContains(
 			(string) $registrationUid,
 			$this->fixture->createListOfRegistrations($this->eventUid)
 		);
@@ -513,7 +500,7 @@ class Tx_Seminars_Tests_pi2_pi2Test extends Tx_Phpunit_TestCase {
 			)
 		);
 
-		$this->assertContains(
+		self::assertContains(
 			$this->localizeAndRemoveColon(
 				'tx_seminars_attendances.registered_themselves'
 			),
@@ -537,7 +524,7 @@ class Tx_Seminars_Tests_pi2_pi2Test extends Tx_Phpunit_TestCase {
 			)
 		);
 
-		$this->assertContains(
+		self::assertContains(
 			$this->localizeAndRemoveColon('tx_seminars_attendances.company'),
 			$this->fixture->createListOfRegistrations($this->eventUid)
 		);
@@ -559,7 +546,7 @@ class Tx_Seminars_Tests_pi2_pi2Test extends Tx_Phpunit_TestCase {
 			)
 		);
 
-		$this->assertContains(
+		self::assertContains(
 			'foo bar inc.',
 			$this->fixture->createListOfRegistrations($this->eventUid)
 		);
@@ -589,7 +576,7 @@ class Tx_Seminars_Tests_pi2_pi2Test extends Tx_Phpunit_TestCase {
 
 		$GLOBALS['BE_USER'] = $globalBackEndUser;
 
-		$this->assertContains(
+		self::assertContains(
 			'foo bar inc.',
 			$result
 		);
@@ -599,37 +586,6 @@ class Tx_Seminars_Tests_pi2_pi2Test extends Tx_Phpunit_TestCase {
 	/*
 	 * Tests concerning the main function
 	 */
-
-	/**
-	 * @test
-	 */
-	public function mainCanExportValueOfSignedThemselves() {
-		$this->markTestIncomplete(
-			'For this test to run, we need to provide a language file to the ' .
-				'registration class @see ' .
-				'https://bugs.oliverklee.com/show_bug.cgi?id=3133'
-		);
-
-		$this->configuration->setAsString('fieldsFromFeUserForCsv', '');
-		$this->configuration->setAsString('fieldsFromAttendanceForCsv', 'registered_themselves');
-
-		$this->testingFramework->createRecord(
-			'tx_seminars_attendances',
-			array(
-				'seminar' => $this->eventUid,
-				'user' => $this->testingFramework->createFrontEndUser(),
-				'registered_themselves' => 1,
-			)
-		);
-
-		$this->fixture->piVars['table'] = 'tx_seminars_attendances';
-		$this->fixture->piVars['eventUid'] = $this->eventUid;
-
-		$this->assertContains(
-			$this->fixture->translate('label_yes'),
-			$this->fixture->main()
-		);
-	}
 
 	/**
 	 * @test
@@ -649,7 +605,7 @@ class Tx_Seminars_Tests_pi2_pi2Test extends Tx_Phpunit_TestCase {
 		$this->fixture->piVars['table'] = 'tx_seminars_attendances';
 		$this->fixture->piVars['eventUid'] = $this->eventUid;
 
-		$this->assertContains(
+		self::assertContains(
 			(string) $registrationUid,
 			$this->fixture->main()
 		);
@@ -681,11 +637,11 @@ class Tx_Seminars_Tests_pi2_pi2Test extends Tx_Phpunit_TestCase {
 		$registrationsList
 			= $this->fixture->createListOfRegistrations($this->eventUid);
 
-		$this->assertContains(
+		self::assertContains(
 			(string) $firstRegistrationUid,
 			$registrationsList
 		);
-		$this->assertContains(
+		self::assertContains(
 			(string) $secondRegistrationUid,
 			$registrationsList
 		);
@@ -708,7 +664,7 @@ class Tx_Seminars_Tests_pi2_pi2Test extends Tx_Phpunit_TestCase {
 		$this->fixture->piVars['table'] = 'tx_seminars_seminars';
 		$this->fixture->piVars['pid'] = $this->pid;
 
-		$this->assertContains(
+		self::assertContains(
 			'Schöne Bären führen',
 			$this->fixture->main()
 		);
@@ -733,7 +689,7 @@ class Tx_Seminars_Tests_pi2_pi2Test extends Tx_Phpunit_TestCase {
 
 		$this->configuration->setAsString('charsetForCsv', 'iso-8859-15');
 
-		$this->assertContains(
+		self::assertContains(
 			'Sch' . chr(246) . 'ne B' . chr(228) . 'ren f' . chr(252) . 'hren',
 			$this->fixture->main()
 		);
@@ -759,7 +715,7 @@ class Tx_Seminars_Tests_pi2_pi2Test extends Tx_Phpunit_TestCase {
 		$this->fixture->piVars['table'] = 'tx_seminars_attendances';
 		$this->fixture->piVars['pid'] = $this->pid;
 
-		$this->assertContains(
+		self::assertContains(
 			'Schöne Bären führen',
 			$this->fixture->main()
 		);
@@ -787,7 +743,7 @@ class Tx_Seminars_Tests_pi2_pi2Test extends Tx_Phpunit_TestCase {
 
 		$this->configuration->setAsString('charsetForCsv', 'iso-8859-15');
 
-		$this->assertContains(
+		self::assertContains(
 			'Sch' . chr(246) . 'ne B' . chr(228) . 'ren f' . chr(252) . 'hren',
 			$this->fixture->main()
 		);
@@ -806,7 +762,7 @@ class Tx_Seminars_Tests_pi2_pi2Test extends Tx_Phpunit_TestCase {
 			$this->testingFramework->getAutoIncrement('tx_seminars_attendances')
 		);
 
-		$this->assertContains(
+		self::assertContains(
 			'404',
 			tx_oelib_headerProxyFactory::getInstance()->getHeaderProxy()
 				->getLastAddedHeader()
@@ -838,11 +794,11 @@ class Tx_Seminars_Tests_pi2_pi2Test extends Tx_Phpunit_TestCase {
 		);
 
 		$registrationsList = $this->fixture->createAndOutputListOfRegistrations($this->eventUid);
-		$this->assertContains(
+		self::assertContains(
 			(string) $firstRegistrationUid,
 			$registrationsList
 		);
-		$this->assertContains(
+		self::assertContains(
 			(string) $secondRegistrationUid,
 			$registrationsList
 		);
@@ -865,7 +821,7 @@ class Tx_Seminars_Tests_pi2_pi2Test extends Tx_Phpunit_TestCase {
 			)
 		);
 
-		$this->assertContains(
+		self::assertContains(
 			'foo_user',
 			$this->fixture->createAndOutputListOfRegistrations($this->eventUid)
 		);
@@ -888,7 +844,7 @@ class Tx_Seminars_Tests_pi2_pi2Test extends Tx_Phpunit_TestCase {
 			)
 		);
 
-		$this->assertNotContains(
+		self::assertNotContains(
 			(string) $registrationUid,
 			$this->fixture->createAndOutputListOfRegistrations($this->eventUid)
 		);
@@ -910,7 +866,7 @@ class Tx_Seminars_Tests_pi2_pi2Test extends Tx_Phpunit_TestCase {
 			)
 		);
 
-		$this->assertNotContains(
+		self::assertNotContains(
 			(string) $registrationUid,
 			$this->fixture->createAndOutputListOfRegistrations($this->eventUid)
 		);
@@ -940,7 +896,7 @@ class Tx_Seminars_Tests_pi2_pi2Test extends Tx_Phpunit_TestCase {
 			)
 		);
 
-		$this->assertContains(
+		self::assertContains(
 			CRLF . $firstRegistrationUid . CRLF .
 				 $secondRegistrationUid . CRLF,
 			$this->fixture->createAndOutputListOfRegistrations($this->eventUid)
@@ -971,7 +927,7 @@ class Tx_Seminars_Tests_pi2_pi2Test extends Tx_Phpunit_TestCase {
 			)
 		);
 
-		$this->assertRegExp(
+		self::assertRegExp(
 			'/\r\n$/',
 			$this->fixture->createAndOutputListOfRegistrations($this->eventUid)
 		);
@@ -993,7 +949,7 @@ class Tx_Seminars_Tests_pi2_pi2Test extends Tx_Phpunit_TestCase {
 			)
 		);
 
-		$this->assertContains(
+		self::assertContains(
 			'foo "" bar',
 			$this->fixture->createAndOutputListOfRegistrations($this->eventUid)
 		);
@@ -1015,7 +971,7 @@ class Tx_Seminars_Tests_pi2_pi2Test extends Tx_Phpunit_TestCase {
 			)
 		);
 
-		$this->assertNotContains(
+		self::assertNotContains(
 			'"foo bar"',
 			$this->fixture->createAndOutputListOfRegistrations($this->eventUid)
 		);
@@ -1037,7 +993,7 @@ class Tx_Seminars_Tests_pi2_pi2Test extends Tx_Phpunit_TestCase {
 			)
 		);
 
-		$this->assertContains(
+		self::assertContains(
 			'"foo ; bar"',
 			$this->fixture->createAndOutputListOfRegistrations($this->eventUid)
 		);
@@ -1059,7 +1015,7 @@ class Tx_Seminars_Tests_pi2_pi2Test extends Tx_Phpunit_TestCase {
 			)
 		);
 
-		$this->assertContains(
+		self::assertContains(
 			'"foo' . LF . 'bar"',
 			$this->fixture->createAndOutputListOfRegistrations($this->eventUid)
 		);
@@ -1081,7 +1037,7 @@ class Tx_Seminars_Tests_pi2_pi2Test extends Tx_Phpunit_TestCase {
 			)
 		);
 
-		$this->assertContains(
+		self::assertContains(
 			'"foo "" bar"',
 			$this->fixture->createAndOutputListOfRegistrations($this->eventUid)
 		);
@@ -1104,7 +1060,7 @@ class Tx_Seminars_Tests_pi2_pi2Test extends Tx_Phpunit_TestCase {
 			)
 		);
 
-		$this->assertContains(
+		self::assertContains(
 			'foo;test',
 			$this->fixture->createAndOutputListOfRegistrations($this->eventUid)
 		);
@@ -1119,11 +1075,11 @@ class Tx_Seminars_Tests_pi2_pi2Test extends Tx_Phpunit_TestCase {
 		$registrationsList = $this->fixture->createAndOutputListOfRegistrations($this->eventUid);
 		$localizedAddress = $this->localizeAndRemoveColon('tx_seminars_attendances.address');
 
-		$this->assertContains(
+		self::assertContains(
 			$localizedAddress,
 			$registrationsList
 		);
-		$this->assertNotContains(
+		self::assertNotContains(
 			'"' . $localizedAddress . '"',
 			$registrationsList
 		);
@@ -1135,7 +1091,7 @@ class Tx_Seminars_Tests_pi2_pi2Test extends Tx_Phpunit_TestCase {
 	public function createAndOutputListOfRegistrationsSeparatesHeadlineFieldsWithSemicolons() {
 		$this->configuration->setAsString('fieldsFromAttendanceForCsv', 'address,title');
 
-		$this->assertContains(
+		self::assertContains(
 			$this->localizeAndRemoveColon('tx_seminars_attendances.address') .
 				';' . $this->localizeAndRemoveColon('tx_seminars_attendances.title'),
 			$this->fixture->createAndOutputListOfRegistrations($this->eventUid)
@@ -1149,7 +1105,7 @@ class Tx_Seminars_Tests_pi2_pi2Test extends Tx_Phpunit_TestCase {
 		$this->configuration->setAsString('fieldsFromAttendanceForCsv', '');
 		$this->configuration->setAsString('fieldsFromFeUserForCsv', 'name');
 
-		$this->assertNotContains(
+		self::assertNotContains(
 			'name;',
 			$this->fixture->createAndOutputListOfRegistrations($this->eventUid)
 		);
@@ -1162,7 +1118,7 @@ class Tx_Seminars_Tests_pi2_pi2Test extends Tx_Phpunit_TestCase {
 		$this->configuration->setAsString('fieldsFromAttendanceForCsv', 'address');
 		$this->configuration->setAsString('fieldsFromFeUserForCsv', '');
 
-		$this->assertNotContains(
+		self::assertNotContains(
 			';address',
 			$this->fixture->createAndOutputListOfRegistrations($this->eventUid)
 		);
@@ -1175,7 +1131,7 @@ class Tx_Seminars_Tests_pi2_pi2Test extends Tx_Phpunit_TestCase {
 		$this->configuration->setAsString('fieldsFromAttendanceForCsv', 'address');
 		$this->configuration->setAsString('fieldsFromFeUserForCsv', 'name');
 
-		$this->assertContains(
+		self::assertContains(
 			$this->localizeAndRemoveColon('LGL.name') . ';' . $this->localizeAndRemoveColon('tx_seminars_attendances.address'),
 			$this->fixture->createAndOutputListOfRegistrations($this->eventUid)
 		);
@@ -1184,12 +1140,12 @@ class Tx_Seminars_Tests_pi2_pi2Test extends Tx_Phpunit_TestCase {
 	/**
 	 * @test
 	 */
-	public function createListOfRegistrationsForBothConfigurationFieldsEmptyReturnsOnlySeparatorSpecification() {
+	public function createListOfRegistrationsForBothConfigurationFieldsEmptyReturnsCrLf() {
 		$this->configuration->setAsString('fieldsFromAttendanceForCsv', '');
 		$this->configuration->setAsString('fieldsFromFeUserForCsv', '');
 
-		$this->assertSame(
-			'sep=;' . CRLF . CRLF,
+		self::assertSame(
+			CRLF,
 			$this->fixture->createAndOutputListOfRegistrations($this->eventUid)
 		);
 	}
@@ -1211,7 +1167,7 @@ class Tx_Seminars_Tests_pi2_pi2Test extends Tx_Phpunit_TestCase {
 			)
 		);
 
-		$this->assertContains(
+		self::assertContains(
 			'foo',
 			$this->fixture->createAndOutputListOfRegistrations()
 		);
@@ -1234,7 +1190,7 @@ class Tx_Seminars_Tests_pi2_pi2Test extends Tx_Phpunit_TestCase {
 			)
 		);
 
-		$this->assertNotContains(
+		self::assertNotContains(
 			'foo',
 			$this->fixture->createAndOutputListOfRegistrations()
 		);
@@ -1258,7 +1214,7 @@ class Tx_Seminars_Tests_pi2_pi2Test extends Tx_Phpunit_TestCase {
 			)
 		);
 
-		$this->assertContains(
+		self::assertContains(
 			'foo',
 			$this->fixture->createAndOutputListOfRegistrations()
 		);
@@ -1272,7 +1228,7 @@ class Tx_Seminars_Tests_pi2_pi2Test extends Tx_Phpunit_TestCase {
 			$this->testingFramework->getAutoIncrement('tx_seminars_seminars')
 		);
 
-		$this->assertContains(
+		self::assertContains(
 			'404',
 			tx_oelib_headerProxyFactory::getInstance()->getHeaderProxy()
 				->getLastAddedHeader()
@@ -1286,7 +1242,7 @@ class Tx_Seminars_Tests_pi2_pi2Test extends Tx_Phpunit_TestCase {
 		$this->fixture->setTypo3Mode('FE');
 		$this->fixture->createAndOutputListOfRegistrations();
 
-		$this->assertContains(
+		self::assertContains(
 			'403',
 			tx_oelib_headerProxyFactory::getInstance()->getHeaderProxy()
 				->getLastAddedHeader()
@@ -1299,7 +1255,7 @@ class Tx_Seminars_Tests_pi2_pi2Test extends Tx_Phpunit_TestCase {
 	public function createAndOutputListOfRegistrationsForEventUidGivenSetsPageContentTypeToCsv() {
 		$this->fixture->createAndOutputListOfRegistrations($this->eventUid);
 
-		$this->assertTrue(
+		self::assertTrue(
 			in_array(
 				'Content-type: text/csv; header=present; charset=utf-8',
 				tx_oelib_headerProxyFactory::getInstance()->getHeaderProxy()
@@ -1315,7 +1271,7 @@ class Tx_Seminars_Tests_pi2_pi2Test extends Tx_Phpunit_TestCase {
 		$this->fixture->piVars['pid'] = $this->pid;
 		$this->fixture->createAndOutputListOfRegistrations();
 
-		$this->assertTrue(
+		self::assertTrue(
 			in_array(
 				'Content-type: text/csv; header=present; charset=utf-8',
 				tx_oelib_headerProxyFactory::getInstance()->getHeaderProxy()
@@ -1342,7 +1298,7 @@ class Tx_Seminars_Tests_pi2_pi2Test extends Tx_Phpunit_TestCase {
 			array('seminar' => $this->eventUid, 'user' => $frontEndUserUid)
 		);
 
-		$this->assertNotContains(
+		self::assertNotContains(
 			'foo@bar.com',
 			$this->fixture->createAndOutputListOfRegistrations($this->eventUid)
 		);
@@ -1364,7 +1320,7 @@ class Tx_Seminars_Tests_pi2_pi2Test extends Tx_Phpunit_TestCase {
 			)
 		);
 
-		$this->assertNotContains(
+		self::assertNotContains(
 			'foo bank',
 			$this->fixture->createAndOutputListOfRegistrations($this->eventUid)
 		);
@@ -1396,7 +1352,7 @@ class Tx_Seminars_Tests_pi2_pi2Test extends Tx_Phpunit_TestCase {
 			)
 		);
 
-		$this->assertNotContains(
+		self::assertNotContains(
 			(string) $queueUid,
 			$this->fixture->createAndOutputListOfRegistrations($this->eventUid)
 		);

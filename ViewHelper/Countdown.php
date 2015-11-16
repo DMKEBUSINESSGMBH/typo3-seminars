@@ -1,26 +1,16 @@
 <?php
-/***************************************************************
- * Copyright notice
-*
-* (c) 2012 Niels Pardon (mail@niels-pardon.de)
-* All rights reserved
-*
-* This script is part of the TYPO3 project. The TYPO3 project is
-* free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* The GNU General Public License can be found at
-* http://www.gnu.org/copyleft/gpl.html.
-*
-* This script is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* This copyright notice MUST APPEAR in all copies of the script!
-***************************************************************/
+/*
+ * This file is part of the TYPO3 CMS project.
+ *
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
+ *
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
+ *
+ * The TYPO3 project - inspiring people to share!
+ */
 
 /**
  * This class represents a view helper for rendering a countdown.
@@ -58,7 +48,7 @@ class tx_seminars_ViewHelper_Countdown {
 	 * 50000 seconds -> "13 hours"
 	 * The function uses localized strings and also looks for proper usage of singular/plural.
 	 *
-	 * @param integer $targettime the target UNIX timestamp to count up to, must be >= 0
+	 * @param int $targettime the target UNIX timestamp to count up to, must be >= 0
 	 *
 	 * @return string a localized string representing the time left until the event starts
 	 */
@@ -81,12 +71,12 @@ class tx_seminars_ViewHelper_Countdown {
 	/**
 	 * Returns the given duration in days.
 	 *
-	 * @param integer $seconds the duration in seconds, must be >= 0
+	 * @param int $seconds the duration in seconds, must be >= 0
 	 *
 	 * @return string the duration in days
 	 */
 	protected function getAsDays($seconds) {
-		$countdownValue = intval(round($seconds / tx_oelib_Time::SECONDS_PER_DAY));
+		$countdownValue = (int)round($seconds / tx_oelib_Time::SECONDS_PER_DAY);
 		if ($countdownValue > 1 || $countdownValue === 0) {
 			$countdownText = $this->translator->translate('countdown_days_plural');
 		} else {
@@ -99,12 +89,12 @@ class tx_seminars_ViewHelper_Countdown {
 	/**
 	 * Returns the given duration in hours.
 	 *
-	 * @param integer $seconds the duration in seconds, must be >= 0
+	 * @param int $seconds the duration in seconds, must be >= 0
 	 *
 	 * @return string the duration in hours
 	 */
 	protected function getAsHours($seconds) {
-		$countdownValue = intval(round($seconds / tx_oelib_Time::SECONDS_PER_HOUR));
+		$countdownValue = (int)round($seconds / tx_oelib_Time::SECONDS_PER_HOUR);
 		if ($countdownValue > 1 || $countdownValue === 0) {
 			$countdownText = $this->translator->translate('countdown_hours_plural');
 		} else {
@@ -117,12 +107,12 @@ class tx_seminars_ViewHelper_Countdown {
 	/**
 	 * Returns the given duration in minutes.
 	 *
-	 * @param integer $seconds the duration in seconds, must be >= 0
+	 * @param int $seconds the duration in seconds, must be >= 0
 	 *
 	 * @return string the duration in minutes
 	 */
 	protected function getAsMinutes($seconds) {
-		$countdownValue = intval(round($seconds / tx_oelib_Time::SECONDS_PER_MINUTE));
+		$countdownValue = (int)round($seconds / tx_oelib_Time::SECONDS_PER_MINUTE);
 		if ($countdownValue > 1 || $countdownValue === 0) {
 			$countdownText = $this->translator->translate('countdown_minutes_plural');
 		} else {
@@ -135,7 +125,7 @@ class tx_seminars_ViewHelper_Countdown {
 	/**
 	 * Returns the given duration in seconds.
 	 *
-	 * @param integer $seconds the duration in seconds, must be >= 0
+	 * @param int $seconds the duration in seconds, must be >= 0
 	 *
 	 * @return string the duration in seconds
 	 */
@@ -149,7 +139,7 @@ class tx_seminars_ViewHelper_Countdown {
 	/**
 	 * Returns the formatted countdown message using $countdownValue and $countdownText.
 	 *
-	 * @param integer $countdownValue
+	 * @param int $countdownValue
 	 * @param string $countdownText
 	 *
 	 * @return string the formatted countdown message

@@ -1,26 +1,16 @@
 <?php
-/***************************************************************
- * Copyright notice
-*
-* (c) 2012 Niels Pardon (mail@niels-pardon.de)
-* All rights reserved
-*
-* This script is part of the TYPO3 project. The TYPO3 project is
-* free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* The GNU General Public License can be found at
-* http://www.gnu.org/copyleft/gpl.html.
-*
-* This script is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* This copyright notice MUST APPEAR in all copies of the script!
-***************************************************************/
+/*
+ * This file is part of the TYPO3 CMS project.
+ *
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
+ *
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
+ *
+ * The TYPO3 project - inspiring people to share!
+ */
 
 /**
  * This class represents a view helper for rendering date ranges.
@@ -93,8 +83,8 @@ class tx_seminars_ViewHelper_DateRange {
 	/**
 	 * Renders the UNIX timestamps in $beginDate and $endDate as an abbreviated date range.
 	 *
-	 * @param integer $beginDate
-	 * @param integer $endDate
+	 * @param int $beginDate
+	 * @param int $endDate
 	 * @param string $dash
 	 *
 	 * @return string the abbreviated date range
@@ -116,10 +106,10 @@ class tx_seminars_ViewHelper_DateRange {
 	/**
 	 * Returns whether the UNIX timestamps in $beginDate and $endDate are on the same day.
 	 *
-	 * @param integer $beginDate
-	 * @param integer $endDate
+	 * @param int $beginDate
+	 * @param int $endDate
 	 *
-	 * @return boolean TRUE if $beginDate and $endDate are on the same day, otherwise FALSE
+	 * @return bool TRUE if $beginDate and $endDate are on the same day, otherwise FALSE
 	 */
 	protected function isSameDay($beginDate, $endDate) {
 		return ($this->getAsDateFormatYmd($beginDate) === $this->getAsDateFormatYmd($endDate));
@@ -128,10 +118,10 @@ class tx_seminars_ViewHelper_DateRange {
 	/**
 	 * Returns whether the UNIX timestamps in $beginDate and $endDate are in the same month.
 	 *
-	 * @param integer $beginDate
-	 * @param integer $endDate
+	 * @param int $beginDate
+	 * @param int $endDate
 	 *
-	 * @return boolean TRUE if $beginDate and $endDate are in the same month, otherwise FALSE
+	 * @return bool TRUE if $beginDate and $endDate are in the same month, otherwise FALSE
 	 */
 	protected function isSameMonth($beginDate, $endDate) {
 		return ($this->getAsDateFormatM($beginDate) === $this->getAsDateFormatM($endDate));
@@ -140,10 +130,10 @@ class tx_seminars_ViewHelper_DateRange {
 	/**
 	 * Returns whether the UNIX timestamps in $beginDate and $endDate are in the same year.
 	 *
-	 * @param integer $beginDate
-	 * @param integer $endDate
+	 * @param int $beginDate
+	 * @param int $endDate
 	 *
-	 * @return boolean TRUE if $beginDate and $endDate are in the same year, otherwise FALSE
+	 * @return bool TRUE if $beginDate and $endDate are in the same year, otherwise FALSE
 	 */
 	protected function isSameYear($beginDate, $endDate) {
 		return ($this->getAsDateFormatY($beginDate) === $this->getAsDateFormatY($endDate));
@@ -152,7 +142,7 @@ class tx_seminars_ViewHelper_DateRange {
 	/**
 	 * Renders a UNIX timestamp in the strftime format specified in plugin.tx_seminars_seminars.dateFormatYMD.
 	 *
-	 * @param integer $timestamp the UNIX timestamp to render
+	 * @param int $timestamp the UNIX timestamp to render
 	 *
 	 * @return string the UNIX timestamp rendered using the strftime format in plugin.tx_seminars_seminars.dateFormatYMD
 	 */
@@ -163,7 +153,7 @@ class tx_seminars_ViewHelper_DateRange {
 	/**
 	 * Renders a UNIX timestamp in the strftime format specified in plugin.tx_seminars_seminars.dateFormatY.
 	 *
-	 * @param integer $timestamp the UNIX timestamp to render
+	 * @param int $timestamp the UNIX timestamp to render
 	 *
 	 * @return string the UNIX timestamp rendered using the strftime format in plugin.tx_seminars_seminars.dateFormatY
 	 */
@@ -174,7 +164,7 @@ class tx_seminars_ViewHelper_DateRange {
 	/**
 	 * Renders a UNIX timestamp in the strftime format specified in plugin.tx_seminars_seminars.dateFormatM.
 	 *
-	 * @param integer $timestamp the UNIX timestamp to render
+	 * @param int $timestamp the UNIX timestamp to render
 	 *
 	 * @return string the UNIX timestamp rendered using the strftime format in plugin.tx_seminars_seminars.dateFormatM
 	 */
@@ -185,7 +175,7 @@ class tx_seminars_ViewHelper_DateRange {
 	/**
 	 * Renders a UNIX timestamp in the strftime format specified in plugin.tx_seminars_seminars.dateFormatMD.
 	 *
-	 * @param integer $timestamp the UNIX timestamp to render
+	 * @param int $timestamp the UNIX timestamp to render
 	 *
 	 * @return string the UNIX timestamp rendered using the strftime format in plugin.tx_seminars_seminars.dateFormatMD
 	 */
@@ -196,7 +186,7 @@ class tx_seminars_ViewHelper_DateRange {
 	/**
 	 * Renders a UNIX timestamp in the strftime format specified in plugin.tx_seminars_seminars.dateFormatD.
 	 *
-	 * @param integer $timestamp the UNIX timestamp to render
+	 * @param int $timestamp the UNIX timestamp to render
 	 *
 	 * @return string the UNIX timestamp rendered using the strftime format in plugin.tx_seminars_seminars.dateFormatD
 	 */

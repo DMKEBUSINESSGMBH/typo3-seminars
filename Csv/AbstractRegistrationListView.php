@@ -1,26 +1,16 @@
 <?php
-/***************************************************************
- * Copyright notice
+/*
+ * This file is part of the TYPO3 CMS project.
  *
- * (c) 2014 Oliver Klee (typo3-coding@oliverklee.de)
- * All rights reserved
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
  *
- * This script is part of the TYPO3 project. The TYPO3 project is
- * free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
  *
- * The GNU General Public License can be found at
- * http://www.gnu.org/copyleft/gpl.html.
- *
- * This script is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * This copyright notice MUST APPEAR in all copies of the script!
- ***************************************************************/
+ * The TYPO3 project - inspiring people to share!
+ */
 
 /**
  * This class creates a CSV export of registrations.
@@ -37,14 +27,14 @@ abstract class Tx_Seminars_Csv_AbstractRegistrationListView extends Tx_Seminars_
 	protected $tableName = 'tx_seminars_attendances';
 
 	/**
-	 * @var integer
+	 * @var int
 	 */
 	protected $eventUid = 0;
 
 	/**
 	 * Sets the page UID of the records to retrieve.
 	 *
-	 * @param integer $pageUid the page UID of the records, must be >= 0
+	 * @param int $pageUid the page UID of the records, must be >= 0
 	 *
 	 * @return void
 	 *
@@ -61,7 +51,7 @@ abstract class Tx_Seminars_Csv_AbstractRegistrationListView extends Tx_Seminars_
 	/**
 	 * Sets the event UID of the registrations to retrieve.
 	 *
-	 * @param integer $eventUid the event UID of the registrations, must be >= 0
+	 * @param int $eventUid the event UID of the registrations, must be >= 0
 	 *
 	 * @return void
 	 *
@@ -78,7 +68,7 @@ abstract class Tx_Seminars_Csv_AbstractRegistrationListView extends Tx_Seminars_
 	/**
 	 * Returns the event UID of the registrationsToRetrieve.
 	 *
-	 * @return integer the event UID, will be >= 0
+	 * @return int the event UID, will be >= 0
 	 */
 	protected function getEventUid() {
 		return $this->eventUid;
@@ -87,7 +77,7 @@ abstract class Tx_Seminars_Csv_AbstractRegistrationListView extends Tx_Seminars_
 	/**
 	 * Checks whether a non-zero event UID has been set.
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	protected function hasEventUid() {
 		return $this->getEventUid() > 0;
@@ -134,10 +124,10 @@ abstract class Tx_Seminars_Csv_AbstractRegistrationListView extends Tx_Seminars_
 	/**
 	 * Returns the localized field names.
 	 *
-	 * @param array $fieldNames the field names to translate, may be empty
+	 * @param string[] $fieldNames the field names to translate, may be empty
 	 * @param string $localizationPrefix the table to which the fields belong to
 	 *
-	 * @return array the translated field names in an array, will be empty if no field names were given
+	 * @return string[] the translated field names in an array, will be empty if no field names were given
 	 */
 	protected function createLocalizedCsvHeadingsForOneTable(array $fieldNames, $localizationPrefix) {
 		$translations = array();
@@ -189,7 +179,7 @@ abstract class Tx_Seminars_Csv_AbstractRegistrationListView extends Tx_Seminars_
 	 * @return tx_seminars_BagBuilder_Registration the bag builder with some preset limitations
 	 */
 	protected function createRegistrationBagBuilder() {
-		/** @var $registrationBagBuilder tx_seminars_BagBuilder_Registration */
+		/** @var tx_seminars_BagBuilder_Registration $registrationBagBuilder */
 		$registrationBagBuilder = t3lib_div::makeInstance('tx_seminars_BagBuilder_Registration');
 
 		if (!$this->shouldAlsoContainRegistrationsOnQueue()) {
@@ -204,7 +194,7 @@ abstract class Tx_Seminars_Csv_AbstractRegistrationListView extends Tx_Seminars_
 	/**
 	 * Checks whether the export should also contain registrations that are on the queue.
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	abstract protected function shouldAlsoContainRegistrationsOnQueue();
 
@@ -225,7 +215,7 @@ abstract class Tx_Seminars_Csv_AbstractRegistrationListView extends Tx_Seminars_
 		/** @var $bag tx_seminars_Bag_Registration */
 		$bag = $builder->build();
 
-		/** @var $registration tx_seminars_registration */
+		/** @var tx_seminars_registration $registration */
 		foreach ($bag as $registration) {
 			$userData = $this->createCsvColumnsForFrontEndUser($registration);
 			$registrationData = $this->createCsvColumnsForRegistration($registration);

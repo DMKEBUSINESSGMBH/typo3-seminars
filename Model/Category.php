@@ -1,26 +1,16 @@
 <?php
-/***************************************************************
-* Copyright notice
-*
-* (c) 2009-2013 Niels Pardon (mail@niels-pardon.de)
-* All rights reserved
-*
-* This script is part of the TYPO3 project. The TYPO3 project is
-* free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* The GNU General Public License can be found at
-* http://www.gnu.org/copyleft/gpl.html.
-*
-* This script is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* This copyright notice MUST APPEAR in all copies of the script!
-***************************************************************/
+/*
+ * This file is part of the TYPO3 CMS project.
+ *
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
+ *
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
+ *
+ * The TYPO3 project - inspiring people to share!
+ */
 
 /**
  * This class represents a category.
@@ -81,7 +71,7 @@ class tx_seminars_Model_Category extends tx_oelib_Model implements tx_seminars_I
 	/**
 	 * Returns whether this category has an icon.
 	 *
-	 * @return boolean TRUE if this category has an icon, FALSE otherwise
+	 * @return bool TRUE if this category has an icon, FALSE otherwise
 	 */
 	public function hasIcon() {
 		return $this->hasString('icon');
@@ -90,7 +80,7 @@ class tx_seminars_Model_Category extends tx_oelib_Model implements tx_seminars_I
 	/**
 	 * Gets the UID of the single view page for events of this category.
 	 *
-	 * @return integer the single view page, will be 0 if none has been set
+	 * @return int the single view page, will be 0 if none has been set
 	 */
 	public function getSingleViewPageUid() {
 		return $this->getAsInteger('single_view_page');
@@ -99,7 +89,7 @@ class tx_seminars_Model_Category extends tx_oelib_Model implements tx_seminars_I
 	/**
 	 * Checks whether this category has a single view page UID set.
 	 *
-	 * @return boolean
+	 * @return bool
 	 *         TRUE if this category has a single view page set, FALSE otherwise
 	 */
 	public function hasSingleViewPageUid() {

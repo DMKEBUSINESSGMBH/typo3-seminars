@@ -1,35 +1,25 @@
 <?php
-/***************************************************************
- * Copyright notice
-*
-* (c) 2012 Niels Pardon (mail@niels-pardon.de)
-* All rights reserved
-*
-* This script is part of the TYPO3 project. The TYPO3 project is
-* free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* The GNU General Public License can be found at
-* http://www.gnu.org/copyleft/gpl.html.
-*
-* This script is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* This copyright notice MUST APPEAR in all copies of the script!
-***************************************************************/
+/*
+ * This file is part of the TYPO3 CMS project.
+ *
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
+ *
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
+ *
+ * The TYPO3 project - inspiring people to share!
+ */
 
 /**
- * Testcase for the tx_seminars_ViewHelper_Countdown class.
-*
-* @package TYPO3
-* @subpackage tx_seminars
-*
-* @author Niels Pardon <mail@niels-pardon.de>
-*/
+ * Test case.
+ *
+ * @package TYPO3
+ * @subpackage tx_seminars
+ *
+ * @author Niels Pardon <mail@niels-pardon.de>
+ */
 class tx_seminars_ViewHelper_CountdownTest extends tx_phpunit_testcase {
 	/**
 	 * @var tx_seminars_ViewHelper_Countdown
@@ -46,7 +36,7 @@ class tx_seminars_ViewHelper_CountdownTest extends tx_phpunit_testcase {
 	 */
 	private $translator;
 
-	public function setUp() {
+	protected function setUp() {
 		$this->testingFramework	= new tx_oelib_testingFramework('tx_seminars');
 
 		$this->translator = tx_oelib_TranslatorRegistry::getInstance()->get('seminars');
@@ -54,10 +44,8 @@ class tx_seminars_ViewHelper_CountdownTest extends tx_phpunit_testcase {
 		$this->fixture = new tx_seminars_ViewHelper_Countdown();
 	}
 
-	public function tearDown() {
+	protected function tearDown() {
 		$this->testingFramework->cleanUp();
-
-		unset($this->fixture, $this->testingFramework, $this->translator);
 	}
 
 	/**
@@ -66,7 +54,7 @@ class tx_seminars_ViewHelper_CountdownTest extends tx_phpunit_testcase {
 	public function renderWithBeginDateInThirtySecondsReturnsThirtySecondsLeft() {
 		$offset = 30;
 
-		$this->assertSame(
+		self::assertSame(
 			sprintf(
 				$this->translator->translate('message_countdown'),
 				$offset,
@@ -82,7 +70,7 @@ class tx_seminars_ViewHelper_CountdownTest extends tx_phpunit_testcase {
 	public function renderWithBeginDateInOneMinuteReturnsOneMinuteLeft() {
 		$offset = 60;
 
-		$this->assertSame(
+		self::assertSame(
 			sprintf(
 				$this->translator->translate('message_countdown'),
 				$offset,
@@ -98,7 +86,7 @@ class tx_seminars_ViewHelper_CountdownTest extends tx_phpunit_testcase {
 	public function renderWithBeginDateInTwoMinutesReturnsTwoMinutesLeft() {
 		$offset = 120;
 
-		$this->assertSame(
+		self::assertSame(
 			sprintf(
 				$this->translator->translate('message_countdown'),
 				$offset,
@@ -114,7 +102,7 @@ class tx_seminars_ViewHelper_CountdownTest extends tx_phpunit_testcase {
 	public function renderWithBeginDateInOneHourReturnsOneHourLeft() {
 		$offset = 3600;
 
-		$this->assertSame(
+		self::assertSame(
 			sprintf(
 				$this->translator->translate('message_countdown'),
 				$offset,
@@ -130,7 +118,7 @@ class tx_seminars_ViewHelper_CountdownTest extends tx_phpunit_testcase {
 	public function renderWithBeginDateInTwoHoursReturnsTwoHoursLeft() {
 		$offset = 7200;
 
-		$this->assertSame(
+		self::assertSame(
 			sprintf(
 				$this->translator->translate('message_countdown'),
 				$offset,
@@ -146,7 +134,7 @@ class tx_seminars_ViewHelper_CountdownTest extends tx_phpunit_testcase {
 	public function renderWithBeginDateInOneDayReturnsOneDayLeft() {
 		$offset = 86400;
 
-		$this->assertSame(
+		self::assertSame(
 			sprintf(
 				$this->translator->translate('message_countdown'),
 				$offset,
@@ -162,7 +150,7 @@ class tx_seminars_ViewHelper_CountdownTest extends tx_phpunit_testcase {
 	public function renderWithBeginDateInTwoDaysReturnsTwoDaysLeft() {
 		$offset = 2*86400;
 
-		$this->assertSame(
+		self::assertSame(
 			sprintf(
 				$this->translator->translate('message_countdown'),
 				$offset,

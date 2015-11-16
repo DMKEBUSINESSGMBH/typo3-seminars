@@ -1,26 +1,16 @@
 <?php
-/***************************************************************
-* Copyright notice
-*
-* (c) 2009-2013 Niels Pardon (mail@niels-pardon.de)
-* All rights reserved
-*
-* This script is part of the TYPO3 project. The TYPO3 project is
-* free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* The GNU General Public License can be found at
-* http://www.gnu.org/copyleft/gpl.html.
-*
-* This script is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* This copyright notice MUST APPEAR in all copies of the script!
-***************************************************************/
+/*
+ * This file is part of the TYPO3 CMS project.
+ *
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
+ *
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
+ *
+ * The TYPO3 project - inspiring people to share!
+ */
 
 /**
  * This class represents a target group.
@@ -79,7 +69,7 @@ class tx_seminars_Model_TargetGroup extends tx_oelib_Model implements tx_seminar
 	/**
 	 * Returns this target group's minimum age.
 	 *
-	 * @return integer this target group's minimum age, will be >= 0; will be 0
+	 * @return int this target group's minimum age, will be >= 0; will be 0
 	 *                 if no minimum age has been set
 	 */
 	public function getMinimumAge() {
@@ -89,7 +79,7 @@ class tx_seminars_Model_TargetGroup extends tx_oelib_Model implements tx_seminar
 	/**
 	 * Sets this target group's minimum age.
 	 *
-	 * @param integer $minimumAge
+	 * @param int $minimumAge
 	 *        this target group's minimum age, must be >= 0; set to 0 to unset the minimum age
 	 *
 	 * @return void
@@ -101,7 +91,7 @@ class tx_seminars_Model_TargetGroup extends tx_oelib_Model implements tx_seminar
 	/**
 	 * Returns this target group's maximum age.
 	 *
-	 * @return integer this target group's maximum age, will be >= 0; will be 0
+	 * @return int this target group's maximum age, will be >= 0; will be 0
 	 *                 if no maximum age has been set
 	 */
 	public function getMaximumAge() {
@@ -111,7 +101,7 @@ class tx_seminars_Model_TargetGroup extends tx_oelib_Model implements tx_seminar
 	/**
 	 * Sets this target group's maximum age.
 	 *
-	 * @param integer $maximumAge
+	 * @param int $maximumAge
 	 *        this target group's maximum age, must be >= 0; set to 0 to unset the maximum age
 	 *
 	 * @return void

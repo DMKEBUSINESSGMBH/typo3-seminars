@@ -1,26 +1,16 @@
 <?php
-/***************************************************************
-* Copyright notice
-*
-* (c) 2007-2013 Niels Pardon (mail@niels-pardon.de)
-* All rights reserved
-*
-* This script is part of the TYPO3 project. The TYPO3 project is
-* free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* The GNU General Public License can be found at
-* http://www.gnu.org/copyleft/gpl.html.
-*
-* This script is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* This copyright notice MUST APPEAR in all copies of the script!
-***************************************************************/
+/*
+ * This file is part of the TYPO3 CMS project.
+ *
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
+ *
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
+ *
+ * The TYPO3 project - inspiring people to share!
+ */
 
 /**
  * This class represents a time slot.
@@ -37,31 +27,25 @@ class tx_seminars_timeslot extends tx_seminars_timespan {
 	protected $tableName = 'tx_seminars_timeslots';
 
 	/**
-	 * the class name of the mapper responsible for creating the new model
-	 * that corresponds to this old model
-	 *
-	 * @var string
-	 */
-	protected $mapperName = 'tx_seminars_Mapper_TimeSlot';
-
-	/**
 	 * Creates and returns a speakerbag object.
 	 *
 	 * @return tx_seminars_Bag_Speaker a speakerbag object
 	 */
 	private function getSpeakerBag() {
-		return t3lib_div::makeInstance(
+		/** @var tx_seminars_Bag_Speaker $bag */
+		$bag = t3lib_div::makeInstance(
 			'tx_seminars_Bag_Speaker',
 			'tx_seminars_timeslots_speakers_mm.uid_local = ' . $this->getUid() .' AND uid = uid_foreign',
 			'tx_seminars_timeslots_speakers_mm',
 			'sorting'
 		);
+		return $bag;
 	}
 
 	/**
 	 * Gets the speaker UIDs.
 	 *
-	 * @return array the speaker UIDs
+	 * @return int[] the speaker UIDs
 	 */
 	public function getSpeakersUids() {
 		$result = array();
@@ -74,7 +58,7 @@ class tx_seminars_timeslot extends tx_seminars_timespan {
 
 		if ($dbResult) {
 			while ($speaker = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($dbResult)) {
-				$result[] = $speaker['uid_foreign'];
+				$result[] = (int)$speaker['uid_foreign'];
 			}
 			$GLOBALS['TYPO3_DB']->sql_free_result($dbResult);
 		}
@@ -92,6 +76,7 @@ class tx_seminars_timeslot extends tx_seminars_timespan {
 		$result = array();
 		$speakerBag = $this->getSpeakerBag();
 
+		/** @var tx_seminars_speaker $organizer */
 		foreach ($speakerBag as $speaker) {
 			$result[] = $speaker->getTitle();
 		}
@@ -104,8 +89,10 @@ class tx_seminars_timeslot extends tx_seminars_timespan {
 	 * Returns a localized string "will be announced" if the time slot has no
 	 * place set.
 	 *
-	 * @return string our places or a localized string "will be announced"
-	 *                if this timeslot has no place assigned
+	 * @return string our places or a localized string "will be announced" if this timeslot has no place assigned
+	 *
+	 * @throws tx_oelib_Exception_Database
+	 * @throws tx_oelib_Exception_NotFound
 	 */
 	public function getPlaceShort() {
 		if (!$this->hasPlace()) {
@@ -136,7 +123,7 @@ class tx_seminars_timeslot extends tx_seminars_timespan {
 	/**
 	 * Gets the place.
 	 *
-	 * @return integer the place UID
+	 * @return int the place UID
 	 */
 	public function getPlace() {
 		return $this->getRecordPropertyInteger('place');
@@ -172,7 +159,7 @@ class tx_seminars_timeslot extends tx_seminars_timespan {
 	/**
 	 * Checks whether the timeslot has a entry date set.
 	 *
-	 * @return boolean TRUE if we have a entry date, FALSE otherwise
+	 * @return bool TRUE if we have a entry date, FALSE otherwise
 	 */
 	public function hasEntryDate() {
 		return $this->hasRecordPropertyInteger('entry_date');
@@ -182,8 +169,7 @@ class tx_seminars_timeslot extends tx_seminars_timespan {
 	 * Returns an associative array, containing fieldname/value pairs that need
 	 * to be updated in the database. Update means "set the title" so far.
 	 *
-	 * @return array associative array containing data to update the
-	 *               database entry of the timeslot, might be empty
+	 * @return string[] data to update the database entry of the timeslot, might be empty
 	 */
 	public function getUpdateArray() {
 		$updateArray = array();

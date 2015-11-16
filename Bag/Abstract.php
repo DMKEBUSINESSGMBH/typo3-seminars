@@ -1,26 +1,16 @@
 <?php
-/***************************************************************
-* Copyright notice
-*
-* (c) 2005-2013 Oliver Klee (typo3-coding@oliverklee.de)
-* All rights reserved
-*
-* This script is part of the TYPO3 project. The TYPO3 project is
-* free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* The GNU General Public License can be found at
-* http://www.gnu.org/copyleft/gpl.html.
-*
-* This script is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* This copyright notice MUST APPEAR in all copies of the script!
-***************************************************************/
+/*
+ * This file is part of the TYPO3 CMS project.
+ *
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
+ *
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
+ *
+ * The TYPO3 project - inspiring people to share!
+ */
 
 /**
  * This aggregate class holds a bunch of objects that are created from
@@ -61,32 +51,32 @@ abstract class tx_seminars_Bag_Abstract implements Iterator {
 	private $limit = '';
 
 	/**
-	 * @var boolean whether $this->count has been calculated
+	 * @var bool whether $this->count has been calculated
 	 */
 	private $hasCount = FALSE;
 
 	/**
-	 * @var integer how many objects this bag contains
+	 * @var int how many objects this bag contains
 	 */
 	private $count = 0;
 
 	/**
-	 * @var boolean whether $this->$countWithoutLimit has been calculated
+	 * @var bool whether $this->$countWithoutLimit has been calculated
 	 */
 	private $hasCountWithoutLimit = FALSE;
 
 	/**
-	 * @var integer how many objects this bag would hold without the LIMIT
+	 * @var int how many objects this bag would hold without the LIMIT
 	 */
 	private $countWithoutLimit = 0;
 
 	/**
-	 * @var boolean whether this bag is at the first element
+	 * @var bool whether this bag is at the first element
 	 */
 	private $isRewound = FALSE;
 
 	/**
-	 * @var boolean an SQL query result (not converted to an associative array
+	 * @var bool an SQL query result (not converted to an associative array
 	 *              yet)
 	 */
 	protected $dbResult = FALSE;
@@ -127,9 +117,9 @@ abstract class tx_seminars_Bag_Abstract implements Iterator {
 	 *        ORDER BY clause (may be empty), must already be safeguarded against SQL injection
 	 * @param string $limit
 	 *        LIMIT clause (may be empty), must already be safeguarded against SQL injection
-	 * @param integer $showHiddenRecords
+	 * @param int $showHiddenRecords
 	 *        If $showHiddenRecords is set (0/1), any hidden fields in records are ignored.
-	 * @param boolean $ignoreTimingOfRecords
+	 * @param bool $ignoreTimingOfRecords
 	 *        If $ignoreTimingOfRecords is TRUE the timing of records is ignored.
 	 */
 	public function __construct(
@@ -139,8 +129,7 @@ abstract class tx_seminars_Bag_Abstract implements Iterator {
 	) {
 		$this->dbTableName = $dbTableName;
 		$this->queryParameters = trim($queryParameters);
-		$this->additionalTableNames = (!empty($additionalTableNames))
-			? ', ' . $additionalTableNames : '';
+		$this->additionalTableNames = !empty($additionalTableNames) ? ', ' . $additionalTableNames : '';
 		$this->createEnabledFieldsQuery(
 			$showHiddenRecords, $ignoreTimingOfRecords
 		);
@@ -156,11 +145,13 @@ abstract class tx_seminars_Bag_Abstract implements Iterator {
 	 * Frees as much memory that has been used by this object as possible.
 	 */
 	public function __destruct() {
-		if ($this->dbResult) {
-			$GLOBALS['TYPO3_DB']->sql_free_result($this->dbResult);
+		$databaseConnection = Tx_Oelib_Db::getDatabaseConnection();
+		if (($this->dbResult !== FALSE) && ($databaseConnection !== NULL)) {
+			$databaseConnection->sql_free_result($this->dbResult);
+			$this->dbResult = FALSE;
 		}
 
-		unset($this->dbResult, $this->currentItem);
+		$this->currentItem = NULL;
 	}
 
 	/**
@@ -168,8 +159,8 @@ abstract class tx_seminars_Bag_Abstract implements Iterator {
 	 * concatenated output from tx_oelib_db::enableFields into
 	 * $this->enabledFieldsQuery.
 	 *
-	 * @param integer $showHiddenRecords If $showHiddenRecords is set (0/1), any hidden-fields in records are ignored.
-	 * @param boolean $ignoreTimingOfRecords If $ignoreTimingOfRecords is TRUE the timing of records is ignored.
+	 * @param int $showHiddenRecords If $showHiddenRecords is set (0/1), any hidden-fields in records are ignored.
+	 * @param bool $ignoreTimingOfRecords If $ignoreTimingOfRecords is TRUE the timing of records is ignored.
 	 *
 	 * @return void
 	 */
@@ -282,7 +273,7 @@ abstract class tx_seminars_Bag_Abstract implements Iterator {
 	 *
 	 * If the function isOk() returns TRUE, nothing is changed.
 	 *
-	 * @return boolean TRUE if the current item is valid, FALSE otherwise
+	 * @return bool TRUE if the current item is valid, FALSE otherwise
 	 */
 	public function valid() {
 		if (!$this->currentItem || !$this->currentItem->isOk()) {
@@ -296,7 +287,7 @@ abstract class tx_seminars_Bag_Abstract implements Iterator {
 	/**
 	 * Returns the UID of the current item.
 	 *
-	 * @return integer the UID of the current item, will be > 0
+	 * @return int the UID of the current item, will be > 0
 	 */
 	public function key() {
 		if (!$this->valid()) {
@@ -311,7 +302,7 @@ abstract class tx_seminars_Bag_Abstract implements Iterator {
 	 *
 	 * Note: This function might rewind().
 	 *
-	 * @return integer the total number of objects in this bag, may be zero
+	 * @return int the total number of objects in this bag, may be zero
 	 */
 	public function count() {
 		if ($this->hasCount) {
@@ -331,7 +322,7 @@ abstract class tx_seminars_Bag_Abstract implements Iterator {
 	 * Retrieves the number of objects this bag would hold if the LIMIT part of
 	 * the query would not have been used.
 	 *
-	 * @return integer the total number of objects in this bag without any
+	 * @return int the total number of objects in this bag without any
 	 *                 limit, may be zero
 	 */
 	public function countWithoutLimit() {
@@ -356,7 +347,7 @@ abstract class tx_seminars_Bag_Abstract implements Iterator {
 	 *
 	 * Note: This function might rewind().
 	 *
-	 * @return boolean TRUE if this bag is empty, FALSE otherwise
+	 * @return bool TRUE if this bag is empty, FALSE otherwise
 	 */
 	public function isEmpty() {
 		if ($this->hasCount) {
@@ -384,6 +375,7 @@ abstract class tx_seminars_Bag_Abstract implements Iterator {
 	public function getUids() {
 		$uids = array();
 
+		/** @var tx_seminars_OldModel_Abstract $currentItem */
 		foreach ($this as $currentItem) {
 			$uids[] = $currentItem->getUid();
 		}

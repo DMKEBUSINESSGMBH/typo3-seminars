@@ -1,26 +1,16 @@
 <?php
-/***************************************************************
-* Copyright notice
-*
-* (c) 2008-2013 Oliver Klee (typo3-coding@oliverklee.de)
-* All rights reserved
-*
-* This script is part of the TYPO3 project. The TYPO3 project is
-* free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* The GNU General Public License can be found at
-* http://www.gnu.org/copyleft/gpl.html.
-*
-* This script is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* This copyright notice MUST APPEAR in all copies of the script!
-***************************************************************/
+/*
+ * This file is part of the TYPO3 CMS project.
+ *
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
+ *
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
+ *
+ * The TYPO3 project - inspiring people to share!
+ */
 
 /**
  * Test case.
@@ -40,7 +30,7 @@ class tx_seminars_FrontEnd_EditorTest extends tx_phpunit_testcase {
 	 */
 	private $testingFramework;
 
-	public function setUp() {
+	protected function setUp() {
 		$this->testingFramework = new tx_oelib_testingFramework('tx_seminars');
 		$this->testingFramework->createFakeFrontEnd();
 
@@ -48,20 +38,19 @@ class tx_seminars_FrontEnd_EditorTest extends tx_phpunit_testcase {
 		$this->fixture->setTestMode();
 	}
 
-	public function tearDown() {
+	protected function tearDown() {
 		$this->testingFramework->cleanUp();
 
 		tx_seminars_registrationmanager::purgeInstance();
-		unset($this->fixture, $this->testingFramework);
 	}
 
 
 	//////////////////////////////
-	// Testing the testmode flag
+	// Testing the test mode flag
 	//////////////////////////////
 
 	public function testIsTestModeReturnsTrueForTestModeEnabled() {
-		$this->assertTrue(
+		self::assertTrue(
 			$this->fixture->isTestMode()
 		);
 	}
@@ -69,7 +58,7 @@ class tx_seminars_FrontEnd_EditorTest extends tx_phpunit_testcase {
 	public function testIsTestModeReturnsFalseForTestModeDisabled() {
 		$fixture = new tx_seminars_FrontEnd_Editor(array(), $GLOBALS['TSFE']->cObj);
 
-		$this->assertFalse(
+		self::assertFalse(
 			$fixture->isTestMode()
 		);
 	}
@@ -82,7 +71,7 @@ class tx_seminars_FrontEnd_EditorTest extends tx_phpunit_testcase {
 	public function testGetObjectUidReturnsTheSetObjectUidForZero() {
 		$this->fixture->setObjectUid(0);
 
-		$this->assertEquals(
+		self::assertEquals(
 			0,
 			$this->fixture->getObjectUid()
 		);
@@ -92,7 +81,7 @@ class tx_seminars_FrontEnd_EditorTest extends tx_phpunit_testcase {
 		$uid = $this->testingFramework->createRecord('tx_seminars_test');
 		$this->fixture->setObjectUid($uid);
 
-		$this->assertEquals(
+		self::assertEquals(
 			$uid,
 			$this->fixture->getObjectUid()
 		);
@@ -104,7 +93,7 @@ class tx_seminars_FrontEnd_EditorTest extends tx_phpunit_testcase {
 	////////////////////////////////////////////////////////////////
 
 	public function testGetFormValueReturnsEmptyStringForRequestedFormValueNotSet() {
-		$this->assertEquals(
+		self::assertEquals(
 			'',
 			$this->fixture->getFormValue('title')
 		);
@@ -113,7 +102,7 @@ class tx_seminars_FrontEnd_EditorTest extends tx_phpunit_testcase {
 	public function testGetFormValueReturnsValueSetViaSetFakedFormValue() {
 		$this->fixture->setFakedFormValue('title', 'foo');
 
-		$this->assertEquals(
+		self::assertEquals(
 			'foo',
 			$this->fixture->getFormValue('title')
 		);

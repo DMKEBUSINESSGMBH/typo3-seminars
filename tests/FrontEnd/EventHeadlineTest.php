@@ -1,29 +1,19 @@
 <?php
-/***************************************************************
-* Copyright notice
-*
-* (c) 2008-2013 Bernd Schönbach <bernd@oliverklee.de>
-* All rights reserved
-*
-* This script is part of the TYPO3 project. The TYPO3 project is
-* free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* The GNU General Public License can be found at
-* http://www.gnu.org/copyleft/gpl.html.
-*
-* This script is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* This copyright notice MUST APPEAR in all copies of the script!
-***************************************************************/
+/*
+ * This file is part of the TYPO3 CMS project.
+ *
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
+ *
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
+ *
+ * The TYPO3 project - inspiring people to share!
+ */
 
 /**
- * Testcase for the tx_seminars_FrontEnd_EventHeadline class.
+ * Test case.
  *
  * @package TYPO3
  * @subpackage tx_seminars
@@ -48,16 +38,24 @@ class tx_seminars_FrontEnd_EventHeadlineTest extends tx_phpunit_testcase {
 	private $mapper;
 
 	/**
-	 * @var integer event begin date
+	 * @var int event begin date
 	 */
 	private $eventDate = 0;
 
 	/**
-	 * @var integer UID of the event to create the headline for
+	 * @var int UID of the event to create the headline for
 	 */
 	private $eventId = 0;
 
-	public function setUp() {
+	protected function setUp() {
+		$pluginConfiguration = new Tx_Oelib_Configuration();
+		$pluginConfiguration->setAsString('dateFormatYMD', '%d.%m.%Y');
+		$configurationRegistry = Tx_Oelib_ConfigurationRegistry::getInstance();
+		$configurationRegistry->set('plugin.tx_seminars', $pluginConfiguration);
+		$configurationRegistry->set('config', new Tx_Oelib_Configuration());
+		$configurationRegistry->set('page.config', new Tx_Oelib_Configuration());
+		$configurationRegistry->set('plugin.tx_seminars._LOCAL_LANG.default', new Tx_Oelib_Configuration());
+
 		tx_oelib_configurationProxy::getInstance('seminars')->setAsBoolean('enableConfigCheck', FALSE);
 
 		$this->testingFramework	= new tx_oelib_testingFramework('tx_seminars');
@@ -84,11 +82,10 @@ class tx_seminars_FrontEnd_EventHeadlineTest extends tx_phpunit_testcase {
 		$this->fixture->injectEventMapper($this->mapper);
 	}
 
-	public function tearDown() {
+	protected function tearDown() {
 		$this->testingFramework->cleanUp();
 
 		tx_seminars_registrationmanager::purgeInstance();
-		unset($this->fixture, $this->mapper, $this->testingFramework);
 	}
 
 
@@ -113,7 +110,7 @@ class tx_seminars_FrontEnd_EventHeadlineTest extends tx_phpunit_testcase {
 	public function renderWithUidOfExistingEventReturnsTitleOfSelectedEvent() {
 		$this->fixture->piVars['uid'] = $this->eventId;
 
-		$this->assertContains(
+		self::assertContains(
 			'Test event',
 			$this->fixture->render()
 		);
@@ -123,10 +120,12 @@ class tx_seminars_FrontEnd_EventHeadlineTest extends tx_phpunit_testcase {
 	 * @test
 	 */
 	public function renderWithUidOfExistingEventReturnsHtmlSpecialCharedTitleOfSelectedEvent() {
-		$this->mapper->find($this->eventId)->setTitle('<test>Test event</test>');
+		/** @var tx_seminars_Model_Event $event */
+		$event = $this->mapper->find($this->eventId);
+		$event->setTitle('<test>Test event</test>');
 		$this->fixture->piVars['uid'] = $this->eventId;
 
-		$this->assertContains(
+		self::assertContains(
 			htmlspecialchars('<test>Test event</test>'),
 			$this->fixture->render()
 		);
@@ -143,7 +142,7 @@ class tx_seminars_FrontEnd_EventHeadlineTest extends tx_phpunit_testcase {
 
 		$this->fixture->piVars['uid'] = $this->eventId;
 
-		$this->assertContains(
+		self::assertContains(
 			strftime($dateFormat, $this->eventDate),
 			$this->fixture->render()
 		);
@@ -155,7 +154,7 @@ class tx_seminars_FrontEnd_EventHeadlineTest extends tx_phpunit_testcase {
 	public function renderReturnsEmptyStringIfNoUidIsSetInPiVar() {
 		unset($this->fixture->piVars['uid']);
 
-		$this->assertEquals(
+		self::assertEquals(
 			'',
 			$this->fixture->render()
 		);
@@ -167,7 +166,7 @@ class tx_seminars_FrontEnd_EventHeadlineTest extends tx_phpunit_testcase {
 	public function renderReturnsEmptyStringIfUidOfInexistentEventIsSetInPiVar() {
 		$this->fixture->piVars['uid'] = $this->testingFramework->getAutoIncrement('tx_seminars_seminars');
 
-		$this->assertEquals(
+		self::assertEquals(
 			'',
 			$this->fixture->render()
 		);
@@ -179,7 +178,7 @@ class tx_seminars_FrontEnd_EventHeadlineTest extends tx_phpunit_testcase {
 	public function renderReturnsEmptyStringIfNonNumericEventUidIsSetInPiVar() {
 		$this->fixture->piVars['uid'] = 'foo';
 
-		$this->assertEquals(
+		self::assertEquals(
 			'',
 			$this->fixture->render()
 		);
