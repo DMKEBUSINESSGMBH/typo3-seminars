@@ -38,6 +38,11 @@ abstract class tx_seminars_BackEnd_AbstractList {
 	const MODULE_NAME = 'web_txseminarsM2';
 
 	/**
+	 * @var string
+	 */
+	protected static $hookQualifier;
+
+	/**
 	 * @var string the name of the table we're working on
 	 */
 	protected $tableName = '';
@@ -409,5 +414,49 @@ abstract class tx_seminars_BackEnd_AbstractList {
 		$pageData = $this->page->getPageData();
 
 		return '&amp;tx_seminars_pi2[pid]=' . $pageData['uid'];
+	}
+
+	/**
+	 * registered hooks can modify the template before it will be rendered
+	 *
+	 * @param Tx_Oelib_Template $template
+	 */
+	protected function modifyTemplateBeforeHeaderRendering(Tx_Oelib_Template $template) {
+		foreach ($this->getHooks() as $hook) {
+			if (method_exists($hook, 'modifyTemplateBeforeHeaderRendering')) {
+				$hook->modifyTemplateBeforeHeaderRendering($template);
+			}
+		}
+	}
+
+	/**
+	 * @param tx_seminars_BagBuilder_Abstract $builder
+	 */
+	protected function modifyBagBuilderBeforeBuild(tx_seminars_BagBuilder_Abstract $builder) {
+		foreach ($this->getHooks() as $hook) {
+			if (method_exists($hook, 'modifyBagBuilderBeforeBuild')) {
+				$hook->modifyBagBuilderBeforeBuild($builder);
+			}
+		}
+	}
+
+
+	/**
+	 * Gets all hooks for this class.
+	 *
+	 * @return array the hook objects in an array, will be empty if no hooks have been set
+	 */
+	private function getHooks() {
+		$result = array();
+
+		$hooks = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['seminars'][static::$hookQualifier];
+
+		if (is_array($hooks)) {
+			foreach ($hooks as $classReference) {
+				$result[] = t3lib_div::getUserObj($classReference);
+			}
+		}
+
+		return $result;
 	}
 }

@@ -23,6 +23,8 @@
  * @author Oliver Klee <typo3-coding@oliverklee.de>
  */
 class tx_seminars_BackEnd_EventsList extends tx_seminars_BackEnd_AbstractList {
+
+	protected static $hookQualifier = 'hookEventList';
 	/**
 	 * @var string the name of the table we're working on
 	 */
@@ -52,6 +54,11 @@ class tx_seminars_BackEnd_EventsList extends tx_seminars_BackEnd_AbstractList {
 		parent::__destruct();
 	}
 
+	protected function getHookQualifier() {
+		return '';
+	}
+
+
 	/**
 	 * Generates and prints out an event list.
 	 *
@@ -69,6 +76,8 @@ class tx_seminars_BackEnd_EventsList extends tx_seminars_BackEnd_AbstractList {
 		$pageData = $this->page->getPageData();
 		$builder->setSourcePages($pageData['uid'], self::RECURSION_DEPTH);
 
+		$this->modifyBagBuilderBeforeBuild($builder);
+
 		$seminarBag = $builder->build();
 		$this->createListBody($seminarBag);
 
@@ -83,6 +92,8 @@ class tx_seminars_BackEnd_EventsList extends tx_seminars_BackEnd_AbstractList {
 		$this->template->setMarker(
 			'label_print_button', $GLOBALS['LANG']->getLL('print')
 		);
+
+		$this->modifyTemplateBeforeHeaderRendering($this->template);
 
 		$content .= $this->template->getSubpart('SEMINARS_EVENT_LIST');
 
@@ -440,6 +451,7 @@ class tx_seminars_BackEnd_EventsList extends tx_seminars_BackEnd_AbstractList {
 		return '<a href="' . htmlspecialchars($url) . '">' .
 			$GLOBALS['LANG']->getLL('label_show_event_registrations') . '</a>';
 	}
+
 }
 
 if (defined('TYPO3_MODE') && $GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['XCLASS']['ext/seminars/BackEnd/EventsList.php']) {

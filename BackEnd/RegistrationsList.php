@@ -22,6 +22,12 @@
  * @author Bernd Schönbach <bernd@oliverklee.de>
  */
 class tx_seminars_BackEnd_RegistrationsList extends tx_seminars_BackEnd_AbstractList {
+
+	/**
+	 * @var string unique qualifier for hooking this class
+	 */
+	protected static $hookQualifier = 'hookRegistrationList';
+
 	/**
 	 * @var string the name of the table we're working on
 	 */
@@ -98,10 +104,11 @@ class tx_seminars_BackEnd_RegistrationsList extends tx_seminars_BackEnd_Abstract
 			$registrationsHeading = '';
 			$newButton = $this->getNewIcon($pageData['uid']);
 		}
-
+		$this->modifyTemplateBeforeHeaderRendering($this->template);
 		$areAnyRegularRegistrationsVisible = $this->setRegistrationTableMarkers(
 			self::REGULAR_REGISTRATIONS
 		);
+
 		$registrationTables = $this->template->getSubpart('REGISTRATION_TABLE');
 		$this->setRegistrationTableMarkers(self::REGISTRATIONS_ON_QUEUE);
 		$registrationTables .= $this->template->getSubpart('REGISTRATION_TABLE');
@@ -118,6 +125,8 @@ class tx_seminars_BackEnd_RegistrationsList extends tx_seminars_BackEnd_Abstract
 		$this->template->setMarker(
 			'label_print_button', $GLOBALS['LANG']->getLL('print')
 		);
+
+
 
 		$content .= $this->template->getSubpart('SEMINARS_REGISTRATION_LIST');
 		$content .= $this->configCheckWarnings;
@@ -162,6 +171,7 @@ class tx_seminars_BackEnd_RegistrationsList extends tx_seminars_BackEnd_Abstract
 			$builder->setSourcePages($pageData['uid'], self::RECURSION_DEPTH);
 		}
 
+		$this->modifyBagBuilderBeforeBuild($builder);
 		$registrationBag = $builder->build();
 		$result = !$registrationBag->isEmpty();
 
